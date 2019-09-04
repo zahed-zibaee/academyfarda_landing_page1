@@ -1,0 +1,33 @@
+{% extends 'academyfarda_crm/base.html'  %}
+{% block content %}
+
+<body>
+	<section class="sec1">
+		<article class="box1">
+			<header>
+				<h3 class="tiltebox1">تعداد علاقه مندی ها</h3>
+			</header>
+			<footer>
+				<h5 class="h5box1">{{ leads_all }}</h5>
+			</footer>
+		</article>
+		<article class="box2">
+			<header>
+				<h3 class="tiltebox2">تعداد پذیرش</h3>
+			</header>
+			<footer>
+				<h5 class="h5box2">{{ leads_reg }}</h5>
+			</footer>
+		</article>
+		<article class="box3">
+			<header>
+				<h3 class="tiltebox3">تعداد رد شده</h3>
+			</header>
+			<footer>
+				<h5 class="h5box3">{{ leads_not_reg }}</h5>
+			</footer>
+		</article>
+	</section>
+</body>
+</html>
+{% endblock %}
