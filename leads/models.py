@@ -5,12 +5,6 @@ from django.db import models
 from datetime import datetime  
 from django.contrib.auth.models import User
 
-##########
-# Set everything to UTF-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-##########
    
 class Token(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -19,7 +13,7 @@ class Token(models.Model):
         return str(self.user) + "_Token"
 
 class Lead(models.Model):
-    token = models.ForeignKey(Token, on_delete=models.SET_NULL, related_name='comments', unique=False, blank = True, null = True, )
+    token = models.ForeignKey(Token, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
     name_and_family = models.CharField(max_length=500, null=False, default='No Name', blank=False)
     GENDER_CHOICES = (
         ('M', 'Male'),
@@ -35,7 +29,7 @@ class Lead(models.Model):
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
     led_time = models.DateTimeField(default=datetime.now, editable=False)
     description = models.TextField(blank=True, null=True)
-
+    
     def __unicode__(self):
         return "{} ==> {} ----- {}".format(self.id, self.phone_number, self.name_and_family)
 

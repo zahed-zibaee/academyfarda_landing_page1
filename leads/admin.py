@@ -7,6 +7,7 @@ import csv
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
+from datetime import datetime
 
 
 # Register your models here.
@@ -15,31 +16,24 @@ admin.site.register(Token)
 class Lead_admin(admin.ModelAdmin):
     #limit show up content
     list_per_page = 50
-    ########################################
     #search field
     search_fields = ('phone_number', 'name_and_family', 'description')
-    ########################################
     #calumn value on Lead
-    list_display = ['id','name_and_family','phone_number','led_time','register_status','description']
-    ########################################
+    list_display = ['id','name_and_family','phone_number','led_time','token','register_status','description']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
-    ########################################
     #make editable 
     list_editable = ['register_status',]
-    ########################################
     #to filter by date 
     list_filter = (
         ('led_time', DateFieldListFilter,),
         'register_status',
         'token',
     )
-    ########################################
     #for export as csv
     def csv_export(self, request, queryset):
-        meta = self.model._meta
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        response['Content-Disposition'] = 'attachment; filename={}_{}.csv'.format("Leads-Export", datetime.now().strftime("%Y-%m-%d_%H-%M"))
         writer = csv.writer(response, csv.excel)
         response.write(u'\ufeff'.encode('utf8'))
         writer.writerow([
@@ -74,10 +68,15 @@ class Lead_admin(admin.ModelAdmin):
 class Comment_admin(admin.ModelAdmin):
     #calumn value on Lead
     list_display = ['id','author','created_date','post','approved_comment']
+    #calumn value on Lead get 
     list_display_links = ['author',]
+    #make editable
     list_editable = ['approved_comment',]
+    #limit show up content
     list_per_page = 50
+    #search field
     search_fields = ('post','approved_comment',)
+    #to filter by date 
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'author',
