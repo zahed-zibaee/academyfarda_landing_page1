@@ -37,13 +37,13 @@ class Lead(models.Model):
     description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
-        return "{} ----- {}".format(self.phone_number, self.name_and_family)
+        return "{} ==> {} ----- {}".format(self.id, self.phone_number, self.name_and_family)
 
 class Comment(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     text = models.TextField(blank=True, null=True)
-    created_date = models.DateTimeField(default=datetime.now)
+    created_date = models.DateTimeField(default=datetime.now, editable=False)
     approved_comment = models.BooleanField(default=True)
     def __unicode__(self):
-        return str(self.author) + ":" + str(self.id) 
+        return str(self.id) + " :" + str(self.author)

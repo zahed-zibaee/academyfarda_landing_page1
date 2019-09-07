@@ -74,3 +74,12 @@ class Lead_admin(admin.ModelAdmin):
 class Comment_admin(admin.ModelAdmin):
     #calumn value on Lead
     list_display = ['id','author','created_date','post','approved_comment']
+    list_display_links = ['author',]
+    list_editable = ['approved_comment',]
+    list_per_page = 50
+    search_fields = ('post','approved_comment',)
+    list_filter = (
+        ('created_date', DateFieldListFilter,),
+        'author',
+    )
+
