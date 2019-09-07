@@ -17,10 +17,10 @@ class Lead_admin(admin.ModelAdmin):
     list_per_page = 50
     ########################################
     #search field
-    search_fields = ('phone_number', 'name_and_family', 'discription')
+    search_fields = ('phone_number', 'name_and_family', 'description')
     ########################################
     #calumn value on Lead
-    list_display = ['id','name_and_family','phone_number','led_time','register_status','discription']
+    list_display = ['id','name_and_family','phone_number','led_time','register_status','description']
     ########################################
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
@@ -50,7 +50,7 @@ class Lead_admin(admin.ModelAdmin):
             smart_str(u"Gender"),
             smart_str(u"Led Time"),
             smart_str(u"Registered"),
-            smart_str(u"Discription"),
+            smart_str(u"Description"),
             ])
         for obj in queryset:
             writer.writerow([
@@ -61,7 +61,7 @@ class Lead_admin(admin.ModelAdmin):
                 smart_str(obj.gender),
                 smart_str(obj.led_time),
                 smart_str(obj.register_status),
-                smart_str(obj.discription),
+                smart_str(obj.description),
             ])
         return response
 

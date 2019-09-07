@@ -1,6 +1,6 @@
 /submit/leads/
   POST, returns a json
-  input: discription (optional), name, phone (unique), token
+  input: description (optional), name, phone (unique), token
   output: status:ok
 
 /query/

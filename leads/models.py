@@ -34,7 +34,7 @@ class Lead(models.Model):
     )
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
     led_time = models.DateTimeField(default=datetime.now, editable=False)
-    discription = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
         return "{} ----- {}".format(self.phone_number, self.name_and_family)
