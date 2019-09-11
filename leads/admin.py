@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from django.contrib import admin
 from models import Lead, Token, Comment
 import csv
 from django.http import HttpResponse
@@ -98,7 +97,7 @@ class Comment_admin(admin.ModelAdmin):
     #limit show up content
     list_per_page = 50
     #search field
-    search_fields = ('post__id',"post__phone_number",'text')
+    search_fields = ('post__id',"post__phone_number",'post__name_and_family','text')
     #to filter by date 
     list_filter = (
         ('created_date', DateFieldListFilter,),
