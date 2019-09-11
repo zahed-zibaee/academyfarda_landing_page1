@@ -5,6 +5,10 @@ from django.db import models
 from datetime import datetime  
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+<<<<<<< HEAD
+=======
+
+>>>>>>> e7744f5b5355c20b57de7c2c75fb9928af1c91b3
    
 class Token(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
