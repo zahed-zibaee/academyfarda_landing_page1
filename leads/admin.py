@@ -81,4 +81,7 @@ class Comment_admin(admin.ModelAdmin):
         ('created_date', DateFieldListFilter,),
         'author',
     )
-
+    #to authenricate author as logedin admin user
+    def save_model(self, request, obj, form, change):
+        obj.author = request.user
+        super(Comment_admin, self).save_model(request, obj, form, change)
