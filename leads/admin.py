@@ -90,7 +90,7 @@ class Lead_admin(admin.ModelAdmin):
 @admin.register(Comment)
 class Comment_admin(admin.ModelAdmin):
     #calumn value on Lead
-    list_display = ['id','author','post','created_date','text','approved_comment']
+    list_display = ['id','author','post','created_date','approved_comment','text']
     #calumn value on Lead get 
     list_display_links = ['author',]
     #make editable
