@@ -15,8 +15,11 @@ def submit_Leads(request):
     # User submit a lead
     #TODO: validate phone, date Shamsi,
     post_keys = request.POST.keys() 
-    if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() is True and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False and 'name' in post_keys :
-        Lead.objects.create(name_and_family = request.POST['name'], phone_number = request.POST['phone'], description = request.POST.get('description', default=''), token = Token.objects.filter(token = request.POST['token'])[0])
+    if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() is True \
+            and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
+                and 'name' in post_keys and len(request.POST['phone']) > 5:
+        Lead.objects.create(name_and_family = request.POST['name'], phone_number = request.POST['phone'], \
+            description = request.POST.get('description', default=''), token = Token.objects.filter(token = request.POST['token'])[0])
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
@@ -24,7 +27,7 @@ def submit_Leads(request):
         return JsonResponse({
         'status': 'registeration_error',
         }, encoder=JSONEncoder)
-    elif 'phone' not in post_keys:
+    elif 'phone' not in post_keys or len(request.POST['phone']) < 6:
         return JsonResponse({
         'status': 'phone_number_needed',
         }, encoder=JSONEncoder)
