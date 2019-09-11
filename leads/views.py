@@ -59,7 +59,8 @@ def query_Leads(request):
         else:
             days = request.POST['days']
             last_month = datetime.today() - timedelta(days=int(days))
-        Leads_counts = Lead.objects.filter(led_time__gte = last_month,led_time__lte = datetime.now(), register_status='K').aggregate(Count('register_status'))
+        Leads_counts = Lead.objects.filter(led_time__gte = last_month,led_time__lte = datetime.now() \
+            , register_status='K').aggregate(Count('register_status'))
         Leads_counts_value = Leads_counts.values()
         context={}
         context['registered_in_' + str(days) + '_days'] = last_month
@@ -76,6 +77,7 @@ def analysis(request):
     leads_all_value = leads_all.values()
     leads_not_reg = leads_all_value[0] - leads_registered_value[0]
 
-    data = { 'leads_all': leads_all_value[0], 'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
+    data = { 'leads_all': leads_all_value[0], \
+        'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
     }
     return render(request,'academyfarda_crm/analysis.html', data)

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.contrib import admin
 from models import Lead, Token, Comment
 import csv
 from django.http import HttpResponse
@@ -19,7 +20,8 @@ class Lead_admin(admin.ModelAdmin):
     #search field
     search_fields = ('phone_number', 'name_and_family', 'description')
     #calumn value on Lead
-    list_display = ['id','name_and_family','phone_number','led_time','token','register_status','description']
+    list_display = ['id','name_and_family','phone_number','led_time', \
+        'token','register_status','description']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
     #make editable 
@@ -33,7 +35,8 @@ class Lead_admin(admin.ModelAdmin):
     #for export as csv
     def csv_export(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename={}_{}.csv'.format("Leads-Export", datetime.now().strftime("%Y-%m-%d_%H-%M"))
+        response['Content-Disposition'] = 'attachment; filename={}_{}.csv' \
+            .format("Leads-Export", datetime.now().strftime("%Y-%m-%d_%H-%M"))
         writer = csv.writer(response, csv.excel)
         response.write(u'\ufeff'.encode('utf8'))
         writer.writerow([
