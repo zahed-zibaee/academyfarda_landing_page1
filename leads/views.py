@@ -46,7 +46,7 @@ def submit_Leads(request):
     
 def error_404(request):
     data = {}
-    return render(request,'academyfarda_crm/error_404.html', data)
+    return render(request,'404/error_404.html', data)
 
 @csrf_exempt
 def query_Leads(request):
@@ -80,4 +80,8 @@ def analysis(request):
     data = { 'leads_all': leads_all_value[0], \
         'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
     }
-    return render(request,'academyfarda_crm/analysis.html', data)
+    return render(request,'leads/analysis/analysis.html', data)
+
+def login(request):
+    data = {}
+    return render(request,'leads/login/index.html', data)
