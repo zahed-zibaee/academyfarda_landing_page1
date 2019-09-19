@@ -1,33 +1,73 @@
-{% extends 'leads/analysis/base.html'  %}
+{% extends 'leads/base/base.html'  %}
 {% block content %}
-
-<body>
-	<section class="sec1">
-		<article class="box1">
-			<header>
-				<h3 class="tiltebox1">تعداد علاقه مندی ها</h3>
-			</header>
-			<footer>
-				<h5 class="h5box1">{{ leads_all }}</h5>
-			</footer>
-		</article>
-		<article class="box2">
-			<header>
-				<h3 class="tiltebox2">تعداد پذیرش</h3>
-			</header>
-			<footer>
-				<h5 class="h5box2">{{ leads_reg }}</h5>
-			</footer>
-		</article>
-		<article class="box3">
-			<header>
-				<h3 class="tiltebox3">تعداد رد شده</h3>
-			</header>
-			<footer>
-				<h5 class="h5box3">{{ leads_not_reg }}</h5>
-			</footer>
-		</article>
-	</section>
-</body>
-</html>
-{% endblock %}
+<div class="mt-5">ا  </div>
+<div class="col-9 mx-auto">
+<table class="table  table-striped table-hover rtl text-right">
+        <thead class="thead-dark ">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First name and family</th>
+            <th scope="col">Phone nubmer</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Led time</th>
+            <th scope="col">Status</th>
+            <th scope="col">Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% if leads == Faild %}
+            <tr>
+                <th scope="row">1</th>
+                <td>No Valid Data</td>
+            </tr>
+            {% else %}
+                {% for lead in leads reversed %}
+                    {% if lead.register_status == 'C' %}
+            <tr class="bg-danger">
+                    {% elif lead.register_status == 'K' %}
+            <tr class="bg-success">
+                    {% else %}
+            <tr class="bg-primary">
+                    {% endif %}
+            <th scope="row">{{ lead.id }}</th>
+            <td>{{ lead.name_and_family }}</td>
+            <td>{{ lead.phone_number }}</td>
+            <td>{{ lead.gender }}</td>
+            <td>{{ lead.led_time }}</td>
+            <td>{{ lead.register_status }}</td>
+            <td>
+            <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                    <input type="text" class="mb-3 floatContainer col-8">
+                    <input type="button" action="submit" value="Submit">
+            </form>
+            </td>
+            </tr>
+                {% if comments == Faild %}
+            <tr>
+                    <th scope="row">1</th>
+                    <td>No Valid Data</td>
+            </tr>
+                {% else %}
+                    {% for comment in comments %}
+                        {% if comment.post == lead %}
+            <tr class="table-light"></tr>
+            <td olspan="2">{{ comment.created_date }}</td>
+            <td colspan="6">
+            <div class="media">
+            <div class="media-body">
+                <h5 class="mt-0">{{ comment.author }}</h5>
+                {{ comment.text }}
+                </div>
+            </div>
+            </td>
+            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>   
+    {% endblock %}

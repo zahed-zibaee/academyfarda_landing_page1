@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Token, User, Lead
+from .models import Token, User, Lead, Comment
 from django.db.models import Count
 from datetime import datetime ,timedelta
 
@@ -77,11 +77,10 @@ def analysis(request):
     leads_all_value = leads_all.values()
     leads_not_reg = leads_all_value[0] - leads_registered_value[0]
 
-    data = { 'leads_all': leads_all_value[0], \
+    leads = Lead.objects.all()
+
+    comments = Comment.objects.all()
+    data = {'comments': comments, 'leads':leads, 'leads_all': leads_all_value[0], \
         'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
     }
     return render(request,'leads/analysis/analysis.html', data)
-
-def login(request):
-    data = {}
-    return render(request,'leads/login/index.html', data)
