@@ -1,16 +1,11 @@
-{% extends 'leads/base/base.html'  %}
+{% extends 'base/base.html'  %}
 {% load static %}
 {% block content %}
-    <div class="container mt-125 ">
-        <div class="row text-center col-11">
-            <div class="col-xs-2 col-md-4 col-lg-5 col-xl-6 col-sm-0 text-center">
-                        
-                        <img class="img-jello img-fluid mx-auto mt-85" src="{% static '/leads/base/media/logo.png' %}" width="350" height="300">
-                        
-            </div>
-            <div class="col">
+    <div class="container mt-125">
+        <div class="row text-center col-12">
+
                 <!-- form card login -->
-                    <div class="card rounded-10 col-xs-10 p-0 mx-auto" id="login-form">
+                    <div class="card rounded-10 col-xs-8 col-md-6 p-0 mx-auto b-color" id="login-form">
                         <div class="card-header">
                             <h3 class="mb-0 login-text t-color">User Login</h3>
                         </div>
@@ -18,7 +13,7 @@
                             <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
                                 {% csrf_token %}
                                 
-                                <p class="wellc">Log in to Academyfarda</p>
+                                <img class="img-jello img-fluid mx-auto mb-3" src="{% static '/leads/base/media/logo.png' %}" width="200" height="150">
                                 <div class="input-group mb-3 floatContainer">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Username</span>
@@ -34,11 +29,11 @@
                                 {% if form.errors %}
                                     <p class="label label-danger danj mt-75">Your username and password didn't match. Please try again.</p>
                                 {% endif %}
-                                <div class="offset-xl-2 mt-2">
+                                <div class="text-center mt-1 mb-3">
                                     <div class="g-recaptcha" data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
                                 </div>
-                                <div class="col-12 mt-5">
-                                <a href="javascript:void('forgot-form-link');" class="forgot-form-link float-left mt-2">Forgot Password</a>
+                                <div class="col-12 ">
+                                <a href="javascript:void('forgot-form-link');" class="forgot-form-link float-left ">Forgot Password</a>
                                 <button type="submit" class="btn btn-lg float-right btn-outline-primary"> Login </button>
                                 </div>
                                 </form>
@@ -47,25 +42,26 @@
                 <!-- /form card login end-->
 
                 <!-- form card forgot -->
-                <div class="card rounded-10 col-xs-10 p-0 mx-auto op-forget" id="forgot-form">
+                <div class="card rounded-10 col-md-6 col-sm-8 col-xs-6 p-0 mx-auto op-forget" id="forgot-form">
                     <div class="card-header">
                         <h3 class="mb-0 reset-text t-color">Reset Password</h3>
                     </div>
                     <div class="card-body">
+                        <img class="img-jello img-fluid mx-auto mb-3" src="{% static '/leads/base/media/logo.png' %}" width="200" height="150">
                         <form class="form" role="form" autocomplete="off" id="" novalidate="" method="POST">
-                        <p class="wellc">Restore Academyfarda accounts</p>
+                        
                         <div class="input-group mb-3 floatContainer">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">Username</span>
                             </div>
                             <input type="email" class="form-control form-control-lg rounded-2 col-11 mx-auto" aria-label="email" aria-describedby="basic-addon1" id="pwd1" autocomplete="new-password" required>
                         </div>
-
-                        <div class="offset-xl-2 mt-3">
-                            <div class="g-recaptcha" data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
+                        <p class="">Enter youremail and we'll send you a link to get back into your account.</p>
+                        <div class="text-center">
+                            <div class="g-recaptcha " data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
                         </div>  
-                        <div class="col-12 mt-5">
-                            <a href="javascript:void('login-form-link');" class="login-form-link float-left mt-2">Login</a>
+                        <div class="col-12 mt-1 mb-3">
+                            <a href="javascript:void('login-form-link');" class="login-form-link float-left ">Login</a>
                             <button type="submit" class="btn btn-lg float-right btn-outline-primary" >Reset</button>
                         </div>
                         </form>

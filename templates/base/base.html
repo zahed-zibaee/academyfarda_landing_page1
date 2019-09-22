@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'leads/base/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'leads/login/bootstrap/css/bootstrap.min.css' %}">
+        <script src="{% static 'leads/login/jquery/jquery.js' %}"></script>
+        <script src="{% static 'leads/login/bootstrap/js/bootstrap.min.js' %}"></script>
+        <meta charset="utf-8">
+        <title>{% block title %}Leads Counter{% endblock %}</title>
+    </head>
+    <body >
+        {% if request.get_full_path == "/login" %}
+        {% elif request.get_full_path == "/login/" %}
+        {% else %}
+        {% include 'base/partials/header.html' %}
+        {% endif %}
+        <main role="main" class="m-color">
+            {% block content %} {% endblock %}
+        </main>
+        {% include 'base/partials/footer.html' %}          
+    </body>
+</html>

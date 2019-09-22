@@ -1,0 +1,18 @@
+<footer class="text-muted fixed-bottom navbar-light bg-light">
+   <div class="container mt-3 m-color">
+      {% if request.get_full_path == "/login" %}
+      {% elif request.get_full_path == "/login/" %}
+      {% else %}
+      <p class="float-right">
+         <a href="#">Back to top</a>
+      </p>
+      {% endif %}
+      {% if request.get_full_path == "/login" %}
+      <p class="m-color text-center">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
+      {% elif request.get_full_path == "/login/" %}
+      <p class="m-color text-center">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
+      {% else %}
+      <p class="m-color float-left">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
+      {% endif %}
+   </div>
+</footer>>

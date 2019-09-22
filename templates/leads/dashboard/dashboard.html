@@ -1,0 +1,75 @@
+{% extends 'base/base.html'  %}
+{% block content %}
+<div class="mt-5">ا  </div>
+<!-- main table -->
+<div class="col-9 mx-auto">
+<table class="table  table-striped table-hover rtl text-right">
+        <thead class="thead-dark ">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">First name and family</th>
+            <th scope="col">Phone nubmer</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Led time</th>
+            <th scope="col">Status</th>
+            <th scope="col">Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% if leads == Faild %}
+            <tr>
+                <th scope="row">1</th>
+                <td>No Valid Data</td>
+            </tr>
+            {% else %}
+                {% for lead in leads reversed %}
+                    {% if lead.register_status == 'C' %}
+            <tr class="bg-danger">
+                    {% elif lead.register_status == 'K' %}
+            <tr class="bg-success">
+                    {% else %}
+            <tr class="bg-primary">
+                    {% endif %}
+            <th scope="row">{{ lead.id }}</th>
+            <td>{{ lead.name_and_family }}</td>
+            <td>{{ lead.phone_number }}</td>
+            <td>{{ lead.gender }}</td>
+            <td>{{ lead.led_time }}</td>
+            <td>{{ lead.register_status }}</td>
+            <td>
+            <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
+                    <input type="text" class="mb-3 floatContainer col-8">
+                    <input type="button" action="submit" value="Submit">
+            </form>
+            </td>
+            </tr>
+                {% if comments == Faild %}
+            <tr>
+                    <th scope="row">1</th>
+                    <td>No Valid Data</td>
+            </tr>
+                {% else %}
+                    {% for comment in comments %}
+                        {% if comment.post == lead %}
+            <tr class="table-light"></tr>
+            <td olspan="2">{{ comment.created_date }}</td>
+            <td colspan="6">
+            <div class="media">
+            <div class="media-body">
+                <h5 class="mt-0">{{ comment.author }}</h5>
+                {{ comment.text }}
+                </div>
+            </div>
+            </td>
+            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>   
+<!-- end of main table -->
+{% endblock %}

@@ -84,3 +84,11 @@ def analysis(request):
         'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
     }
     return render(request,'leads/analysis/analysis.html', data)
+
+def login(request):
+    data = {}
+    return render(request,'leads/login/login.html', data)
+
+def dashboard(request):
+    data = {}
+    return render(request,'leads/dashboard/dashboard.html', data)

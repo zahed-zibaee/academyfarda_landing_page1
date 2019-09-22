@@ -1,10 +1,25 @@
 
-.t-color {
-  color: darkslategray;
+
+.m-b-color {
+  background-color: #eeeeee !important;
+}
+.m-color {
+  color: #303841 !important;
+}
+.or-color {
+  color: #ff5722;
+}
+::selection {
+  color: #fff;
+  background-color: #00adb5; 
+}
+.text-center {
+  text-align: center;
 }
 
-
-
+.g-recaptcha {
+  display: inline-block;
+}
 .login-text {
     font-size: xx-large;
     -webkit-animation: tracking-in-expand 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
