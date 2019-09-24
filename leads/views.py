@@ -17,7 +17,7 @@ def submit_Leads(request):
     post_keys = request.POST.keys() 
     if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() is True \
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
-                and 'name' in post_keys and len(request.POST['phone']) > 5:
+                and 'name' in post_keys and len(request.POST['phone']) > 5 and len(request.POST['name']) > 2 :
         Lead.objects.create(name_and_family = request.POST['name'], phone_number = request.POST['phone'], \
             description = request.POST.get('description', default=''), token = Token.objects.filter(token = request.POST['token'])[0])
         return JsonResponse({
@@ -35,7 +35,7 @@ def submit_Leads(request):
         return JsonResponse({
         'status': 'repetitive_ phone_number',
         }, encoder=JSONEncoder)
-    elif 'name' not in post_keys:
+    elif 'name' not in post_keys or len(request.POST['name']) < 3 :
         return JsonResponse({
         'status': 'name_needed',
         }, encoder=JSONEncoder)
@@ -77,10 +77,8 @@ def analysis(request):
     leads_all_value = leads_all.values()
     leads_not_reg = leads_all_value[0] - leads_registered_value[0]
 
-    leads = Lead.objects.all()
-
-    comments = Comment.objects.all()
-    data = {'comments': comments, 'leads':leads, 'leads_all': leads_all_value[0], \
+ 
+    data = {'leads_all': leads_all_value[0], \
         'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
     }
     return render(request,'leads/analysis/analysis.html', data)
@@ -90,5 +88,7 @@ def login(request):
     return render(request,'leads/login/login.html', data)
 
 def dashboard(request):
-    data = {}
+    leads = Lead.objects.all()
+    comments = Comment.objects.all()
+    data = {'comments': comments, 'leads':leads, }
     return render(request,'leads/dashboard/dashboard.html', data)
