@@ -242,12 +242,6 @@
 	direction: rtl;
   }
 
-.float-r {
-	float: right;
-}
-.float-l {
-	float: left;
-}
 .mt-50 {
   margin-top: 50px;
 }

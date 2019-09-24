@@ -1,12 +1,11 @@
 {% extends 'base/base.html'  %}
 {% block content %}
-<div class="col-3 mt-75">
-
-</div>
+{% include 'base/partials/_alerts.html' %}
+<div class="col-3"></div>
 <!-- main table -->
-<div class="col-9 mt-75">
-<table class="table  table-striped table-hover rtl text-right">
-        <thead class="thead-dark ">
+<div class="col-9 d-none d-md-block">
+<table class="table  table-striped table-hover rtl text-right ">
+        <thead class="thead-dark text-center">
           <tr>
             <th scope="col">#</th>
             <th scope="col">First name and family</th>
@@ -41,7 +40,7 @@
             <td>{{ lead.register_status }}</td>
             <td>
             <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
-                    <input type="text" class="mb-3 floatContainer col-8">
+                    <input type="text" class="mb-3 floatContainer col-7">
                     <input type="button" action="submit" value="Submit">
             </form>
             </td>

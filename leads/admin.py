@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from models import Lead, Token, Comment
-import csv
+from .models import Lead, Token, Comment
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
 from datetime import datetime
+import csv
 
 
 # Register your models here.

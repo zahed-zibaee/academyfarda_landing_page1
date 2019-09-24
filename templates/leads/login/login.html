@@ -13,7 +13,7 @@
                             <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
                                 {% csrf_token %}
                                 
-                                <img class="img-jello img-fluid mx-auto mb-3" src="{% static '/leads/base/media/logo.png' %}" width="200" height="150">
+                                <img class="img-jello img-fluid mx-auto mb-3" src="{% static 'base/media/logo.png' %}" width="200" height="150">
                                 <div class="input-group mb-3 floatContainer">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Username</span>
@@ -26,9 +26,7 @@
                                     </div>
                                     <input type="password" class="form-control form-control-lg rounded-2 col-11 mx-auto" aria-label="password" aria-describedby="basic-addon1" id="id_password" name="password" required>
                                 </div>
-                                {% if form.errors %}
-                                    <p class="label label-danger danj mt-75">Your username and password didn't match. Please try again.</p>
-                                {% endif %}
+                                {% include 'base/partials/_alerts.html' %}
                                 <div class="text-center mt-1 mb-3">
                                     <div class="g-recaptcha" data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
                                 </div>
@@ -56,7 +54,7 @@
                             </div>
                             <input type="email" class="form-control form-control-lg rounded-2 col-11 mx-auto" aria-label="email" aria-describedby="basic-addon1" id="pwd1" autocomplete="new-password" required>
                         </div>
-                        <p class="">Enter youremail and we'll send you a link to get back into your account.</p>
+                        <p class="">Enter your email and we'll send you a link to get back into your account.</p>
                         <div class="text-center">
                             <div class="g-recaptcha " data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
                         </div>  

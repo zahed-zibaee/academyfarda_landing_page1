@@ -1,14 +1,12 @@
 {% load static %}
 <header dir="rtl">
     <nav class="navbar navbar-expand-md navbar-light fixed-top m-b-color b-color">
-        <div class="">
-            <img src="{% static '/leads/base/media/logo.png' %}" width="35" height="32" class="mr-4 img-jello" alt="Logo">
-        </div>
+        <img src="{% static 'base/media/logo.png' %}" width="35" height="32" class="mr-4 img-jello" alt="Logo">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <div class="col-xl-11 col-md-10">
+            <div class="col-lg-6 ">
                 <ul class="navbar-nav mt-2 mt-lg-0 ">
                     <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}  active {% endif %}">
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
@@ -17,15 +15,24 @@
                         <a class="nav-link" href="{% url 'analysis' %}">Analysis</a>
                     </li>
 
-
                 </ul>
             </div>
-            <div class="col-xl-1 col-md-2">
-                <form class="form-inline">
-                    <button class="btn btn-outline-dark " type="button"> Logout </button>
-                </form>
+            <div class="col-lg-2 "><p> </p></div>
+            {% if user.is_authenticated %}
+            <div class="col-lg-4">
+            <form class="form-inline">
+                <span class="navbar-text d-none d-md-block mx-auto ">
+                    Wellcome {{ user.username }}
+                </span>
+                <button class="btn btn-dark " type="button"> Logout </button>
+
+            </form>
             </div>
+            {% else %}
+            
+            {% endif %}
         </div>
     </nav>
+    <div class="mt-75"><p> </p></div>
 
 </header>

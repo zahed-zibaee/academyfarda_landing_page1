@@ -14,6 +14,7 @@ class Token(models.Model):
         return str(self.user) + "_Token"
 
 class Lead(models.Model):
+    #TODO make a function witch give us a shamsi date
     token = models.ForeignKey(Token, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
     name_and_family = models.CharField(max_length=500, null=False, default='No Name', blank=False)
     GENDER_CHOICES = (
