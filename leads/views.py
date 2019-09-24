@@ -20,13 +20,18 @@ def submit_Leads(request):
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
                     and len(request.POST['name']) > 2 :
         Lead.objects.create(name_and_family = request.POST['name'], phone_number = request.POST['phone'], \
-            description = request.POST.get('description', default=''), token = Token.objects.filter(token = request.POST['token'])[0])
+            description = request.POST.get('description', default=''), \
+                token = Token.objects.filter(token = request.POST['token'])[0])
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
     elif 'token' not in post_keys or User.objects.filter(token__token = request.POST['token']).exists() is False:
         return JsonResponse({
         'status': 'registeration_error',
+        }, encoder=JSONEncoder)
+    elif 'name' not in post_keys or len(request.POST['name']) < 3 :
+        return JsonResponse({
+        'status': 'name_needed',
         }, encoder=JSONEncoder)
     elif 'phone' not in post_keys or len(request.POST['phone']) < 6 or request.POST['phone'].isdigit() is False:
         return JsonResponse({
@@ -36,6 +41,7 @@ def submit_Leads(request):
         return JsonResponse({
         'status': 'repetitive_ phone_number',
         }, encoder=JSONEncoder)
+
     else:
         return JsonResponse({
         'status': 'unknown_error',
