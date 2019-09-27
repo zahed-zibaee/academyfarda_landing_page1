@@ -4,7 +4,9 @@
     <head>
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css" href="{% static 'base/css/style.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'base/media/logo/2000X2000.png' %}"/>
         <script src="{% static 'base/js/main.js' %}"></script>
+        
 
         <link rel="stylesheet" href="{% static 'leads/login/bootstrap/css/bootstrap.min.css' %}">
         <script src="{% static 'leads/login/jquery/jquery.js' %}"></script>
@@ -18,7 +20,7 @@
         {% else %}
         {% include 'base/partials/_header.html' %}
         {% endif %}
-        <main role="main" class="m-color">
+        <main role="main">
             {% block content %} {% endblock %}
         </main>
         {% include 'base/partials/_footer.html' %}          

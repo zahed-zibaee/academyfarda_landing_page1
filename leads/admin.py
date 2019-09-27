@@ -14,6 +14,7 @@ import csv
 admin.site.register(Token)
 @admin.register(Lead)
 class Lead_admin(admin.ModelAdmin):
+    #TODO: date range
     #limit show up content
     list_per_page = 50
     #search field
@@ -84,7 +85,7 @@ class Lead_admin(admin.ModelAdmin):
     csv_export.short_description = u"Export Selected"
     actions = ["csv_export"]
     ####################################
-    #TODO: date range
+    
 
 @admin.register(Comment)
 class Comment_admin(admin.ModelAdmin):

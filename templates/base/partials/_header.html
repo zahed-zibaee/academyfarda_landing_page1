@@ -1,38 +1,53 @@
 {% load static %}
-<header dir="rtl">
-    <nav class="navbar navbar-expand-md navbar-light fixed-top m-b-color b-color">
-        <img src="{% static 'base/media/logo/250X250.png' %}" width="40" height="40" class="mr-4 img-jello" alt="Logo">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+<header>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top m-b-color my-navbar">   
+        <img src="{% static 'base/media/logo/2000X2000.png' %}" width="40" height="40" class="mr-4 ml-2 img-jello" alt="Logo">
+        <span class="navbar-text d-xl-none d-lg-none d-md-none mx-auto">
+                Wellcome {{ user.username }}
+        </span>
+        <button class="navbar-toggler " type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-            <div class="col-lg-6 ">
-                <ul class="navbar-nav mt-2 mt-lg-0 ">
-                    <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}  active {% endif %}">
-                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                    </li>
-                    <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
-                        <a class="nav-link" href="{% url 'analysis' %}">Analysis</a>
-                    </li>
-
-                </ul>
-            </div>
-            <div class="col-lg-2 "><p> </p></div>
-            {% if user.is_authenticated %}
-            <div class="col-lg-4">
-            <form class="form-inline">
-                <span class="navbar-text d-none d-md-block mx-auto ">
-                    Wellcome {{ user.username }}
-                </span>
-                <button class="btn btn-dark " type="button"> Logout </button>
-
-            </form>
-            </div>
-            {% else %}
-            
-            {% endif %}
-        </div>
+    {% if user.is_authenticated %}
+    <div class="navbar-collapse collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}  active {% endif %}">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+            </li>
+            <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
+                <a class="nav-link" href="{% url 'analysis' %}">Analysis</a>
+            </li>
+        </ul>
+        
+        <form class="form-inline my-2 my-lg-0">
+            <span class="navbar-text d-none d-md-block mr-5">
+                Wellcome {{ user.username }}
+            </span>
+            <a class="btn1" href="#"> Logout </a>
+        </form> 
+    </div> 
+    {% else %}
+    <div class="navbar-collapse collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}  active {% endif %}">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
+                        <a class="nav-link" href="{% url 'analysis' %}">Classes</a>
+                </li>
+                <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
+                    <a class="nav-link" href="{% url 'analysis' %}">About</a>
+                </li>
+            </ul>
+                <a class="btn1" href="{% url 'login' %}"> login </a>
+    </div>    
+    {% endif %}
     </nav>
-    <div class="mt-75"><p> </p></div>
-
+    <nav aria-label="breadcrum ">
+        <ol class="breadcrumb my-navbar">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Library</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Data</li>
+        </ol>
+    </nav>
 </header>
