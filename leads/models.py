@@ -34,7 +34,8 @@ class Lead(models.Model):
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
     led_time = models.DateTimeField(default=datetime.now, editable=False)
     description = models.TextField(blank=True, null=True)
-    
+    def Persian_led_time(self):
+        pass
     def __unicode__(self):
         return "{} ==> {} ----- {}".format(self.id, self.phone_number, self.name_and_family)
 
