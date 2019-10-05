@@ -82,7 +82,15 @@ def login(request):
             return redirect("login")
     else:
         return render(request,'leads/login/login.html')
-    
+
+def logout(request):
+    if request.method == 'POST':
+        auth.logout(request)
+        messages.success(request, 'You are now loged out')
+        return redirect('login')
+    else:
+        messages.error(request, "Something went wrong!!!")
+        return redirect('login')
 
 def dashboard(request):
     #TODO add search and filters, make user only see commend they need 2 see, sort commends,padging

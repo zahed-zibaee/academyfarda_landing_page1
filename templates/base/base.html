@@ -3,15 +3,16 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+
+        <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
+        <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
+        <script src="{% static 'base/jquery/jquery.js' %}"></script>
+        <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
         <link rel="stylesheet" type="text/css" href="{% static 'base/fontawesome-free-5.11.2/css/all.css' %}">
+
         <link rel="stylesheet" type="text/css" href="{% static 'base/css/style.css' %}">
         <link rel="shortcut icon" type="image/png" href="{% static 'base/media/logo/50X50.png' %}">
         <script src="{% static 'base/js/main.js' %}"></script>
-        
-
-        <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
-        <script src="{% static 'base/jquery/jquery.js' %}"></script>
-        <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
         
         <title>{% block title %}Leads Counter{% endblock %}</title>
     </head>

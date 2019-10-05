@@ -42,12 +42,13 @@
             {% endif %}
             <td>{{ lead.token }}</td>
             <td>
-                <a class="btn1" aria-label="Open">
-                    <i class="fas fa-chevron-left" id="opencommends{{ lead.id }}" onclick="opencommends({{ lead.id }});" aria-hidden="true"></i>
+                <a class="btn1" data-toggle="collapse" href="#multiCollapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">
+                    <i class="fas fa-chevron-down" id="opencommends"></i>
                 </a>
             </td>
             </tr>
-            <tr class="m-b-color">
+            <div >
+            <tr class="m-b-color collapse multi-collapse" id="multiCollapseExample{{ lead.id }}">
             <td colspan="2" class="text-left"><i class="far fa-arrow-alt-circle-right mr-1"></i> {{ lead.led_time|timesince }}</td>
             <td colspan="5">
             <div class="media">
@@ -57,7 +58,7 @@
             </div>
             </td>
             </tr>
-            <tr class="m-b-color">
+            <tr class="m-b-color collapse multi-collapse" id="multiCollapseExample{{ lead.id }}">
             <td colspan="8">
             <form class="form-row ml-5 mr-5 mt-3">
                     <div class="form-group col-11">
@@ -77,8 +78,8 @@
                 {% else %}
                     {% for comment in comments reversed %}
                         {% if comment.post == lead %}
-            <tr class="table-light">
-            <td colspan="4">
+            <tr class="m-b-color collapse multi-collapse table-light" id="multiCollapseExample{{ lead.id }}">
+            <td colspan="5">
                 <div class="media  my-navbar">
                     <div class="media-body text-left ml-4">
                         <p class="w-50 text-left "><i class="far fa-comment mr-1"></i>  {{ comment.created_date|timesince }} <p>
@@ -95,6 +96,7 @@
                     </a>
             </td>
             </tr>
+            </div>
                         {% endif %}
                     {% endfor %}
                 {% endif %}

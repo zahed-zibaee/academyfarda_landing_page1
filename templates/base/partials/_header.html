@@ -18,13 +18,15 @@
                 <a class="nav-link" href="{% url 'analysis' %}">Analysis</a>
             </li>
         </ul>
-        
-        <form class="form-inline my-2 my-lg-0">
+
             <span class="navbar-text d-none d-md-block mr-5">
                 Wellcome {{ user.username }}
             </span>
-            <a class="btn1" href="#"> Logout </a>
-        </form> 
+            <a class="btn1" href="javascript:{document.getElementById('logout').submit();}"><i class="fas fa-sign-out-alt"></i> Logout </a>
+            <form method="POST" action="{% url 'logout' %}" id="logout">
+                    {% csrf_token %}
+                    <input type="hidden">
+            </form>
     </div> 
     {% else %}
     <div class="navbar-collapse collapse" id="navbarTogglerDemo02">
