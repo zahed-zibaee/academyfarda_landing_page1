@@ -20,7 +20,7 @@ class Lead_admin(admin.ModelAdmin):
     #search field
     search_fields = ('phone_number', 'name_and_family', 'description')
     #calumn value on Lead
-    list_display = ['id','name_and_family','phone_number','gender','led_time', \
+    list_display = ['id','name_and_family','phone_number','gender','led_time_jalali_str', \
         'token','register_status','description']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
@@ -90,7 +90,7 @@ class Lead_admin(admin.ModelAdmin):
 @admin.register(Comment)
 class Comment_admin(admin.ModelAdmin):
     #calumn value on Lead
-    list_display = ['id','author','post','created_date','approved_comment','text']
+    list_display = ['id','author','post','created_date_jalali_str','approved_comment','text']
     #calumn value on Lead get 
     list_display_links = ['author',]
     #make editable
@@ -98,19 +98,32 @@ class Comment_admin(admin.ModelAdmin):
     #limit show up content
     list_per_page = 50
     #search field
-    search_fields = ('post__id',"post__phone_number",'post__name_and_family','text')
+    search_fields = ("post__phone_number",'post__name_and_family','text')
     #to filter by date 
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'author',
         'approved_comment',
     )
+
     #marketing users can't change data
+    readonly_fields = ['author']
+
     def save_model(self, request, obj, form, change):
-        if request.user.groups.filter(name__in=['marketing']).exists():
-            pass
-        else:
+        if request.user.is_superuser:
+            obj.author = request.user
             super(Comment_admin, self).save_model(request, obj, form, change)
+        elif change and 'author' not in form.changed_data \
+            and 'post' not in form.changed_data \
+                and 'text' not in form.changed_data \
+                    and  obj.author == request.user:
+            super(Comment_admin, self).save_model(request, obj, form, change)
+        elif request.user.groups.filter(name__in=['marketing']).exists():
+            if not change:
+                obj.author = request.user
+                super(Comment_admin, self).save_model(request, obj, form, change)
+        else:
+            pass
     #define actions
     actions = ['delete_selected']
     #marketing users have no actions permitions

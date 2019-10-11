@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from datetime import datetime  
+from datetime import datetime
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
-
+from persiantools.jdatetime import JalaliDateTime
    
 class Token(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -32,18 +33,28 @@ class Lead(models.Model):
         ('D', 'Default'),
     )
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
-    led_time = models.DateTimeField(default=datetime.now, editable=False)
+    led_time = models.DateTimeField(default=datetime.now(), editable=False)
+    led_time_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    led_time_jalali_str = models.CharField(max_length=20, default=JalaliDateTime.now().strftime("%c"),\
+        editable=False, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
-    def Persian_led_time(self):
-        pass
+
     def __unicode__(self):
-        return "{} ==> {} ----- {}".format(self.id, self.phone_number, self.name_and_family)
+        return "{} ----- {}".format(self.phone_number, self.name_and_family)
+
 
 class Comment(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     text = models.TextField(blank=True, null=True)
-    created_date = models.DateTimeField(default=datetime.now, editable=False)
+    created_date = models.DateTimeField(default=datetime.now(), editable=False)
+    created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    created_date_jalali_str = models.CharField(max_length=20, default=JalaliDateTime.now().strftime("%c"),\
+        editable=False, null=False, blank=False)
     approved_comment = models.BooleanField(default=True)
     def __unicode__(self):
         return str(self.id) + " :" + str(self.author)
+
+
