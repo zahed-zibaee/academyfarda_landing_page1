@@ -35,9 +35,9 @@ class Lead(models.Model):
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
     led_time = models.DateTimeField(default=datetime.now(), editable=False)
     led_time_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False)
+        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=20, default=JalaliDateTime.now().strftime("%c"),\
-        editable=False)
+        editable=False, null=False, blank=False)
     description = models.TextField(blank=True, null=True)
 
     def __unicode__(self):
@@ -50,9 +50,9 @@ class Comment(models.Model):
     text = models.TextField(blank=True, null=True)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False)
+        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
     created_date_jalali_str = models.CharField(max_length=20, default=JalaliDateTime.now().strftime("%c"),\
-        editable=False)
+        editable=False, null=False, blank=False)
     approved_comment = models.BooleanField(default=True)
     def __unicode__(self):
         return str(self.id) + " :" + str(self.author)
