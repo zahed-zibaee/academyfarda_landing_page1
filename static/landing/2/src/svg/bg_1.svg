@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="66.795" height="86.479" viewBox="0 0 66.795 86.479">
+  <defs>
+    <filter id="Path_11" x="0" y="0" width="44.246" height="76.932" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="28" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.09"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Path_12" x="19.122" y="1.625" width="47.673" height="71.146" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="28" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-opacity="0.09"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Path_13" x="2.396" y="23.232" width="62.391" height="63.248" filterUnits="userSpaceOnUse">
+      <feOffset dx="10" dy="28" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-opacity="0.09"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_5740" data-name="Group 5740" transform="translate(43.807 49.479) rotate(-175)">
+    <g transform="matrix(-1, 0.09, -0.09, -1, 47.95, 45.47)" filter="url(#Path_11)">
+      <path id="Path_11-2" data-name="Path 11" d="M0,15.107,3.347,38.16,22,21.516,18.934,0Z" transform="translate(21.92 39.93) rotate(-175)" fill="#ff5895"/>
+    </g>
+    <g transform="matrix(-1, 0.09, -0.09, -1, 47.95, 45.47)" filter="url(#Path_12)">
+      <path id="Path_12-2" data-name="Path 12" d="M0,0,4.339,21.184,25.982,32,22.635,8.951Z" transform="translate(45.01 35.77) rotate(-175)" fill="#ff6fa4"/>
+    </g>
+    <g transform="matrix(-1, 0.09, -0.09, -1, 47.95, 45.47)" filter="url(#Path_13)">
+      <path id="Path_13-2" data-name="Path 13" d="M22.635,22.711,41.569,7.6,21.484,0,0,13.76Z" transform="translate(43.81 49.48) rotate(-175)" fill="#c32961"/>
+    </g>
+  </g>
+</svg>

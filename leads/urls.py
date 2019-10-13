@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^login/?$', views.login, name='login'),
     url(r'^logout/?$', views.logout, name='logout'),
     url(r'^dashboard/?$', views.dashboard, name='dashboard'),
-
+    url(r'^landing2/?$', views.landing2, name='landing2'),
+    url(r'^thanks/?$', views.thanks, name='thanks'),
 ]

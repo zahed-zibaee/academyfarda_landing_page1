@@ -1,0 +1,9 @@
+rem-calc(value)
+  u = unit(value)
+  if (u is 'rem')
+    return unit(value, u)
+  else
+    return unit(value / base-font-size, 'rem')
+
+// make an alias
+rem = rem-calc

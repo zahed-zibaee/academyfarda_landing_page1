@@ -1,0 +1,248 @@
+// CSS Reset
+// Forked from Normalize.css
+//
+// @author Am!n <ivahid.com>
+// @copyright 2017 ivahid.com
+//
+
+html
+  font-family sans-serif
+  -ms-text-size-adjust 100%
+  -webkit-text-size-adjust 100%
+  -ms-overflow-style scrollbar
+  -webkit-tap-highlight-color rgba(0, 0, 0, 0)
+
+body
+  margin 0
+  // font-family $font-family-base
+  // font-size $font-size-base
+  // font-weight $font-weight-base
+  // line-height $line-height-base
+  // color $body-color
+  // text-align left
+  // background-color $body-bg
+
+@-ms-viewport
+  width device-width
+
+*
+  margin 0
+  padding 0
+  outline 0
+  -webkit-overflow-scrolling touch
+
+*,
+*:before,
+*:after
+  box-sizing border-box
+
+// Reset html elements
+article, details, section, summary,
+aside, main, menu, nav, figcaption,
+figure, footer, header, hgroup
+  display block
+
+audio, canvas, progress, video
+  display inline-block
+  vertical-align  baseline
+
+audio:not([controls])
+  display none
+  height  0
+
+ul
+  list-style none
+
+blockquote,
+q
+  quotes none
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after
+  content ''
+  content none
+
+[hidden],
+template
+  display none
+
+abbr[title]
+  border-bottom 1px dotted
+
+dfn
+  font-style italic
+
+mark
+  background #ff0
+  color #000
+
+b, strong
+  font-weight bold
+
+small
+  font-size 80%
+
+sub, sup
+  font-size       75%
+  line-height     0
+  position        relative
+  vertical-align  baseline
+
+sup
+  top -0.5em
+
+sub
+  bottom -0.25em
+
+img, video
+  border 0
+  max-width 100%
+  height auto
+
+img
+  -ms-interpolation-mode bicubic
+  vertical-align middle
+
+svg:not(:root)
+  overflow hidden
+
+button, input, optgroup, select, textarea
+  color  inherit
+  font   inherit
+  margin 0
+
+button
+  overflow visible
+
+button, select
+  text-transform none
+
+button, html input[type='button'], input[type='reset'], input[type='submit']
+  cursor pointer
+  -webkit-appearance button
+
+button[disabled], html input[disabled]
+  cursor default
+
+button::-moz-focus-inner, input::-moz-focus-inner
+  border  0
+  padding 0
+
+input
+  line-height normal
+
+input[type='checkbox'], input[type='radio']
+  box-sizing border-box
+  padding    0
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button
+  height auto
+
+input[type='search']
+  -webkit-appearance  textfield
+
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-decoration
+  -webkit-appearance none
+
+fieldset
+  border  1px solid #c0c0c0
+  margin  0 2px
+  padding 0.35em 0.625em 0.75em
+
+legend
+  border  0
+  padding 0
+
+textarea
+  overflow auto
+
+optgroup
+  font-weight bold
+
+figure
+  margin 1em 40px
+
+hr
+  -moz-box-sizing content-box
+  box-sizing      content-box
+  height          0
+
+pre
+  overflow auto
+
+code, kbd, pre, samp
+  font-family monospace, monospace
+  font-size 1em
+
+a
+  background-color transparent
+  transition all 200ms ease-in-out
+
+  &:active, &:hover
+    outline 0
+
+h1 a,
+h2 a,
+h3 a,
+.title a,
+.entry-title a
+  color inherit
+
+table
+  border-collapse collapse
+  border-spacing  0
+td, th
+  padding 0
+
+summary
+  display list-item
+
+output
+  display inline-block
+
+::-webkit-file-upload-button
+  font inherit
+  -webkit-appearance button
+
+code
+  padding 2px 4px
+  font-size 90%
+  color #c7254e
+  background-color #f9f2f4
+  -webkit-border-radius 4px
+  -moz-border-radius 4px
+  border-radius 4px
+  margin 2px
+  padding 2px 4px
+  white-space nowrap
+  direction ltr
+  text-align left
+
+pre
+  display block
+  padding 9.5px
+  margin 0 0 10px
+  font-size 13px
+  line-height 1.42857143
+  color #777
+  word-break break-all
+  word-wrap:break-word
+  background-color #FbFbFb
+  border 1px solid #e4e4e4
+  border-radius:4px
+  tab-size: 4
+
+pre code
+  padding 0
+  font-size inherit
+  color inherit
+  white-space pre-wrap
+  background-color transparent
+  border-radius 0
+
+li a
+  color inherit

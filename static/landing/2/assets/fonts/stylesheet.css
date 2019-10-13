@@ -1,0 +1,96 @@
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans-Black.woff2') format('woff2'),
+        url('IRANSans-Black.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSansDN';
+    src: url('IRANSansDN-Bold.woff2') format('woff2'),
+        url('IRANSansDN-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yekan Bakh';
+    src: url('YekanBakh-Regular.woff2') format('woff2'),
+        url('YekanBakh-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans-Bold.woff2') format('woff2'),
+        url('IRANSans-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans-Light.woff2') format('woff2'),
+        url('IRANSans-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans-Medium.woff2') format('woff2'),
+        url('IRANSans-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans-UltraLight.woff2') format('woff2'),
+        url('IRANSans-UltraLight.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSansDN';
+    src: url('IRANSansDN.woff2') format('woff2'),
+        url('IRANSansDN.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSans';
+    src: url('IRANSans.woff2') format('woff2'),
+        url('IRANSans.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yekan Bakh Fat';
+    src: url('YekanBakh-Fat.woff2') format('woff2'),
+        url('YekanBakh-Fat.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Yekan Bakh';
+    src: url('YekanBakh-Bold.woff2') format('woff2'),
+        url('YekanBakh-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IRANSansDN';
+    src: url('IRANSansDN-Light.woff2') format('woff2'),
+        url('IRANSansDN-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+

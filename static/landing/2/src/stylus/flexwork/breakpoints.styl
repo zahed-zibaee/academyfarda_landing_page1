@@ -1,0 +1,40 @@
+// Breakpoints
+//
+// @author Am!n <ivahid.com>
+// @copyright 2017 ivahid.com
+//
+breakpoint-up(key)
+  bp_val = typeof( convert(key) ) is 'unit' ? unquote(key) : grid-breakpoints[key]
+
+  @media( min-width: bp_val )
+    {block}
+
+breakpoint-down( key )
+  bp_val = typeof( convert(key) ) is 'unit' ? unquote(key) : ( grid-breakpoints[key] - 1 )
+
+  @media( max-width: bp_val )
+    {block}
+
+breakpoint-between( key1, key2 )
+  bp_val1 = typeof( convert(key1) ) is 'unit' ? unquote(key1) : grid-breakpoints[key1]
+  bp_val2 = typeof( convert(key2) ) is 'unit' ? unquote(key2) : ( grid-breakpoints[key2] - 1 )
+
+  @media ( min-width: bp_val1 ) and ( max-width: bp_val2 )
+    {block}
+
+breakpoint-only( key )
+  first = shift( keys( grid-breakpoints ) )
+  last  = pop( keys( grid-breakpoints ) )
+  next  = keys( grid-breakpoints )[index( keys( grid-breakpoints ), key ) + 1]
+
+  if( key == first )
+    +breakpoint-down(next)
+      {block}
+
+  else if( key == last )
+    +breakpoint-up(key)
+      {block}
+
+  else if( next is not null )
+    +breakpoint-between( key, next )
+      {block}

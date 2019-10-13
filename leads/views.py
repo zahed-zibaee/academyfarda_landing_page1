@@ -98,3 +98,12 @@ def dashboard(request):
     comments = Comment.objects.all()
     data = {'comments': comments, 'leads':leads, }
     return render(request,'leads/dashboard/dashboard.html', data)
+
+
+def landing2(request):
+    data = {}
+    return render(request,'landing/2/index.html', data)
+
+def thanks(request):
+    data = {}
+    return render(request,'landing/thanks/thanks.html', data)

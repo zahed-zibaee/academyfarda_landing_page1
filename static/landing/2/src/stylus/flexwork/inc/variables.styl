@@ -1,0 +1,92 @@
+// Variables
+//
+// @author Am!n <ivahid.com>
+// @copyright 2017 ivahid.com
+//
+
+// Nib overrides
+support-for-ie = true
+vendor-prefixes = ms official // values 'webkit o moz ms official' accepted
+
+// Grid system variables
+// settings
+is-responsive = true
+generate-containers ?= is-responsive
+generate-column-classes ?= is-responsive
+generate-responsive-utils ?= is-responsive
+grid-ie-fallback = false // not supported yet, even if set to true
+
+// grid sizes
+grid-columns = 12
+grid-gutter-width   = 30px
+grid-breakpoints ?= {
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1600px
+}
+
+grid-containers ?= {
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1170px,
+  xxl: 1300px
+}
+
+side-paddings ?= {
+  xs: "calc( 100% - ( %s / 2 ) )" % grid-gutter-width
+  sm: "calc( ( 100% - ( %s - %s ) ) / 2 )"  % ( grid-containers[sm] grid-gutter-width ),
+  md: "calc( ( 100% - ( %s - %s ) ) / 2 )"  % ( grid-containers[md] grid-gutter-width ),
+  lg: "calc( ( 100% - ( %s - %s ) ) / 2 )"  % ( grid-containers[lg] grid-gutter-width ),
+  xl: "calc( ( 100% - ( %s - %s ) ) / 2 )"  % ( grid-containers[xl] grid-gutter-width ),
+  xxl: "calc( ( 100% - ( %s - %s ) ) / 2 )"  % ( grid-containers[xxl] grid-gutter-width ),
+
+}
+
+// You can change font size, family, weight from here
+base-font-family ?= fonts('System')
+base-font-size ?= 12px
+font-weights ?= {
+  verylight:  200
+  light:      300,
+  normal:     400,
+  medium:     500,
+  bold:       700
+}
+base-font-weight ?= font-weights.normal
+base-line-height ?= 1.7
+base-small-font-size ?= 80%
+heading-font-sizes ?= {
+  h1: 3.2rem,
+  h2: 2.75rem,
+  h3: 2.5rem,
+  h4: 2rem,
+  h5: 1.75rem,
+  h6: 1.5rem
+}
+
+
+// Alignments
+base-direction ?= ltr
+base-text-align ?= left
+
+// transitions
+base-transition-delay ?= 0ms
+base-transition-duration ?= 200ms
+base-transition-function ?= easing('ease-in-out')
+base-transition ?= all base-transition-duration base-transition-function base-transition-delay
+
+// colors
+background-colors ?= {
+  body: #fff
+}
+base-background-color ?= background-colors.body
+text-colors ?= {
+  primary:   #373737,
+  links:     #989898,
+  headings:  inherit
+}
+base-text-color ?= text-colors.primary
