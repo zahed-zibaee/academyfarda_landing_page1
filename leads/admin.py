@@ -105,7 +105,8 @@ class Comment_admin(admin.ModelAdmin):
         'author',
         'approved_comment',
     )
-
+    #make post field chose base
+    raw_id_fields = ("post",)
     #marketing users can't change data
     readonly_fields = ['author']
 
