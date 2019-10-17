@@ -9,17 +9,22 @@ from .models import Token, User, Lead, Comment
 from django.db.models import Count
 from datetime import datetime ,timedelta
 from django.contrib import messages ,auth
+from persiantools import characters, digits
 
 #TODO: add comment to all project
 @csrf_exempt
 def submit_Leads(request):
     #TODO: frontend make lead page input pup red when error
     post_keys = request.POST.keys() 
+    #check if there is a token and token is valid and phone is exist and not repetitive than is phone digits and name exits and not too short
     if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() is True \
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
                     and len(request.POST['name']) > 2 :
-        Lead.objects.create(name_and_family = request.POST['name'], phone_number = request.POST['phone'], \
+        #change arabic numbers to persian and than to english
+        phone_fa = digits.ar_to_fa(request.POST['phone'])
+        phone_en = digits.fa_to_en(phone_fa)
+        Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
             description = request.POST.get('description', default=''), \
                 token = Token.objects.filter(token = request.POST['token'])[0])
         return JsonResponse({
