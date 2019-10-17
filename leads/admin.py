@@ -10,10 +10,28 @@ from datetime import datetime
 import csv
 
 
+class Comments_inline(admin.StackedInline):
+    model = Comment  
+    extra = 0
+    readonly_fields = ['author']
+
 # Register your models here.
 admin.site.register(Token)
 @admin.register(Lead)
 class Lead_admin(admin.ModelAdmin):
+    #add comments to leads
+    inlines = [Comments_inline,]
+    def save_formset(self, request, form, formset, change):
+        if change:
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                    obj.delete()
+            for instance in instances:
+                instance.author = request.user
+                instance.save()
+            formset.save_m2m()
+        else:
+            pass
     #TODO: date range
     #limit show up content
     list_per_page = 50
@@ -38,8 +56,8 @@ class Lead_admin(admin.ModelAdmin):
     def get_actions(self, request):
         actions = super(Lead_admin, self).get_actions(request)
         if request.user.groups.filter(name__in=['marketing']).exists():
-            del actions['csv_export']
-            del actions['delete_selected']
+            pass
+            #del actions['csv_export']
         return actions
     #marketing users can't change name_and_family, phone_number and description
     def save_model(self, request, obj, form, change):
