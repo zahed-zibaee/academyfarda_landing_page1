@@ -2,30 +2,52 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Lead, Token, Comment
+from .models import Lead, Token, Comment, LabelDefinition, Label
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
 from datetime import datetime
 import csv
 
-
+class Labels_inline(admin.StackedInline):
+    model = Label  
+    extra = 0
 class Comments_inline(admin.StackedInline):
     model = Comment  
     extra = 0
     readonly_fields = ['author']
 
-# Register your models here.
+@admin.register(Label)
+class Label_admin(admin.ModelAdmin):
+    #make post field chose base
+    raw_id_fields = ("post",)
+    list_display = ('id','post','colored_name',)
+
+@admin.register(LabelDefinition)
+class LabelDefinition(admin.ModelAdmin):
+    #make post field chose base
+    radio_fields = {'color_code': admin.HORIZONTAL}
+    list_display = ('id','colored_name','color_code',)
+
 admin.site.register(Token)
 @admin.register(Lead)
 class Lead_admin(admin.ModelAdmin):
-    #add comments to leads
-    inlines = [Comments_inline,]
+    #TODO: add action to change operator, operator view, filter make for all admin objs, inline object in leads
+    inlines = [Labels_inline, Comments_inline,]
     def save_formset(self, request, form, formset, change):
-        if change:
+        #TODO: change marketing previlages
+        if request.user.is_superuser:
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
-                    obj.delete()
+                obj.delete()
+            for instance in instances:
+                instance.author = request.user
+                instance.save()
+            formset.save_m2m()
+        elif change:
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                pass
             for instance in instances:
                 instance.author = request.user
                 instance.save()
@@ -36,10 +58,10 @@ class Lead_admin(admin.ModelAdmin):
     #limit show up content
     list_per_page = 50
     #search field
-    search_fields = ('phone_number', 'name_and_family', 'description')
+    search_fields = ('phone_number', 'name_and_family', 'question')
     #calumn value on Lead
     list_display = ['id','name_and_family','phone_number','gender','led_time_jalali_str', \
-        'token','register_status','description']
+        'origin','register_status','question']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
     #make editable 
@@ -48,7 +70,7 @@ class Lead_admin(admin.ModelAdmin):
     list_filter = (
         ('led_time', DateFieldListFilter,),
         'register_status',
-        'token',
+        'origin',
     )
     #define actions
     actions = ['csv_export','delete_selected']
@@ -64,13 +86,14 @@ class Lead_admin(admin.ModelAdmin):
         if request.user.groups.filter(name__in=['marketing']).exists():
             if 'name_and_family' not in form.changed_data  \
                     and 'phone_number' not in form.changed_data  \
-                    and 'description' not in form.changed_data:
+                    and 'question' not in form.changed_data:
                 super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass
         else:
             super(Lead_admin, self).save_model(request, obj, form, change)
     #for export as csv
+    #TODO: need to be modified
     def csv_export(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename={}_{}.csv' \
@@ -79,24 +102,24 @@ class Lead_admin(admin.ModelAdmin):
         response.write(u'\ufeff'.encode('utf8'))
         writer.writerow([
             smart_str(u"ID"),
-            smart_str(u"Token"),
+            smart_str(u"Origin"),
             smart_str(u"Name"),
             smart_str(u"Phone"),
             smart_str(u"Gender"),
             smart_str(u"Led Time"),
             smart_str(u"Registered"),
-            smart_str(u"Description"),
+            smart_str(u"Question"),
             ])
         for obj in queryset:
             writer.writerow([
                 smart_str(obj.id),
-                smart_str(obj.token),
+                smart_str(obj.origin),
                 smart_str(obj.name_and_family),
                 smart_str(obj.phone_number),
                 smart_str(obj.gender),
                 smart_str(obj.led_time),
                 smart_str(obj.register_status),
-                smart_str(obj.description),
+                smart_str(obj.question),
             ])
         return response
 

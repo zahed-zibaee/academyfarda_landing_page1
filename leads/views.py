@@ -25,8 +25,8 @@ def submit_Leads(request):
         phone_fa = digits.ar_to_fa(request.POST['phone'])
         phone_en = digits.fa_to_en(phone_fa)
         Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
-            description = request.POST.get('description', default=''), \
-                token = Token.objects.filter(token = request.POST['token'])[0])
+            question = request.POST.get('question', default=''), \
+                origin = Token.objects.filter(token = request.POST['token'])[0])
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)

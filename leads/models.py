@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from persiantools.jdatetime import JalaliDateTime
-   
+from django.utils.html import format_html
 class Token(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=64)
@@ -15,8 +15,8 @@ class Token(models.Model):
         return str(self.user) + "_Token"
 
 class Lead(models.Model):
-    #TODO make a function witch give us a shamsi date
-    token = models.ForeignKey(Token, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
+    #TODO 
+    origin = models.ForeignKey(Token, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
     name_and_family = models.CharField(max_length=500, null=False, default='No Name', blank=False)
     GENDER_CHOICES = (
         ('M', 'Male'),
@@ -38,7 +38,8 @@ class Lead(models.Model):
         ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
-    description = models.TextField(blank=True, null=True)
+    question = models.TextField(blank=True, null=True)
+    operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='operator', unique=False, null=True, editable=False,)
 
     def __unicode__(self):
         return "{} ----- {}".format(self.phone_number, self.name_and_family)
@@ -58,3 +59,47 @@ class Comment(models.Model):
         return str(self.id) + " :" + str(self.author)
 
  
+class LabelDefinition(models.Model):
+    tag = models.CharField(max_length=500, null=True, blank=True)
+    COLOR_CHOICES = (
+    ('800000', 'Maroon'),
+    ('FF0000', 'Red'),
+    ('FFA500', 'Orange'),
+    ('FFFF00', 'Yellow'),
+    ('808000', 'Olive'),
+    ('00800', 'Green'),
+    ('800080', 'Purple'),
+    ('FF00FF', 'Fuchsia'),
+    ('00FF00', 'Lime'),
+    ('008080', 'Teal'),
+    ('00FFFF', 'Aqua'),
+    ('0000FF', 'Blue'),
+    ('000080', 'Navy'),
+    ('000000', 'Black'),
+    ('808080', 'Gray'),
+    )
+    color_code = models.CharField(max_length=10, choices=COLOR_CHOICES, default="000000", unique=True)
+    def colored_name(self):
+        return format_html(
+            '<span style="color: white; background-color: #{};">{}</span>',
+            self.color_code,
+            self.tag,
+        )
+    def __unicode__(self):
+        return str(self.tag) 
+
+class Label(models.Model):
+    post = models.ForeignKey(Lead, on_delete=models.CASCADE)
+    label = models.ForeignKey(LabelDefinition, on_delete=models.CASCADE)
+    def colored_name(self):
+        return format_html(
+            '<span style="color: white; background-color: #{};">{}</span>',
+            self.label.color_code,
+            self.label.tag,
+        ) 
+    def __unicode__(self):
+        return format_html(
+            '<span style="color: white; background-color: #{};">{}</span>',
+            self.label.color_code,
+            self.label.tag,
+        )

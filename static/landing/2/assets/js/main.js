@@ -34,11 +34,11 @@ function dwtoast( txt ) {
 
     data.push({
       name: 'token',
-      value: 'OcfLGIGkoex3SDI1o2AeHTBdpwWA1usEuxf04JbiNy9uZHlbzLd6sFaI1U6Qemiy'
+      value: '123'
     });
 
     $.ajax({
-      url: 'https://academyfarda.com/submit/leads',
+      url: 'http://127.0.0.1:8000/submit/leads',
       method: 'POST',
       data: data,
       crossDomain: true,
