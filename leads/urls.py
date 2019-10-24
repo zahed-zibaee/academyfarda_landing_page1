@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^dashboard/?$', views.dashboard, name='dashboard'),
     url(r'^landing2/?$', views.landing2, name='landing2'),
     url(r'^thanks/?$', views.thanks, name='thanks'),
+    url(r'^export/?$', views.export, name='export'),
 ]

@@ -1,0 +1,14 @@
+th {
+    border: 3px solid black;
+    text-align: center;
+    background-color: slategrey;
+    color: white;
+}
+td {
+    border: 1px solid black;
+    text-align: center;
+
+}
+.no-bor {
+    border: none;
+}

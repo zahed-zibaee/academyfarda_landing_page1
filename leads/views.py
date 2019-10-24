@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Token, User, Lead, Comment
+from .models import Token, User, Lead, Comment, Label
 from django.db.models import Count
 from datetime import datetime ,timedelta
 from django.contrib import messages ,auth
@@ -112,3 +112,12 @@ def landing2(request):
 def thanks(request):
     data = {}
     return render(request,'landing/thanks/thanks.html', data)
+
+def export(request):
+    leads = Lead.objects.all()
+    comments = Comment.objects.all()
+    labels = Label.objects.all()
+
+
+    data = {'comments': comments, 'leads':leads, 'labels': labels}
+    return render(request,'leads/export/export.html', data)
