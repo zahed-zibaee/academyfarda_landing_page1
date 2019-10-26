@@ -9,10 +9,11 @@ from django.core.validators import RegexValidator
 from persiantools.jdatetime import JalaliDateTime
 from django.utils.html import format_html
 class Token(models.Model):
+    description = models.CharField(max_length=100, null=False, default='No Name', blank=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=64)
     def __unicode__(self):
-        return str(self.user) + "_Token"
+        return "{}".format(self.description)
 
 class Lead(models.Model):
     #TODO 
@@ -86,7 +87,7 @@ class LabelDefinition(models.Model):
             self.tag,
         )
     def __unicode__(self):
-        return str(self.tag) 
+        return "{}".format(self.tag)
 
 class Label(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE)
