@@ -82,3 +82,15 @@ body {
     font-weight: bold;
     font-size: 13px;
 }
+.table-success-hover:hover {
+    background-color: rgb(71, 126, 71) !important;
+    color: white;
+}
+.table-danger-hover:hover {
+    background-color: rgb(134, 60, 60) !important;
+    color: white;
+}
+.thead-light-hover:hover {
+    background-color: lightslategray !important;
+    color: white;
+}

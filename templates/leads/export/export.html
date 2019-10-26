@@ -2,16 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
+    <script src="{% static 'base/jquery/jquery.js' %}"></script>
+    <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static '/leads/export/css/style.css' %}">
     <link rel="stylesheet" type="text/css" media="print" href="{% static '/leads/export/css/print.css' %}">
-
-    <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
-    <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
-    <script src="{% static 'base/jquery/jquery.js' %}"></script>
-    <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'leads/export/js/main.js' %}"></script>
 
     <title></title>
 </head>
@@ -23,16 +24,22 @@
                 <th scope="col"><h5>#</h5></th>
                 <th scope="col"><h5>نام و نام خانوادگی</h5></th>
                 <th scope="col"><h5>تلفن</h5></th>
-                <th scope="col"><h5>صادره</h5></th>
+                <th scope="col"><h5>منشاء</h5></th>
                 <th scope="col"><h5>جنسیت</h5></th>
-                <th scope="col"><h5>تاریخ دریافت</h5></th>
+                <th scope="col"><h5>تاریخ</h5></th>
                 <th scope="col"><h5>وضعیت</h5></th>
                 <th scope="col"><h5>اپراتور</h5></th>
             </tr>
         </thead>
-        {% if leads != FALSE %}
+        {% if leads %}
         {% for lead in leads reversed %}
-        <thead class="thead-light">
+        {% if lead.register_status == 'K' %}
+        <thead class="table-success table-success-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        {% elif lead.register_status == 'C'%} {# register #} 
+        <thead class="table-danger table-danger-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        {% else %} {# register #} 
+        <thead class="table-secondary thead-light-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        {% endif %} {# register #} 
             <tr class="bld">
                 <th scope="row">{{ forloop.counter }}</th>
                 <th>{{ lead.name_and_family }}</th>
@@ -53,7 +60,7 @@
                 {% elif lead.register_status == 'C'%} {# register #} 
                 <th>کنسل شده</th> 
                 {% else %}{# register #} 
-                <th>نا مشخص</th> 
+                <th>نامشخص</th> 
                 {% endif %} {# register #} 
                 {% if lead.operator %}
                 <th>{{ lead.operator.first_name }} {{ lead.operator.last_name }}</th>
@@ -62,13 +69,13 @@
                 {% endif %} {# lead.operator #}
             </tr>
         </thead>
-        <tbody>
+        <tbody class="collapse" id="collapseExample{{ lead.id }}">
             <tr>
                 <td colspan="3">درخواست</td>
                 <td colspan="5" class="text-right">{{ lead.question }}</td>
             </tr>
         </tbody>
-        <tbody>
+        <tbody class="collapse" id="collapseExample{{ lead.id }}">
                 <tr>
                     <td colspan="3">برچسب</td>
                     <td colspan="5" class="text-left">
@@ -79,10 +86,10 @@
         {% endfor %} {# label #}
                 </td>
                     </tr>
-        </tbody>
+        </tbody class="collapse" id="collapseExample{{ lead.id }}">
         {% for comment in lead.comments.all %}
         {% if comment.approved_comment == True %}
-        <tbody>
+        <tbody class="collapse" id="collapseExample{{ lead.id }}">
             <tr>
                 <td colspan="4"> در تاریخ {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
@@ -90,9 +97,16 @@
 
                 <td colspan="5" class="text-right"> {{ comment.text }} </td> 
             </tr>
-        </tbody> 
+        </tbody > 
         {% endif %}{# approved #} 
         {% endfor %} {# comment #}
+        <tbody class="collapse" id="collapseExample{{ lead.id }}">
+                <tr>
+                    <td colspan="4"> نظر جدید </td>
+                    <td colspan="3"><input type="text" class="form-control form-control-sm" placeholder="نظر شما"></td> 
+                    <td colspan="1"><button type="submit" class="btn btn-primary btn-sm">&emsp;&emsp;ثبت&emsp;&emsp;</button></td>
+                </tr>
+            </tbody > 
         {% endfor %} {# leads #}
         {% else %} {# lead false #} 
         <tbody>
