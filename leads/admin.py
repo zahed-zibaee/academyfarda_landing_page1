@@ -49,7 +49,7 @@ class Lead_admin(admin.ModelAdmin):
             for obj in formset.deleted_objects:
                 pass
             for instance in instances:
-                instance.author = request.user
+                instance.author = request.user     
                 instance.save()
             formset.save_m2m()
         else:
@@ -88,9 +88,13 @@ class Lead_admin(admin.ModelAdmin):
                     and 'phone_number' not in form.changed_data  \
                     and 'question' not in form.changed_data:
                 super(Lead_admin, self).save_model(request, obj, form, change)
+            elif not change:
+                obj.operator = request.user
+                super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass
         else:
+            obj.operator = request.user
             super(Lead_admin, self).save_model(request, obj, form, change)
     #for export as csv
     #TODO: need to be modified

@@ -6,115 +6,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static '/leads/export/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" media="print" href="{% static '/leads/export/css/print.css' %}">
 
     <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
     <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
     <script src="{% static 'base/jquery/jquery.js' %}"></script>
     <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
 
-    <title>export</title>
+    <title></title>
 </head>
 <body>
-<div class="col-11 text-center mx-auto mt-3">
-    <table class="" style="direction: rtl;">
-    <thead class="">
-        <tr>
-            <th scope="row">#</th>
-            <th scope="row">NAME</th>
-            <th scope="row">PHONE</th>
-            <th scope="row">ORIGIN</th>
-            <th scope="row">GENDER</th>
-            <th scope="row">LED TIME</th>
-            <th scope="row">REGISTER STATUS</th>
-            <th scope="row">OPERATOR</th>
-        </tr>
-    </thead>
-    {% if leads != FALSE %}
-    {% for lead in leads reversed %}
-    <tbody >
-        <tr class="">
-            <td scope="row">{{ forloop.counter }}</td>
-            <td scope="row">{{ lead.name_and_family }}</td>
-            <td scope="row">{{ lead.phone_number }}</td>
-            <td scope="row">{{ lead.origin }}</td>
-            {% if lead.gender == 'M' %}
-            <td scope="row">Male</td>
-            {% else %} {# gender #} 
-            <td scope="row">Female</td> 
-            {% endif %} {# gender #} 
-            <td scope="row">{{ lead.led_time_jalali_str }}</td>
-            {% if lead.register_status == 'K' %}
-            <td scope="row">Registered</td>
-            {% elif lead.register_status == 'C'%} {# register #} 
-            <td scope="row">Canceled</td> 
-            {% else %}{# register #} 
-            <td scope="row">Unknown</td> 
-            {% endif %} {# register #} 
-            <td scope="row">{{ lead.operator }}</td>
-        </tr>
-    </tbody>
-    {% if lead.question|length > 1 %}
-    <thead class="">
-        <tr>
-            <th colspan="8">QUESTIONS</td>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan="8">{{ lead.question }}</td>
-        </tr>
-    </tbody>
-    {% endif %} {# question length #}
-    {% for label in lead.labels.all %}
-    {% if forloop.counter == 1 %}
-    <thead class="">
-        <tr>
-            <th colspan="8">LABEL</td>
-        </tr>
-    </thead>
-    {% endif %} {# lable header #}
-    <tbody>
-        <tr>
-            <td scope="row"> {{ label.colored_name }} </td>
-        </tr>
-    </tbody> 
-    {% endfor %} {# label #}
-    {% for comment in lead.comments.all %}
-    {% if forloop.counter == 1 %}
-    <thead class="">
-        <tr>
-            <th colspan="8">COMMENTS</td>
-        </tr>
-    </thead>
-    {% endif %} {# lable comments #}
-    {% if comment.approved_comment == True %}
-    <tbody>
-        <tr>
-            <td colspan="2"> {{ comment.created_date_jalali_str }}    {{ comment.author }}  </td>
+    <div class="container-fluid text-center mx-auto mt-3 table-responsive" id="div">
+        <table class="table table-sm table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"><h5>#</h5></th>
+                <th scope="col"><h5>نام و نام خانوادگی</h5></th>
+                <th scope="col"><h5>تلفن</h5></th>
+                <th scope="col"><h5>صادره</h5></th>
+                <th scope="col"><h5>جنسیت</h5></th>
+                <th scope="col"><h5>تاریخ دریافت</h5></th>
+                <th scope="col"><h5>وضعیت</h5></th>
+                <th scope="col"><h5>اپراتور</h5></th>
+            </tr>
+        </thead>
+        {% if leads != FALSE %}
+        {% for lead in leads reversed %}
+        <thead class="thead-light">
+            <tr class="bld">
+                <th scope="row">{{ forloop.counter }}</th>
+                <th>{{ lead.name_and_family }}</th>
+                <th>{{ lead.phone_number }}</th>
+                {% if lead.origin %}
+                <th>{{ lead.origin }}</th>
+                {% else %} {# origin #}
+                <th>نامشخص</th>
+                {% endif %} {# origin #}
+                {% if lead.gender == 'M' %}
+                <th>مرد</th>
+                {% else %} {# gender #} 
+                <th>زن</th> 
+                {% endif %} {# gender #} 
+                <th>{{ lead.led_time_jalali|date:'H:i Y-m-d' }}</th>
+                {% if lead.register_status == 'K' %}
+                <th>ثبت نام شده</th>
+                {% elif lead.register_status == 'C'%} {# register #} 
+                <th>کنسل شده</th> 
+                {% else %}{# register #} 
+                <th>نا مشخص</th> 
+                {% endif %} {# register #} 
+                {% if lead.operator %}
+                <th>{{ lead.operator.first_name }} {{ lead.operator.last_name }}</th>
+                {% else %} {# lead.operator #}
+                <th>نامشخص</th>
+                {% endif %} {# lead.operator #}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="3">درخواست</td>
+                <td colspan="5" class="text-right">{{ lead.question }}</td>
+            </tr>
+        </tbody>
+        <tbody>
+                <tr>
+                    <td colspan="3">برچسب</td>
+                    <td colspan="5" class="text-left">
+        {% for label in labels %}
+        {% if label.post.id == lead.id %}
+                    {{ label.export_show }}
+        {% endif %} {# label #}
+        {% endfor %} {# label #}
+                </td>
+                    </tr>
+        </tbody>
+        {% for comment in lead.comments.all %}
+        {% if comment.approved_comment == True %}
+        <tbody>
+            <tr>
+                <td colspan="4"> در تاریخ {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
+                {{ comment.created_date_jalali|date:' H:i' }}
+                توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
 
-            <td colspan="6" class="text-right"> {{ comment.text }} </td> 
-        </tr>
-    </tbody> 
-    
-    {% endif %}{# approved #} 
-    {% endfor %} {# comment #}
-    <tbody >
-        <tr class="no-bor">
-            <td colspan="8"><br></td>
-        </tr>
-    </tbody> 
-    {% endfor %} {# leads #}
-    {% else %} {# lead false #} 
-    <tbody>
-        <tr>
-            <td colspan="8"> There is no data </td>
-        </tr>
-    </tbody>
-    {% endif %} {# lead false #} 
-    </table>
-</div>
-
-
+                <td colspan="5" class="text-right"> {{ comment.text }} </td> 
+            </tr>
+        </tbody> 
+        {% endif %}{# approved #} 
+        {% endfor %} {# comment #}
+        {% endfor %} {# leads #}
+        {% else %} {# lead false #} 
+        <tbody>
+            <tr>
+                <td colspan="8"> There is no data </td>
+            </tr>
+        </tbody>
+        {% endif %} {# lead false #} 
+        </table>
+    </div>
+</body>
+</html>
 
 
 

@@ -96,7 +96,13 @@ class Label(models.Model):
             '<span style="color: white; background-color: #{};">{}</span>',
             self.label.color_code,
             self.label.tag,
-        ) 
+        )
+    def export_show(self):
+        return format_html(
+            '<button type="button" class="btn btn-light btn-sm" style="color: white; background-color: #{};">{}</button>',
+            self.label.color_code,
+            self.label.tag, 
+        )
     def __unicode__(self):
         return format_html(
             '<span style="color: white; background-color: #{};">{}</span>',
