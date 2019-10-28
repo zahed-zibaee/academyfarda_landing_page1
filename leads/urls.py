@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^landing2/?$', views.landing2, name='landing2'),
     url(r'^thanks/?$', views.thanks, name='thanks'),
     url(r'^export/?$', views.export, name='export'),
+    url(r'^export_comment_save/?$', views.export_comment_save, name='export_comment_save'),
+    url(r'^export_comment_approved/?$', views.export_comment_approved, name='export_comment_approved'),
 ]

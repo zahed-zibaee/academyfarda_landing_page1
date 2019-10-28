@@ -6,8 +6,10 @@ from .models import Lead, Token, Comment, LabelDefinition, Label
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
+from django.contrib.auth.models import User
 from datetime import datetime
 import csv
+
 
 class Labels_inline(admin.StackedInline):
     model = Label  
@@ -47,13 +49,23 @@ class Lead_admin(admin.ModelAdmin):
         elif change:
             instances = formset.save(commit=False)
             for obj in formset.deleted_objects:
-                pass
+                try:
+                    obj.label.id = 1
+                    obj.delete()
+                except:
+                    pass
             for instance in instances:
                 instance.author = request.user     
                 instance.save()
             formset.save_m2m()
         else:
-            pass
+            instances = formset.save(commit=False)
+            for obj in formset.deleted_objects:
+                pass
+            for instance in instances:
+                instance.author = request.user
+                instance.save()
+            formset.save_m2m()
     #TODO: date range
     #limit show up content
     list_per_page = 50
@@ -61,7 +73,7 @@ class Lead_admin(admin.ModelAdmin):
     search_fields = ('phone_number', 'name_and_family', 'question')
     #calumn value on Lead
     list_display = ['id','name_and_family','phone_number','gender','led_time_jalali_str', \
-        'origin','register_status','question']
+        'origin','operator','register_status','question']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
     #make editable 
@@ -78,18 +90,23 @@ class Lead_admin(admin.ModelAdmin):
     def get_actions(self, request):
         actions = super(Lead_admin, self).get_actions(request)
         if request.user.groups.filter(name__in=['marketing']).exists():
-            pass
-            #del actions['csv_export']
+            del actions['csv_export']
+            del actions['operator_change_to_s_yari']
+            del actions['operator_change_to_z_zibaee']
         return actions
     #marketing users can't change name_and_family, phone_number and description
     def save_model(self, request, obj, form, change):
         if request.user.groups.filter(name__in=['marketing']).exists():
-            if 'name_and_family' not in form.changed_data  \
-                    and 'phone_number' not in form.changed_data  \
+            if change and obj.operator == request.user \
+                and obj.origin == Token.objects.filter(description = 'Divar').first():
+                super(Lead_admin, self).save_model(request, obj, form, change)
+            elif change and 'name_and_family' not in form.changed_data  \
+                and 'phone_number' not in form.changed_data  \
                     and 'question' not in form.changed_data:
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif not change:
                 obj.operator = request.user
+                obj.origin = Token.objects.filter(description = 'Divar').first()
                 super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass
@@ -130,7 +147,23 @@ class Lead_admin(admin.ModelAdmin):
     csv_export.short_description = u"Export Selected"
     actions = ["csv_export"]
     ####################################
-    
+    #action for change oprators
+    def operator_change_to_z_zibaee(self, request, queryset):
+        try:
+            queryset.update( operator = User.objects.get(username='z.zibaee') )
+        except:
+            pass
+    operator_change_to_z_zibaee.short_description = u"Change Operator to z.zibaee"
+    actions.append(operator_change_to_z_zibaee)
+    def operator_change_to_s_yari(self, request, queryset):
+        try:
+            queryset.update( operator = User.objects.get(username='s.yari') )
+        except:
+            pass
+    operator_change_to_s_yari.short_description = u"Change Operator to s.yari"
+    actions.append(operator_change_to_s_yari)
+    ####################################
+
 
 @admin.register(Comment)
 class Comment_admin(admin.ModelAdmin):

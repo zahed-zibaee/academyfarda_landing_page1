@@ -6,6 +6,7 @@
     <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
     <script src="{% static 'base/jquery/jquery.js' %}"></script>
     <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'base/fontawesome-free-5.11.2/css/all.css' %}">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,12 @@
     <title></title>
 </head>
 <body>
+    <div class="container-fluid text-center mx-auto mt-3">
+    <p>Some Text Blurb here</p>
+    <p class="pull-right"><a href="#" class="expandAll">Expand all</a> |  <a href="#" class="collapseAll">Collapse all</a></p>
+    </div>
     <div class="container-fluid text-center mx-auto mt-3 table-responsive" id="div">
+        {% include 'base/partials/_alerts.html' %}
         <table class="table table-sm table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
@@ -29,56 +35,129 @@
                 <th scope="col"><h5>تاریخ</h5></th>
                 <th scope="col"><h5>وضعیت</h5></th>
                 <th scope="col"><h5>اپراتور</h5></th>
+                <th scope="col" class="d-print-none"><h5>تنظیمات</h5></th>
             </tr>
         </thead>
         {% if leads %}
+        <thead>
+            <tr class="bld d-print-none">
+                <form action="{% url 'export' %}" method="POST">
+                <div class="form-group">
+                {% csrf_token %}
+                    <th>
+                        جدید
+                    </th>
+                    <th>
+                        <input class="form-control form-control-sm" type="text" name="name_and_family">
+                    </th>
+                    <th>
+                        <input class="form-control form-control-sm" type="text" name="phone">
+                    </th>
+                    <th>
+                        دیوار
+                    </th>
+                    <th>
+                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
+                            <option>مرد</option>
+                            <option>زن</option>
+                        </select>
+                    </th>
+                    <th>
+                        {{ time }}
+                    </th>
+                    <th>
+                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
+                            <option>نامشخص</option>
+                            <option>ثبت نام شده</option>
+                            <option>کنسل شده</option>
+                        </select>
+                    </th>
+                    <th>
+                        {{ request.user.first_name }} {{ request.user.last_name }}
+                    </th>
+                    <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
+                </div>
+                </form>
+            </tr>
+        </thead>
         {% for lead in leads reversed %}
         {% if lead.register_status == 'K' %}
-        <thead class="table-success table-success-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        <thead class="table-success table-success-hover">
         {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger table-danger-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        <thead class="table-danger table-danger-hover">
         {% else %} {# register #} 
-        <thead class="table-secondary thead-light-hover" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+        <thead class="table-secondary thead-light-hover" >
         {% endif %} {# register #} 
             <tr class="bld">
-                <th scope="row">{{ forloop.counter }}</th>
-                <th>{{ lead.name_and_family }}</th>
-                <th>{{ lead.phone_number }}</th>
+                <th scope="row" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ forloop.counter }}
+                </th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ lead.name_and_family }}
+                </th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ lead.phone_number }}
+                </th>
                 {% if lead.origin %}
-                <th>{{ lead.origin }}</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ lead.origin }}
+                </th>
                 {% else %} {# origin #}
-                <th>نامشخص</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    نامشخص
+                </th>
                 {% endif %} {# origin #}
                 {% if lead.gender == 'M' %}
-                <th>مرد</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    مرد
+                </th>
                 {% else %} {# gender #} 
-                <th>زن</th> 
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    زن
+                </th> 
                 {% endif %} {# gender #} 
-                <th>{{ lead.led_time_jalali|date:'H:i Y-m-d' }}</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ lead.led_time_jalali|date:'H:i Y-m-d' }}
+                </th>
                 {% if lead.register_status == 'K' %}
-                <th>ثبت نام شده</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    ثبت نام شده
+                </th>
                 {% elif lead.register_status == 'C'%} {# register #} 
-                <th>کنسل شده</th> 
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    کنسل شده
+                </th> 
                 {% else %}{# register #} 
-                <th>نامشخص</th> 
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    نامشخص
+                </th> 
                 {% endif %} {# register #} 
                 {% if lead.operator %}
-                <th>{{ lead.operator.first_name }} {{ lead.operator.last_name }}</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    {{ lead.operator.first_name }} {{ lead.operator.last_name }}
+                </th>
                 {% else %} {# lead.operator #}
-                <th>نامشخص</th>
+                <th data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                    نامشخص
+                </th>
                 {% endif %} {# lead.operator #}
+                <th class="d-print-none"><button type="button" class="btn btn-primary btn-sm">
+                    <i class="fas fa-edit"></i></button>
+                </th>
             </tr>
         </thead>
         <tbody class="collapse" id="collapseExample{{ lead.id }}">
             <tr>
                 <td colspan="3">درخواست</td>
                 <td colspan="5" class="text-right">{{ lead.question }}</td>
+                <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
             </tr>
         </tbody>
         <tbody class="collapse" id="collapseExample{{ lead.id }}">
                 <tr>
                     <td colspan="3">برچسب</td>
                     <td colspan="5" class="text-left">
+                    <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
         {% for label in labels %}
         {% if label.post.id == lead.id %}
                     {{ label.export_show }}
@@ -88,23 +167,55 @@
                     </tr>
         </tbody class="collapse" id="collapseExample{{ lead.id }}">
         {% for comment in lead.comments.all %}
-        {% if comment.approved_comment == True %}
-        <tbody class="collapse" id="collapseExample{{ lead.id }}">
+
+        <tbody class="collapse{% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #}" id="collapseExample{{ lead.id }}">
             <tr>
                 <td colspan="4"> در تاریخ {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
                 توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
 
-                <td colspan="5" class="text-right"> {{ comment.text }} </td> 
+                <td colspan="4" class="text-right"> {{ comment.text }} </td> 
+                {% if comment.approved_comment == True %}
+                <th class="d-print-none">
+                    <div class="comment_approval_toggle"> 
+                    <form action="{% url 'export_comment_approved' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment" value="{{ comment.id }}">
+                    <input type="hidden" name="approved_comment" value="False">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fa fa-comment"></i>
+                    </button>
+                    </form>
+                    </div>
+                </th>
+                {% else %} {# approved #}
+                <th class="d-print-none">
+                    <div class="comment_approval_toggle">
+                    <form action="{% url 'export_comment_approved' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment" value="{{ comment.id }}">
+                    <input type="hidden" name="approved_comment" value="True">
+                    <button type="submit" class="btn btn-dark btn-sm">
+                            <i class="fa fa-comment-slash"></i>
+                    </button>
+                    </form>
+                    </div>
+                </th>
+                {% endif %} {# approved #}
             </tr>
         </tbody > 
-        {% endif %}{# approved #} 
         {% endfor %} {# comment #}
-        <tbody class="collapse" id="collapseExample{{ lead.id }}">
+        <tbody class="collapse d-print-none" id="collapseExample{{ lead.id }}">
                 <tr>
                     <td colspan="4"> نظر جدید </td>
-                    <td colspan="3"><input type="text" class="form-control form-control-sm" placeholder="نظر شما"></td> 
-                    <td colspan="1"><button type="submit" class="btn btn-primary btn-sm">&emsp;&emsp;ثبت&emsp;&emsp;</button></td>
+                    <form action="{% url 'export_comment_save' %}" method="POST">
+                    {% csrf_token %}
+                        <td colspan="4">
+                            <input type="hidden" name="post" value="{{ lead.id }}">
+                            <input name="text" type="text" class="form-control form-control-sm" placeholder="نظر شما" id="myInput{{ lead.id }}">
+                        </td> 
+                        <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
+                    </form>
                 </tr>
             </tbody > 
         {% endfor %} {# leads #}

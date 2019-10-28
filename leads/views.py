@@ -10,6 +10,7 @@ from django.db.models import Count
 from datetime import datetime ,timedelta
 from django.contrib import messages ,auth
 from persiantools import characters, digits
+from persiantools.jdatetime import JalaliDateTime
 
 #TODO: add comment to all project
 @csrf_exempt
@@ -17,7 +18,7 @@ def submit_Leads(request):
     #TODO: frontend make lead page input pup red when error
     post_keys = request.POST.keys() 
     #check if there is a token and token is valid and phone is exist and not repetitive than is phone digits and name exits and not too short
-    if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() is True \
+    if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() and User.objects.filter(token__token_activation = True) \
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
                     and len(request.POST['name']) > 2 :
@@ -26,11 +27,11 @@ def submit_Leads(request):
         phone_en = digits.fa_to_en(phone_fa)
         Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
             question = request.POST.get('question', default=''), \
-                origin = Token.objects.filter(token = request.POST['token'])[0])
+                origin = Token.objects.filter(token = request.POST['token']).first())
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
-    elif 'token' not in post_keys or User.objects.filter(token__token = request.POST['token']).exists() is False:
+    elif 'token' not in post_keys or User.objects.filter(token__token = request.POST['token']).exists() is False or User.objects.filter(token__token_activation = False):
         return JsonResponse({
         'status': 'registeration_error',
         }, encoder=JSONEncoder)
@@ -63,10 +64,10 @@ def analysis(request):
     leads_registered = Lead.objects.filter(register_status = 'K').aggregate(Count('id'))
     leads_registered_value = leads_registered.values()
     leads_all_value = leads_all.values()
-    leads_not_reg = leads_all_value[0] - leads_registered_value[0]
+    leads_not_reg = leads_all_value.first() - leads_registered_value.first()
  
-    data = {'leads_all': leads_all_value[0], \
-        'leads_reg': leads_registered_value[0], 'leads_not_reg': leads_not_reg
+    data = {'leads_all': leads_all_value.first(), \
+        'leads_reg': leads_registered_value.first(), 'leads_not_reg': leads_not_reg
     }
     return render(request,'leads/analysis/analysis.html', data)
 
@@ -117,7 +118,41 @@ def export(request):
     leads = Lead.objects.all()
     comments = Comment.objects.all()
     labels = Label.objects.all()
+    time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
 
-    data = {'comments': comments, 'leads':leads, 'labels': labels}
+    data = {'comments': comments, 'leads':leads, 'labels': labels, 'time': time}
     return render(request,'leads/export/export.html', data)
+
+def export_comment_save(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff and len(request.POST['text']) > 0:
+        post = Lead.objects.get(id=int(request.POST['post']))
+        author = request.user
+        text = request.POST['text']
+    else:
+        messages.warning(request, "You'r comment can not be saved")
+        return redirect('export')
+    comment = Comment(post = post, author = author, text = text)
+    comment.save()
+    messages.success(request, "You'r comment has been save")
+    return redirect('export')
+
+
+def export_comment_approved(request):
+    if request.user.is_superuser or request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff \
+                and Comment.objects.filter(id=request.POST['comment']).first().author == request.user:
+        approved_comment = request.POST['approved_comment']
+        if approved_comment == "True":
+            Comment.objects.filter(id=request.POST['comment']).update(approved_comment=True)
+        else:
+            Comment.objects.filter(id=request.POST['comment']).update(approved_comment=False)
+        if approved_comment == True:
+            messages.success(request, "You'r comment has been approved")
+        else:
+            messages.success(request, "You'r comment has been revoked") 
+        return redirect('export')
+    else:
+        messages.success(request, "You'r comment has been save")
+        return redirect('export')

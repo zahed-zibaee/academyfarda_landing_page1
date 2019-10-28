@@ -12,7 +12,8 @@ from django.utils.html import format_html
 class Token(models.Model):
     description = models.CharField(max_length=100, null=False, default='No Name', blank=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=64)
+    token = models.CharField(max_length=64, null=True, blank=True)
+    token_activation = models.BooleanField(default=False)
     def __unicode__(self):
         return "{}".format(self.description)
 
