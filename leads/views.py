@@ -31,7 +31,8 @@ def submit_Leads(request):
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
-    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token']).exists() is False or Origin.objects.filter(token_activation = False):
+    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token']).exists() is False\
+         or Origin.objects.filter(token_activation = False):
         return JsonResponse({
         'status': 'registeration_error',
         }, encoder=JSONEncoder)
@@ -145,24 +146,46 @@ def export_lead_add(request):
         origin = Origin.objects.filter(description = 'دیوار').first()
         name_and_family = request.POST['name_and_family']
         gender = request.POST['gender']
-        phone_number = request.POST['phone_number']
+        phone_fa = digits.ar_to_fa(request.POST['phone_number'])
+        phone_en = digits.fa_to_en(phone_fa)
         register_status = request.POST['register_status']
         operator = request.user
-        lead = Lead(origin = origin, name_and_family = name_and_family, gender = gender, phone_number = phone_number\
-            , register_status = register_status, operator = operator)
-        lead.save()
-        messages.success(request, "You'r new lead has been save")
-        return redirect('export')
+
+        if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and phone_en.isdigit():
+            lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
+                 phone_number = phone_en, register_status = register_status, operator = operator)
+            lead.save()
+            messages.success(request, "You'r new lead has been save")
+            return redirect('export')
+        else:
+            messages.warning(request, "Check name and family fileld or phone number")
+            return redirect('export')
     else:
         messages.warning(request, "You'r lead can not be saved")
         return redirect('export')
         
-
-
+def export_lead_del(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff:
+        lead = Lead.objects.filter(id=request.POST["lead_id"]).first()
+        if request.user.is_superuser:
+            lead.delete()
+            messages.success(request, "That lead is now gone!!!") 
+            return redirect('export')
+        elif request.user == lead.operator and lead.origin.description == "دیوار":
+            lead.delete()
+            messages.success(request, "That lead is now gone!!!") 
+            return redirect('export')
+        else:
+            messages.warning(request, "You're not operator or lead origin is undeleteable") 
+            return redirect('export')
+    else:
+        messages.warning(request, "You're can not remove this lead") 
+        return redirect('export')
 
 
 def x(request):
-    if request.user.is_superuser or request.method == "POST" and request.user.is_authenticated \
+    if request.user.is_superuser or request.method == "PUT" and request.user.is_authenticated \
             and request.user.is_staff \
                 and Comment.objects.filter(id=request.POST['comment']).first().author == request.user:
         approved_comment = request.POST['approved_comment']

@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^export/?$', views.export, name='export'),
     url(r'^export_comment_save/?$', views.export_comment_save, name='export_comment_save'),
     url(r'^export_lead_add/?$', views.export_lead_add, name='export_lead_add'),
+    url(r'^export_lead_del/?$', views.export_lead_del, name='export_lead_del'),
 ]

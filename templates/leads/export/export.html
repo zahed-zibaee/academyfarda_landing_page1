@@ -58,18 +58,18 @@
                     </th>
                     <th>
                         <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
-                            <option>مرد</option>
-                            <option>زن</option>
+                            <option value="M">مرد</option>
+                            <option value="F">زن</option>
                         </select>
                     </th>
                     <th>
                         {{ time }}
                     </th>
                     <th>
-                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
-                            <option>نامشخص</option>
-                            <option>ثبت نام شده</option>
-                            <option>کنسل شده</option>
+                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
+                            <option value="D">نامشخص</option>
+                            <option value="K">ثبت نام شده</option>
+                            <option value="C">کنسل شده</option>
                         </select>
                     </th>
                     <th>
@@ -78,7 +78,7 @@
                     <th class="d-print-none">
                         <button type="submit" class="btn btn-primary btn-sm ">
                             <i class="fas fa-plus"></i>
-                        </button>
+                            </button>
                     </th>
                 </div>
                 </form>
@@ -146,6 +146,8 @@
                 </th>
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
+                    <div class="form-row justify-content-center">
+                    
                     <button type="button" class="btn btn-primary btn-sm collapse show collapseAll expandbuttomE" id="collapsebuttom{{ lead.id }}" data-toggle="collapse" href="#collapsebuttom{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapsebuttom{{ lead.id }}">
                         <i class="fas fa-edit"></i>
                     </button>
@@ -154,7 +156,16 @@
                     </button>
                     <button type="submit" class="btn btn-primary btn-sm collapse collapsebuttom" id="collapsebuttom{{ lead.id }}">
                         <i class="fas fa-check collapse show"></i>
-                     </button>         
+                    </button> 
+                    <div class="mr-1"></div>
+                    <form class="form-inline" action="{% url 'export_lead_del' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="lead_id" value="{{ lead.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm ">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    </form>
+                    </div>
                 </th>
             </tr>
         </thead>
