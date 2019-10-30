@@ -98,7 +98,7 @@ class Lead_admin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if request.user.groups.filter(name__in=['marketing']).exists():
             if change and obj.operator == request.user \
-                and obj.origin == Token.objects.filter(description = 'Divar').first():
+                and obj.origin == Token.objects.filter(description = 'دیوار').first():
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif change and 'name_and_family' not in form.changed_data  \
                 and 'phone_number' not in form.changed_data  \
@@ -106,7 +106,7 @@ class Lead_admin(admin.ModelAdmin):
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif not change:
                 obj.operator = request.user
-                obj.origin = Token.objects.filter(description = 'Divar').first()
+                obj.origin = Token.objects.filter(description = 'دیوار').first()
                 super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass

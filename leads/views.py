@@ -139,7 +139,29 @@ def export_comment_save(request):
     return redirect('export')
 
 
-def export_comment_approved(request):
+def export_lead_add(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff:
+        origin = Token.objects.filter(description = 'دیوار').first()
+        name_and_family = request.POST['name_and_family']
+        gender = request.POST['gender']
+        phone_number = request.POST['phone_number']
+        register_status = request.POST['register_status']
+        operator = request.user
+        lead = Lead(origin = origin, name_and_family = name_and_family, gender = gender, phone_number = phone_number\
+            , register_status = register_status, operator = operator)
+        lead.save()
+        messages.success(request, "You'r new lead has been save")
+        return redirect('export')
+    else:
+        messages.warning(request, "You'r lead can not be saved")
+        return redirect('export')
+        
+
+
+
+
+def x(request):
     if request.user.is_superuser or request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff \
                 and Comment.objects.filter(id=request.POST['comment']).first().author == request.user:
@@ -148,7 +170,7 @@ def export_comment_approved(request):
             Comment.objects.filter(id=request.POST['comment']).update(approved_comment=True)
         else:
             Comment.objects.filter(id=request.POST['comment']).update(approved_comment=False)
-        if approved_comment == True:
+        if approved_comment == "True":
             messages.success(request, "You'r comment has been approved")
         else:
             messages.success(request, "You'r comment has been revoked") 
