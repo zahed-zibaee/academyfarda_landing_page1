@@ -9,9 +9,8 @@ from django.core.validators import RegexValidator
 from persiantools.jdatetime import JalaliDateTime
 from django.utils.html import format_html
 
-class Token(models.Model):
+class Origin(models.Model):
     description = models.CharField(max_length=100, null=False, default='No Name', blank=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     token = models.CharField(max_length=64, null=True, blank=True)
     token_activation = models.BooleanField(default=False)
     def __unicode__(self):
@@ -19,7 +18,7 @@ class Token(models.Model):
 
 class Lead(models.Model):
     #TODO 
-    origin = models.ForeignKey(Token, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
+    origin = models.ForeignKey(Origin, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
     name_and_family = models.CharField(max_length=500, null=False, default='No Name', blank=False)
     GENDER_CHOICES = (
         ('M', 'Male'),

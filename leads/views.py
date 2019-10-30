@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Token, User, Lead, Comment, Label
+from .models import Origin, User, Lead, Comment, Label
 from django.db.models import Count
 from datetime import datetime ,timedelta
 from django.contrib import messages ,auth
@@ -18,7 +18,7 @@ def submit_Leads(request):
     #TODO: frontend make lead page input pup red when error
     post_keys = request.POST.keys() 
     #check if there is a token and token is valid and phone is exist and not repetitive than is phone digits and name exits and not too short
-    if 'token' in post_keys and User.objects.filter(token__token = request.POST['token']).exists() and User.objects.filter(token__token_activation = True) \
+    if 'token' in post_keys and Origin.objects.filter(token = request.POST['token']).exists() and Origin.objects.filter(token_activation = True) \
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
                     and len(request.POST['name']) > 2 :
@@ -27,11 +27,11 @@ def submit_Leads(request):
         phone_en = digits.fa_to_en(phone_fa)
         Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
             question = request.POST.get('question', default=''), \
-                origin = Token.objects.filter(token = request.POST['token']).first())
+                origin = Origin.objects.filter(token = request.POST['token']).first())
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
-    elif 'token' not in post_keys or User.objects.filter(token__token = request.POST['token']).exists() is False or User.objects.filter(token__token_activation = False):
+    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token']).exists() is False or Origin.objects.filter(token_activation = False):
         return JsonResponse({
         'status': 'registeration_error',
         }, encoder=JSONEncoder)
@@ -142,7 +142,7 @@ def export_comment_save(request):
 def export_lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
-        origin = Token.objects.filter(description = 'دیوار').first()
+        origin = Origin.objects.filter(description = 'دیوار').first()
         name_and_family = request.POST['name_and_family']
         gender = request.POST['gender']
         phone_number = request.POST['phone_number']

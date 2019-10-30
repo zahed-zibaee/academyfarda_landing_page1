@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Lead, Token, Comment, LabelDefinition, Label
+from .models import Lead, Origin, Comment, LabelDefinition, Label
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
@@ -31,7 +31,7 @@ class LabelDefinition(admin.ModelAdmin):
     radio_fields = {'color_code': admin.HORIZONTAL}
     list_display = ('id','colored_name','color_code',)
 
-admin.site.register(Token)
+admin.site.register(Origin)
 @admin.register(Lead)
 class Lead_admin(admin.ModelAdmin):
     #TODO: add action to change operator, operator view, filter make for all admin objs, inline object in leads
@@ -98,7 +98,7 @@ class Lead_admin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if request.user.groups.filter(name__in=['marketing']).exists():
             if change and obj.operator == request.user \
-                and obj.origin == Token.objects.filter(description = 'دیوار').first():
+                and obj.origin == Origin.objects.filter(description = 'دیوار').first():
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif change and 'name_and_family' not in form.changed_data  \
                 and 'phone_number' not in form.changed_data  \
@@ -106,7 +106,7 @@ class Lead_admin(admin.ModelAdmin):
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif not change:
                 obj.operator = request.user
-                obj.origin = Token.objects.filter(description = 'دیوار').first()
+                obj.origin = Origin.objects.filter(description = 'دیوار').first()
                 super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass
