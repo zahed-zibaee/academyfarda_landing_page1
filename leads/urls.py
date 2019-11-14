@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^landing2/?$', views.landing2, name='landing2'),
     url(r'^thanks/?$', views.thanks, name='thanks'),
     url(r'^export/?$', views.export, name='export'),
-    url(r'^export_comment_save/?$', views.export_comment_save, name='export_comment_save'),
-    url(r'^export_lead_add/?$', views.export_lead_add, name='export_lead_add'),
-    url(r'^export_lead_del/?$', views.export_lead_del, name='export_lead_del'),
+    url(r'^comment_save/?$', views.comment_save, name='comment_save'),
+    url(r'^lead_add/?$', views.lead_add, name='lead_add'),
+    url(r'^lead_del/?$', views.lead_del, name='lead_del'),
 ]

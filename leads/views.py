@@ -11,6 +11,7 @@ from datetime import datetime ,timedelta
 from django.contrib import messages ,auth
 from persiantools import characters, digits
 from persiantools.jdatetime import JalaliDateTime
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 
 #TODO: add comment to all project
 @csrf_exempt
@@ -116,16 +117,25 @@ def thanks(request):
     return render(request,'landing/thanks/thanks.html', data)
 
 def export(request):
-    leads = Lead.objects.all()
+    leads = Lead.objects.order_by('-led_time')
+    #leads paginator
+    paginator = Paginator(leads, 20)
+    page = request.GET.get('page')
+    if page:
+        paged_leads = paginator.page(page)
+    else:
+        paged_leads = paginator.page(1)
+    #page = paginator.get_page(page)
+
     comments = Comment.objects.all()
     labels = Label.objects.all()
     time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
 
-    data = {'comments': comments, 'leads':leads, 'labels': labels, 'time': time}
+    data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time}
     return render(request,'leads/export/export.html', data)
 
-def export_comment_save(request):
+def comment_save(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff and len(request.POST['text']) > 0:
         post = Lead.objects.get(id=int(request.POST['post']))
@@ -140,7 +150,7 @@ def export_comment_save(request):
     return redirect('export')
 
 
-def export_lead_add(request):
+def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         origin = Origin.objects.filter(description = 'دیوار').first()
@@ -164,7 +174,7 @@ def export_lead_add(request):
         messages.warning(request, "You'r lead can not be saved")
         return redirect('export')
         
-def export_lead_del(request):
+def lead_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         lead = Lead.objects.filter(id=request.POST["lead_id"]).first()

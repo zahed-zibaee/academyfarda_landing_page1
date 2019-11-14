@@ -13,9 +13,9 @@ $(document).ready(function(){
      $('.collapseExample')
          .collapse('show');
      });
-  
- 
  });
+
+ 
 $(document).ready(function(){
 
     $('.collapsebuttomALL').click(function(){
