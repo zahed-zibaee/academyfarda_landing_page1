@@ -210,10 +210,7 @@ header a:hover {
       opacity: 1;
     }
   }
-  
-.op-forget{
-      opacity: 0;
-  }
+
 
 .img-jello:hover {
     -webkit-animation: jello-horizontal 0.9s both;

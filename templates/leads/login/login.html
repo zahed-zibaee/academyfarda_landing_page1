@@ -1,11 +1,12 @@
 {% extends 'base/base.html'  %}
 {% load static %}
 {% block content %}
-    <div class="container mt-85">
+    <div class="container">
+        {% include 'base/partials/_alerts.html' %}
         <div class="row text-center col-12">
 
                 <!-- form card login -->
-                    <div class="card rounded-10 col-xs-8 col-md-6 p-0 mx-auto b-color" id="login-form">
+                    <div class="card rounded-10 col-xs-12 col-sm-12 col-md-10 col-lg-6 p-0 mx-auto b-color" id="login-form">
                         <div class="card-header">
                             <h3 class="mb-0 login-text t-color">User Login</h3>
                         </div>
@@ -13,7 +14,7 @@
                             <form class="form" role="form" autocomplete="off" id="formLogin" novalidate="" method="POST">
                                 {% csrf_token %}
                                 
-                                <img class="img-jello img-fluid mx-auto mb-3" src="{% static 'base/media/logo/1000X1000.png' %}" width="200" height="200">
+                                <img class="img-jello img-fluid mx-auto mt-4 mb-5" src="{% static 'base/media/logo/1000X1000.png' %}" width="200" height="200">
                                 <div class="input-group mb-3 floatContainer">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" id="basic-addon1">Username</span>
@@ -26,7 +27,7 @@
                                     </div>
                                     <input type="password" class="form-control form-control-lg rounded-2 col-11 mx-auto" aria-label="password" aria-describedby="basic-addon1" id="id_password" name="password" required>
                                 </div>
-                                {% include 'base/partials/_alerts.html' %}
+                                
                                 <div class="text-center mt-1 mb-3">
                                     <div class="g-recaptcha" data-sitekey="6LdwM7kUAAAAAGBNUkZ-7h-k761ohru0bigD_OlO"></div>
                                 </div>
@@ -40,17 +41,17 @@
                 <!-- /form card login end-->
 
                 <!-- form card forgot -->
-                <div class="card rounded-10 col-md-6 col-sm-8 col-xs-6 p-0 mx-auto op-forget" id="forgot-form">
+                <div class="card rounded-10 col-xs-12 col-sm-12 col-md-10 col-lg-6 p-0 mx-auto op-forget" id="forgot-form">
                     <div class="card-header">
                         <h3 class="mb-0 reset-text t-color">Reset Password</h3>
                     </div>
                     <div class="card-body">
-                        <img class="img-jello img-fluid mx-auto mb-3" src="{% static 'base/media/logo/1000X1000.png' %}" width="200" height="200">
+                        <img class="img-jello img-fluid mx-auto mt-4 mb-5" src="{% static 'base/media/logo/1000X1000.png' %}" width="200" height="200">
                         <form class="form" role="form" autocomplete="off" id="" novalidate="" method="POST">
                         
                         <div class="input-group mb-3 floatContainer">
                             <div class="input-group-prepend">
-                                <span class="input-group-text" id="basic-addon1">Username</span>
+                                <span class="input-group-text" id="basic-addon1">Email</span>
                             </div>
                             <input type="email" class="form-control form-control-lg rounded-2 col-11 mx-auto" aria-label="email" aria-describedby="basic-addon1" id="pwd1" autocomplete="new-password" required>
                         </div>
@@ -69,6 +70,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $('.op-forget').hide()
+    </script>
     <script src="{% static 'leads/login/js/function.js' %}" type="text/javascript"></script>
     <script src='https://www.google.com/recaptcha/api.js'></script>
     {% endblock %}

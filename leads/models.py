@@ -64,17 +64,13 @@ class Comment(models.Model):
 class LabelDefinition(models.Model):
     tag = models.CharField(max_length=500, null=True, blank=True)
     COLOR_CHOICES = (
-    ('800000', 'Maroon'),
     ('FF0000', 'Red'),
     ('FFA500', 'Orange'),
-    ('FFFF00', 'Yellow'),
+    ('800000', 'Maroon'),
     ('808000', 'Olive'),
-    ('00800', 'Green'),
     ('800080', 'Purple'),
-    ('FF00FF', 'Fuchsia'),
-    ('00FF00', 'Lime'),
+    ('FF00FF', 'Pink'),
     ('008080', 'Teal'),
-    ('00FFFF', 'Aqua'),
     ('0000FF', 'Blue'),
     ('000080', 'Navy'),
     ('000000', 'Black'),
@@ -91,7 +87,7 @@ class LabelDefinition(models.Model):
         return "{}".format(self.tag)
 
 class Label(models.Model):
-    post = models.ForeignKey(Lead, on_delete=models.CASCADE)
+    post = models.ForeignKey(Lead, on_delete=models.CASCADE, unique=False)
     label = models.ForeignKey(LabelDefinition, on_delete=models.CASCADE)
     def colored_name(self):
         return format_html(

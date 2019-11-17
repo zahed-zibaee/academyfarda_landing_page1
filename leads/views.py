@@ -6,16 +6,15 @@ from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from .models import Origin, User, Lead, Comment, Label
-from django.db.models import Count
-from datetime import datetime ,timedelta
+from datetime import datetime
 from django.contrib import messages ,auth
-from persiantools import characters, digits
+from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime
 
 #TODO: add comment to all project
 @csrf_exempt
-def submit_Leads(request):
-    #TODO: frontend make lead page input pup red when error
+def api_submit(request):
+    #TODO: frontend make lead page input pup red when error, calasify this if
     post_keys = request.POST.keys() 
     #check if there is a token and token is valid and phone is exist and not repetitive than is phone digits and name exits and not too short
     if 'token' in post_keys and Origin.objects.filter(token = request.POST['token']).exists() and Origin.objects.filter(token_activation = True) \
@@ -54,57 +53,6 @@ def submit_Leads(request):
         'status': 'unknown_error',
         }, encoder=JSONEncoder)
     
-def error_404(request):
-    #TODO: add other errors 
-    data = {}
-    return render(request,'404/error_404.html', data)
-
-def analysis(request):
-    #TODO do the frontend and graphs
-    leads_all = Lead.objects.all().aggregate(Count('id'))
-    leads_registered = Lead.objects.filter(register_status = 'K').aggregate(Count('id'))
-    leads_registered_value = leads_registered.values()
-    leads_all_value = leads_all.values()
-    leads_not_reg = leads_all_value.first() - leads_registered_value.first()
- 
-    data = {'leads_all': leads_all_value.first(), \
-        'leads_reg': leads_registered_value.first(), 'leads_not_reg': leads_not_reg
-    }
-    return render(request,'leads/analysis/analysis.html', data)
-
-def login(request):
-    #TODO add user login or logout
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = auth.authenticate(username=username ,password=password )
-
-        if user is not None:
-            auth.login(request, user)
-            messages.success(request, 'You are now loged in')
-            return redirect("dashboard")
-        else:
-            messages.error(request, "You'r username or passwerd is wrong")
-            return redirect("login")
-    else:
-        return render(request,'leads/login/login.html')
-
-def logout(request):
-    if request.method == 'POST':
-        auth.logout(request)
-        messages.success(request, 'You are now loged out')
-        return redirect('login')
-    else:
-        messages.error(request, "Something went wrong!!!")
-        return redirect('login')
-
-def dashboard(request):
-    #TODO add search and filters, make user only see commend they need 2 see, sort commends,padging
-    leads = Lead.objects.all()
-    comments = Comment.objects.all()
-    data = {'comments': comments, 'leads':leads, }
-    return render(request,'leads/dashboard/dashboard.html', data)
 
 
 def landing2(request):
@@ -125,7 +73,7 @@ def export(request):
     data = {'comments': comments, 'leads':leads, 'labels': labels, 'time': time}
     return render(request,'leads/export/export.html', data)
 
-def export_comment_save(request):
+def comment_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff and len(request.POST['text']) > 0:
         post = Lead.objects.get(id=int(request.POST['post']))
@@ -140,7 +88,7 @@ def export_comment_save(request):
     return redirect('export')
 
 
-def export_lead_add(request):
+def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         origin = Origin.objects.filter(description = 'دیوار').first()
@@ -164,7 +112,7 @@ def export_lead_add(request):
         messages.warning(request, "You'r lead can not be saved")
         return redirect('export')
         
-def export_lead_del(request):
+def lead_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         lead = Lead.objects.filter(id=request.POST["lead_id"]).first()

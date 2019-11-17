@@ -1,19 +1,19 @@
 <div class="mt-100"><p> </p></div>
 <footer class="text-muted fixed-bottom navbar-light my-footer">
    <div class="container mt-3 ">
-      {% if request.get_full_path == "/login" %}
-      {% elif request.get_full_path == "/login/" %}
+      {% if request.get_full_path == "/accounts/login" %}
+      {% elif request.get_full_path == "/accounts/login/" %}
       {% else %}
       <p class="float-right">
          <a class="btn1" href="#">Back to top</a>
       </p>
       {% endif %}
-      {% if request.get_full_path == "/login" %}
-      <p class="text-center copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
-      {% elif request.get_full_path == "/login/" %}
-      <p class="text-center copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
+      {% if request.get_full_path == "/accounts/login" %}
+      <p class="text-center copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This site is made with by Academyfarda team</p>
+      {% elif request.get_full_path == "/accounts/login/" %}
+      <p class="text-center copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This site is made with by Academyfarda team</p>
       {% else %}
-      <p class="float-left copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This template is made with by Academyfarda team</p>
+      <p class="float-left copyr-fs mt-2">Copyright &copy;2019 All rights reserved | This site is made with by Academyfarda team</p>
       {% endif %}
    </div>
 </footer>

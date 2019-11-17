@@ -21,8 +21,9 @@ class Comments_inline(admin.StackedInline):
 
 @admin.register(Label)
 class Label_admin(admin.ModelAdmin):
+    #TODO: only one time a label for a post
     #make post field chose base
-    raw_id_fields = ("post",)
+    raw_id_fields = ("post","label",)
     list_display = ('id','post','colored_name',)
 
 @admin.register(LabelDefinition)

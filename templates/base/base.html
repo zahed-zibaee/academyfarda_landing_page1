@@ -16,8 +16,8 @@
         <title>{% block title %}Leads Counter{% endblock %}</title>
     </head>
     <body >
-        {% if request.get_full_path == "/login" %}
-        {% elif request.get_full_path == "/login/" %}
+        {% if request.get_full_path == "/accounts/login" %}
+        {% elif request.get_full_path == "/accounts/login/" %}
         {% else %}
         {% include 'base/partials/_header.html' %}
         {% endif %}

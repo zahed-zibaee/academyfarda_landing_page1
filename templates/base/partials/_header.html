@@ -34,12 +34,10 @@
                 <li class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}  active {% endif %}">
                     <a class="nav-link" href="{% url 'dashboard' %}">Home</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
-                        <a class="nav-link" href="{% url 'analysis' %}">Classes</a>
+                <li class="nav-item {% if request.resolver_match.url_name == 'export' %}  active {% endif %}">
+                        <a class="nav-link" href="{% url 'export' %}">Export</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == 'analysis' %}  active {% endif %}">
-                    <a class="nav-link" href="{% url 'analysis' %}">About</a>
-                </li>
+
             </ul>
                 <a class="btn1" href="{% url 'login' %}"> login </a>
     </div>    
