@@ -83,11 +83,8 @@ def export(request):
     data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time}
     return render(request,'leads/export/export.html', data)
 
-<<<<<<< HEAD
-def comment_save(request):
-=======
+
 def comment_add(request):
->>>>>>> a622e076fb3bce85104cbed4d4d980f9a60adfbf
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff and len(request.POST['text']) > 0:
         post = Lead.objects.get(id=int(request.POST['post']))
