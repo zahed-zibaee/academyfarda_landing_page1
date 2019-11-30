@@ -268,11 +268,7 @@
         <tbody class="collapse d-print-none collapseExample" id="collapseExample{{ lead.id }}">
                 <tr>
                     <td colspan="4"> نظر جدید </td>
-<<<<<<< HEAD
-                    <form action="{% url 'comment_save' %}" method="POST">
-=======
                     <form action="{% url 'comment_add' %}" method="POST">
->>>>>>> a622e076fb3bce85104cbed4d4d980f9a60adfbf
                     {% csrf_token %}
                         <td colspan="4">
                             <input type="hidden" name="post" value="{{ lead.id }}">
