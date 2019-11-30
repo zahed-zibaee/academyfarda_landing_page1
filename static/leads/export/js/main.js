@@ -4,29 +4,21 @@ setTimeout(function() {
 
 
 $(document).ready(function(){
+    $("table").children(".collapseTableHeadersbutton").click(function(){
+        var child = $(this).data("id");
+        $("."+child).toggle();
+    });
 
     $('.collapseAll').click(function(){
-     $('.collapseExample')
-         .collapse('hide');
-     });
-     $('.expandAll').click(function(){
-     $('.collapseExample')
-         .collapse('show');
-     });
- });
+    $(".collapseTableHeaders").hide('300');
+    });
+    $('.expandAll').click(function(){
+    $(".collapseTableHeaders").show('300');
+    });
 
- 
-$(document).ready(function(){
 
-    $('.collapsebuttomALL').click(function(){
-        $('.collapsebuttom')
-         .collapse('hide');
-        $('.expandbuttomE')
-         .collapse('show');
-     });
+}); 
 
- 
- });
 $(document).ready(function(){
 
     $('.expandlabelALL').click(function(){

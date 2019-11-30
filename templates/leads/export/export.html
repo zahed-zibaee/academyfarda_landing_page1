@@ -20,7 +20,7 @@
 <body>
     <div class="container-fluid text-center mx-auto mt-3">
     <p>Some Text Blurb here</p>
-    <p class="pull-right"><a href="#" class="expandAll">Expand all</a> |  <a href="#" class="collapseAll">Collapse all</a></p>
+    <p class="pull-right"><a href="#" class="expandAll">Expand all</a> |  <a href="#" class="collapseAll"> Collapse All</a></p>
     </div>
     <div class="container-fluid text-center mx-auto mt-3 table-responsive" id="div">
         {% include 'base/partials/_alerts.html' %}
@@ -85,79 +85,79 @@
             </tr>
         </thead>
         {% for lead in leads reversed %}
-        {% if lead.register_status == 'K' %}
-        <thead class="table-success table-success-hover" >
-        {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger table-danger-hover" >
-        {% else %} {# register #} 
-        <thead class="table-secondary thead-light-hover" >
-        {% endif %} {# register #} 
+            {% if lead.register_status == 'K' %}
+        <thead class="table-success table-success-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+            {% elif lead.register_status == 'C'%} {# register #} 
+        <thead class="table-danger table-danger-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+            {% else %} {# register #} 
+        <thead class="table-secondary thead-light-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+            {% endif %} {# register #}
                 <tr class="bld">
-                <th scope="row" class="collapsebuttomALL" data-toggle="collapse " href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
-                    {{ forloop.counter }}
-                </th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th scope="row">
+                    {{ lead.id }}
+                </th class="buttomALL" >
                 <th >
                     {{ lead.name_and_family }}
                 </th>
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     {{ lead.phone_number }}
                 </th>
                 {% if lead.origin %}
-                <th class="collapsebuttomALL"  data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL"  >
                     {{ lead.origin }}
                 </th>
                 {% else %} {# origin #}
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     نامشخص
                 </th>
                 {% endif %} {# origin #}
                 {% if lead.gender == 'M' %}
-                <th class="collapsebuttomALL"  data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL"  >
                     مرد
                 </th>
                 {% else %} {# gender #} 
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     زن
                 </th> 
                 {% endif %} {# gender #} 
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     {{ lead.led_time_jalali|date:'H:i Y-m-d' }}
                 </th>
                 {% if lead.register_status == 'K' %}
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     ثبت نام شده
                 </th>
                 {% elif lead.register_status == 'C'%} {# register #} 
-                <th  class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th  class="buttomALL" >
                     کنسل شده
                 </th> 
                 {% else %}{# register #} 
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     نامشخص
                 </th> 
                 {% endif %} {# register #} 
                 {% if lead.operator %}
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th class="buttomALL" >
                     {{ lead.operator.first_name }} {{ lead.operator.last_name }}
                 </th>
                 {% else %} {# lead.operator #}
-                <th class="collapsebuttomALL" data-toggle="collapse" href="#collapseExample{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapseExample{{ lead.id }}">
+                <th>
                     نامشخص
                 </th>
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
                     <div class="form-row justify-content-center">
                     
-                    <button type="button" class="btn btn-primary btn-sm collapse show collapseAll expandbuttomE" id="collapsebuttom{{ lead.id }}" data-toggle="collapse" href="#collapsebuttom{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapsebuttom{{ lead.id }}">
+                    <button type="button" class="btn btn-primary btn-sm" id="buttom{{ lead.id }}" >
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm collapse collapsebuttom expandlabelALL" id="collapsebuttom{{ lead.id }}">
-                        <i class="fa fa-times collapse show" data-toggle="collapse" href="#collapsebuttom{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapsebuttom{{ lead.id }}"></i>
+                    <button type="button" class="btn btn-primary btn-sm buttom" id="buttom{{ lead.id }}">
+                        <i class="fa fa-times  " ></i>
                     </button>
-                    <button type="submit" class="btn btn-primary btn-sm collapse collapsebuttom" id="collapsebuttom{{ lead.id }}">
-                        <i class="fas fa-check collapse show"></i>
+                    <button type="submit" class="btn btn-primary btn-sm buttom" id="buttom{{ lead.id }}">
+                        <i class="fas fa-check"></i>
                     </button> 
-                    <div class="mr-1"></div>
+                    <div class="mr-1">
                     <form class="form-inline" action="{% url 'lead_del' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="lead_id" value="{{ lead.id }}">
@@ -169,62 +169,26 @@
                 </th>
             </tr>
         </thead>
-        <tbody class="collapse collapseExample" id="collapseExample{{ lead.id }}">
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" >
             <tr>
                 <td colspan="3">درخواست</td>
                 <td colspan="6" class="text-right">{{ lead.question }}</td>
             </tr>
         </tbody>
-        <tbody class="collapse collapsebuttom" id="collapsebuttom{{ lead.id }}">
-            <tr>
-                <td colspan="3">درخواست</td>
-                <td colspan="6" class="text-right"><input class="form-control form-control-sm" type="text" name="question" placeholder="{{ lead.question }}"></td>
-            </tr>
-        </tbody>
-        <tbody class="collapse collapseExample" id="collapseExample{{ lead.id }}">
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}">
                 <tr>
                     <td colspan="3">برچسب</td>
-                    <td colspan="6" class="text-left">
-                    
+                    <td colspan="6" class="text-left">              
         {% for label in labels %}
-        {% if label.post.id == lead.id %}
-                    {{ label.export_show }}
-        {% endif %} {# label #}
+            {% if label.post.id == lead.id %}
+                {{ label.export_ }}
+            {% endif %} {# label #}
         {% endfor %} {# label #}
-                    </td>
-                    
-                </tr>
-        </tbody>
-        <tbody class="collapse collapsebuttom" id="collapsebuttom{{ lead.id }}">
-                <tr>
-                    <td colspan="3">برچسب</td>
-                    <td colspan="6" class="text-left">
-                    <div class="row">
-        {% for label in labels %}
-        {% if label.post.id == lead.id %}
-                        <div class="col">
-                        <select class="form-control form-control-sm" id="exampleFormControlSelect1">
-                                <option>-----</option>  
-        {% for label in labels %}
-                                <option>{{ label.export_show }}</option>  
-        {% endfor %} {# label #}
-                        </select>
-                        </div> 
-                        <div class="col">
-                    <span class="collapse show expandlabelE" id="collapselabel{{ lead.id }}">{{ label.export_show }}</span>
-                    <button type="buttom" class="btn btn-danger btn-sm collapse show expandlabelE" id="collapselabel{{ lead.id }}" data-toggle="collapse" href="#collapselabel{{ lead.id }}" role="button" aria-expanded="false" aria-controls="collapselabel{{ lead.id }}">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                        </div>
-        {% endif %} {# label #}
-        {% endfor %} {# label #}        
-                    
-                    </div>
+                    </td>  
                 </tr>
         </tbody>
         {% for comment in lead.comments.all %}
-
-        <tbody class="collapse {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} collapseExample" id="collapseExample{{ lead.id }}">
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
             <tr>
                 <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
@@ -234,8 +198,8 @@
 
             </tr>
         </tbody >
-        <tbody class="collapse d-print-none collapsebuttom" id="collapsebuttom{{ lead.id }}">
-            <tr class="collapse show expandlabelE" id="collapsecomment{{ comment.id }}">
+        <tbody class="d-print-none buttom collapseTableHeaders collapseTableHeaders{{ lead.id }}" id="buttom{{ lead.id }}">
+            <tr class="  " id="comment{{ comment.id }}">
                 <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
                 توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
@@ -246,38 +210,37 @@
                     <button type="buttom" class="btn btn-primary btn-sm btn-comm comment_approval_toggle">
                             <i class="fa fa-comment"></i>
                     </button>
-                    <button type="buttom" class="btn btn-danger btn-sm expandlabelE"  id="collapsecomment{{ comment.id }}" data-toggle="collapse" href="#collapsecomment{{ comment.id }}" role="button" aria-expanded="false" aria-controls="collapsecomment{{ lead.id }}">
+                    <button type="buttom" class="btn btn-danger btn-sm ">
                             <i class="fa fa-trash"></i>
                     
                 </td>
                 {% else %} {# approved #}
                 <td class="d-print-none" >
-                    <div class="">
+
                     <button type="buttom" class="btn btn-dark btn-sm btn-comm comment_approval_toggle">
                             <i class="fa fa-comment-slash"></i>
                     </button>
-                    <button type="buttom" class="btn btn-danger btn-sm" id="collapsecomment{{ comment.id }}" data-toggle="collapse" href="#collapsecomment{{ comment.id }}" role="button" aria-expanded="false" aria-controls="collapsecomment{{ lead.id }}">
+                    <button type="buttom" class="btn btn-danger btn-sm" >
                             <i class="fa fa-trash"></i>
                     </button>
-                    </div>
                 </td>
                 {% endif %} {# approved #}
             </tr>
         </tbody > 
         {% endfor %} {# comment #}
-        <tbody class="collapse d-print-none collapseExample" id="collapseExample{{ lead.id }}">
-                <tr>
-                    <td colspan="4"> نظر جدید </td>
+        <tbody class="d-print-none collapseTableHeaders collapseTableHeaders{{ lead.id }}">
+            <tr>
+                <td colspan="4"> نظر جدید </td>
                     <form action="{% url 'comment_add' %}" method="POST">
-                    {% csrf_token %}
+                        {% csrf_token %}
                         <td colspan="4">
                             <input type="hidden" name="post" value="{{ lead.id }}">
                             <input name="text" type="text" class="form-control form-control-sm" placeholder="نظر شما" id="myInput{{ lead.id }}">
                         </td> 
                         <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
                     </form>
-                </tr>
-            </tbody > 
+            </tr>
+        </tbody > 
         {% endfor %} {# leads #}
         {% else %} {# lead false #} 
         <tbody>
@@ -286,6 +249,7 @@
             </tr>
         </tbody>
         {% endif %} {# lead false #} 
+        
         </table>
     </div>
     <div class="container-fluid text-center mx-auto mt-3">
