@@ -55,15 +55,6 @@ def api_submit(request):
         }, encoder=JSONEncoder)
     
 
-
-def landing2(request):
-    data = {}
-    return render(request,'landing/2/index.html', data)
-
-def thanks(request):
-    data = {}
-    return render(request,'landing/thanks/thanks.html', data)
-
 def export(request):
     leads = Lead.objects.order_by('-led_time')
     #leads paginator

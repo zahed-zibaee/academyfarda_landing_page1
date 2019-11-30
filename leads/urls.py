@@ -5,8 +5,6 @@ from . import views
 urlpatterns = [
     #TODO: 1-change submit/leads to leads/saubmit 2-acount/login 3-leads/dashboard or analysis
     url(r'^api/submitnew/?$', views.api_submit, name='api_submit'),
-    url(r'^landing/second?$', views.landing2, name='landing2'),
-    url(r'^landing/thanks/?$', views.thanks, name='thanks'),
     url(r'^export/?$', views.export, name='export'),
     url(r'^comment_add/?$', views.comment_add, name='comment_add'),
     url(r'^lead_add/?$', views.lead_add, name='lead_add'),
