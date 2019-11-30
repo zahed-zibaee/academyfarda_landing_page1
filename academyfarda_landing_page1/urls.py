@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include, handler404
 from django.contrib import admin
-from leads import views as leads_views
+from . import views
 
 
 #TODO change from leads import views as leads_views to something dynamic
 urlpatterns = [
     url(r'^admin/?', admin.site.urls),
-    url(r'', include('leads.urls')),
+    url(r'^leads/', include('leads.urls')),
+    url(r'^accounts/', include('accounts.urls')),
+    url(r'^crm/', include('CRM.urls')),
+
 ]
 
-handler404 = leads_views.error_404
+handler404 = views.error_404
