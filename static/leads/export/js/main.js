@@ -4,46 +4,53 @@ setTimeout(function() {
 
 
 $(document).ready(function(){
-    $("table").children(".collapseTableHeadersbutton").click(function(){
+    $("table").children("tbody").hide();
+    $("table .editing").hide();
+
+    $("table thead tr").children(".collapseTableHeadersbutton").click(function(){
+        var editing = $(this).data("id")
+        $("table").children(".editing"+editing).hide();
         var child = $(this).data("id");
-        $("."+child).toggle();
-    });
+        $("table .collapseTableHeaders"+child).toggle();
+        $("table thead th .edit").show();
+        $("table thead th .editing").hide();
+        });
 
     $('.collapseAll').click(function(){
-    $(".collapseTableHeaders").hide('300');
-    });
+        $(".collapseTableHeaders").hide('300');
+        });
     $('.expandAll').click(function(){
-    $(".collapseTableHeaders").show('300');
-    });
+        $(".collapseTableHeaders").show('300');
+        });
 
-
+    $("table thead th .edit").click(function(){
+        var editing = $(this).data("id");
+        $("table").children(".editing"+editing).show(300);
+        var static = $(this).data("id");
+        $("table .static"+static).hide(100);
+        var child = $(this).data("id");
+        $("table .collapseTableHeaders"+child).hide();
+        });
+    $("table thead th .times").click(function(){
+        var editing = $(this).data("id");
+        $("table").children(".editing"+editing).hide(100);
+        var static = $(this).data("id");
+        $("table .static"+static).show(300);
+        var child = $(this).data("id");
+        $("table .collapseTableHeaders"+child).hide();
+        });
 }); 
 
+
 $(document).ready(function(){
 
-    $('.expandlabelALL').click(function(){
-        $('.expandlabelE')
-        .collapse('show');
-    });
-
-});
-$(document).ready(function(){
-
-    $('.table-success-hover').click(function(){
+    $('.table-success-hover111').click(function(){
         $(this).toggleClass( "table-success-hover2" );    
     });
-    $('.table-danger-hover').click(function(){
+    $('.table-danger-hover111').click(function(){
         $(this).toggleClass( "table-danger-hover2" );    
     });
-    $('.thead-light-hover').click(function(){
+    $('.thead-light-hover111').click(function(){
         $(this).toggleClass( "thead-light-hover2" );    
     });
-});
-
-$(document).ready(function(){
-    $('.comment_approval_toggle').on('click', jQFav);
-        function jQFav(e) {
-            $(this).toggleClass('btn-primary btn-dark');
-            $(this).find('.fa').toggleClass('fa-comment-slash fa-comment');
-        }
 });

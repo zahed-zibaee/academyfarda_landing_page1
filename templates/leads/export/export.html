@@ -18,13 +18,17 @@
     <title></title>
 </head>
 <body>
-    <div class="container-fluid text-center mx-auto mt-3">
+    <!-- Start Search -->
+    <div class="container-fluid text-center mx-auto mt-3 d-print-none">
     <p>Some Text Blurb here</p>
     <p class="pull-right"><a href="#" class="expandAll">Expand all</a> |  <a href="#" class="collapseAll"> Collapse All</a></p>
     </div>
+    <!-- End Search -->
+    <!-- Start Table -->
     <div class="container-fluid text-center mx-auto mt-3 table-responsive" id="div">
         {% include 'base/partials/_alerts.html' %}
         <table class="table table-sm table-bordered table-hover">
+        <!-- Start Table_header -->
         <thead class="thead-dark">
             <tr>
                 <th scope="col"><h5>#</h5></th>
@@ -38,6 +42,8 @@
                 <th scope="col" class="d-print-none"><h5>تنظیمات</h5></th>
             </tr>
         </thead>
+        <!-- End Table_header -->
+        <!-- Start Table_New -->
         {% if leads %}
         <thead>
             <tr class="bld d-print-none">
@@ -84,97 +90,150 @@
                 </form>
             </tr>
         </thead>
-        {% for lead in leads reversed %}
+        <!-- End Table_New -->
+        <!-- Start Table_Landing -->
+        {% for lead in leads %}
             {% if lead.register_status == 'K' %}
-        <thead class="table-success table-success-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+        <thead class="table-success table-success-hover static static{{ lead.id }}" data-id="{{ lead.id }}">
             {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger table-danger-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+        <thead class="table-danger table-danger-hover static static{{ lead.id }}" data-id="{{ lead.id }}">
             {% else %} {# register #} 
-        <thead class="table-secondary thead-light-hover collapseTableHeadersbutton" data-id="collapseTableHeaders{{ lead.id }}">
+        <thead class="table-secondary thead-light-hover static static{{ lead.id }}" data-id="{{ lead.id }}">
             {% endif %} {# register #}
                 <tr class="bld">
-                <th scope="row">
+                <th scope="row" class="collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.id }}
-                </th class="buttomALL" >
-                <th >
+                </th >
+                <th  class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.name_and_family }}
                 </th>
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.phone_number }}
                 </th>
                 {% if lead.origin %}
-                <th class="buttomALL"  >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.origin }}
                 </th>
                 {% else %} {# origin #}
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     نامشخص
                 </th>
                 {% endif %} {# origin #}
                 {% if lead.gender == 'M' %}
-                <th class="buttomALL"  >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     مرد
                 </th>
                 {% else %} {# gender #} 
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     زن
                 </th> 
                 {% endif %} {# gender #} 
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.led_time_jalali|date:'H:i Y-m-d' }}
                 </th>
                 {% if lead.register_status == 'K' %}
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     ثبت نام شده
                 </th>
                 {% elif lead.register_status == 'C'%} {# register #} 
-                <th  class="buttomALL" >
+                <th  class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     کنسل شده
                 </th> 
                 {% else %}{# register #} 
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     نامشخص
                 </th> 
                 {% endif %} {# register #} 
                 {% if lead.operator %}
-                <th class="buttomALL" >
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {{ lead.operator.first_name }} {{ lead.operator.last_name }}
                 </th>
                 {% else %} {# lead.operator #}
-                <th>
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     نامشخص
                 </th>
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
                     <div class="form-row justify-content-center">
-                    
-                    <button type="button" class="btn btn-primary btn-sm" id="buttom{{ lead.id }}" >
+                    <button type="button" class="btn btn-primary btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button type="button" class="btn btn-primary btn-sm buttom" id="buttom{{ lead.id }}">
-                        <i class="fa fa-times  " ></i>
-                    </button>
-                    <button type="submit" class="btn btn-primary btn-sm buttom" id="buttom{{ lead.id }}">
-                        <i class="fas fa-check"></i>
-                    </button> 
-                    <div class="mr-1">
-                    <form class="form-inline" action="{% url 'lead_del' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="lead_id" value="{{ lead.id }}">
-                    <button type="submit" class="btn btn-danger btn-sm ">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                    </form>
-                    </div>
                 </th>
             </tr>
         </thead>
-        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" >
+        <!-- Start Table_Landing_Edit -->
+        {% if lead.register_status == 'K' %}
+        <thead class="table-success table-success-hover editing editing{{ lead.id }}" >
+        {% elif lead.register_status == 'C'%} {# register #} 
+        <thead class="table-danger table-danger-hover editing editing{{ lead.id }}">
+        {% else %} {# register #} 
+        <thead class="table-secondary thead-light-hover editing editing{{ lead.id }}">
+        {% endif %} {# register #}
+            <tr class="bld d-print-none">
+                <div class="form-inline justify-content-center">
+                    <form class="form-inline" action="{% url 'lead_del_and_edit' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ lead.id }}">
+                        <th>
+                            {{ lead.id }}
+                        </th>
+                        <th>
+                            <input class="form-control form-control-sm" type="text" name="name_and_family" value="{{ lead.name_and_family }}">
+                        </th>
+                        <th>
+                            <input class="form-control form-control-sm" type="text" name="phone_number" value="{{ lead.phone_number }}">
+                        </th>
+                        <th>
+                            {% if lead.origin %} {{ lead.origin }} {% else %} {# origin #} نامشخص {% endif %} {# origin #}
+                        </th>
+                        <th>
+                            <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
+                                <option value="M" {% if lead.gender == 'M' %} selected="selected" {% endif %}>مرد</option>
+                                <option value="F" {% if lead.gender == 'F' %} selected="selected" {% endif %}>زن</option>
+                            </select>
+                        </th>
+                        <th>
+                            {{ time }}
+                        </th>
+                        <th>
+                            <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
+                                <option value="D" {% if lead.gender == 'D' %} selected="selected" {% endif %}>نامشخص</option>
+                                <option value="K" {% if lead.gender == 'K' %} selected="selected" {% endif %}>ثبت نام شده</option>
+                                <option value="C" {% if lead.gender == 'C' %} selected="selected" {% endif %}>کنسل شده</option>
+                            </select>
+                        </th>
+                        <th>
+                            {% if lead.operator %} 
+                            {{ request.user.first_name }} {{ request.user.last_name }} 
+                            {% else %} {# lead.operator #} 
+                            نامشخص 
+                            {% endif %} {# lead.operator #}
+                        </th>
+                        <th class="d-print-none">
+                        <button type="button" class="btn btn-primary btn-sm mx-1 times" data-id="{{ lead.id }}">
+                            <i class="fa fa-times" ></i>
+                        </button>
+                        <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
+                            <i class="fa fa-check" ></i>
+                        </button>
+                        <button type="submit" class="btn btn-danger btn-sm mx-1" name="submit" value="delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        </th>
+                    </form>
+                </div>   
+            </tr>
+        </thead>
+        <!-- End Table_Landing_Edit -->
+        <!-- Start Table_Landing_Question -->
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} " >
             <tr>
                 <td colspan="3">درخواست</td>
                 <td colspan="6" class="text-right">{{ lead.question }}</td>
             </tr>
         </tbody>
+        <!-- End Table_Landing_Question -->
+        <!-- Start Table_Landing_Label -->
         <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}">
                 <tr>
                     <td colspan="3">برچسب</td>
@@ -187,6 +246,8 @@
                     </td>  
                 </tr>
         </tbody>
+        <!-- End Table_Landing_Label -->
+        <!-- Start Table_Landing_Commends -->
         {% for comment in lead.comments.all %}
         <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
             <tr>
@@ -198,43 +259,52 @@
 
             </tr>
         </tbody >
-        <tbody class="d-print-none buttom collapseTableHeaders collapseTableHeaders{{ lead.id }}" id="buttom{{ lead.id }}">
+        <!-- End Table_Landing_Commends -->
+        <!-- Start Table_Landing_Commends_Edit -->
+        <tbody class="d-print-none buttom editing editing{{ lead.id }}">
             <tr class="  " id="comment{{ comment.id }}">
                 <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
                 توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
 
                 <td colspan="4" class="text-right"> {{ comment.text }} </td> 
-                {% if comment.approved_comment == True %}
-                <td class="d-print-none">
-                    <button type="buttom" class="btn btn-primary btn-sm btn-comm comment_approval_toggle">
-                            <i class="fa fa-comment"></i>
-                    </button>
-                    <button type="buttom" class="btn btn-danger btn-sm ">
-                            <i class="fa fa-trash"></i>
+                <td>
+                    <div class="form-inline justify-content-center">
+                        <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ comment.id }}">
+                                <button type="buttom" class="btn {% if comment.approved_comment == True %} btn-primary {% else %} {# approved #} btn-dark {% endif %} {# approved #}  btn-sm btn-comm comment_approval_toggle mx-1">
+                                        {% if comment.approved_comment == True %}
+                                        <i class="fa fa-comment"></i>
+                                        {% else %} {# approved #}
+                                        <i class="fa fa-comment-slash"></i>
+                                        {% endif %} {# approved #}
+                                </button>
+                        </form>
+                        {% if request.user.is_superuser %}
+                        <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{ comment.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm mx-1">
+                                    <i class="fa fa-trash"></i>
+                            </button>  
+                        </form>
+                        {% endif %}
                     
+                    </div>
                 </td>
-                {% else %} {# approved #}
-                <td class="d-print-none" >
-
-                    <button type="buttom" class="btn btn-dark btn-sm btn-comm comment_approval_toggle">
-                            <i class="fa fa-comment-slash"></i>
-                    </button>
-                    <button type="buttom" class="btn btn-danger btn-sm" >
-                            <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-                {% endif %} {# approved #}
             </tr>
         </tbody > 
+        <!-- End Table_Landing_Commends_Edit -->
         {% endfor %} {# comment #}
-        <tbody class="d-print-none collapseTableHeaders collapseTableHeaders{{ lead.id }}">
+        <!-- Start Table_Landing_Commends_New -->
+        <tbody class="d-print-none editing editing{{ lead.id }}">
             <tr>
                 <td colspan="4"> نظر جدید </td>
                     <form action="{% url 'comment_add' %}" method="POST">
                         {% csrf_token %}
                         <td colspan="4">
-                            <input type="hidden" name="post" value="{{ lead.id }}">
+                            <input type="hidden" name="id" value="{{ lead.id }}">
                             <input name="text" type="text" class="form-control form-control-sm" placeholder="نظر شما" id="myInput{{ lead.id }}">
                         </td> 
                         <th class="d-print-none"><button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i></button></th>
@@ -242,6 +312,9 @@
             </tr>
         </tbody > 
         {% endfor %} {# leads #}
+        <!-- End Table_Landing_Commends_New -->
+        <!-- End Table_Landing -->
+        <!-- Start Table_No_Landing -->
         {% else %} {# lead false #} 
         <tbody>
             <tr>
@@ -249,10 +322,12 @@
             </tr>
         </tbody>
         {% endif %} {# lead false #} 
-        
+        <!-- End Table_No_Landing -->
         </table>
     </div>
-    <div class="container-fluid text-center mx-auto mt-3">
+    <!-- End Table -->
+    <!-- Start Pagination -->
+    <div class="container-fluid text-center mx-auto mt-3 d-print-none">
         <nav aria-label="...">
             {% if leads.has_other_pages %}
             <ul class="pagination">
@@ -283,6 +358,7 @@
             {% endif %}
         </nav>
     </div>
+    <!-- End Pagination -->
 </body>
 </html>
 

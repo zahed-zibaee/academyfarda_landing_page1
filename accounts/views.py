@@ -15,7 +15,7 @@ def login(request):
         if user is not None:
             auth.login(request, user)
             messages.success(request, 'You are now loged in')
-            return redirect("/crm/dashboard")
+            return redirect("/leads/export")
         else:
             messages.error(request, "You'r username or passwerd is wrong")
             return redirect("login")

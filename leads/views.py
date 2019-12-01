@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
@@ -56,7 +56,7 @@ def api_submit(request):
     
 
 def export(request):
-    leads = Lead.objects.order_by('-led_time')
+    leads = Lead.objects.order_by('-id')
     #leads paginator
     paginator = Paginator(leads, 20)
     page = request.GET.get('page')
@@ -78,7 +78,8 @@ def export(request):
 def comment_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff and len(request.POST['text']) > 0:
-        post = Lead.objects.get(id=int(request.POST['post']))
+        get_object_or_404(Lead, id=int(request.POST["id"]))
+        post = Lead.objects.filter(id=int(request.POST["id"])).first()
         author = request.user
         text = request.POST['text']
     else:
@@ -89,6 +90,42 @@ def comment_add(request):
     messages.success(request, "You'r comment has been save")
     return redirect('export')
 
+
+def comment_approve(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff:
+        get_object_or_404(Comment, id=int(request.POST["id"]))
+        comment_id = int(request.POST["id"])
+        author = Comment.objects.filter(id=comment_id).first().author
+        if Comment.objects.filter(id=comment_id).first().approved_comment:
+            approved = False
+        else:
+            approved = True
+    else:
+        messages.warning(request, "You'r not authorized")
+        return redirect('export')
+    if request.user == author:
+        obj = Comment.objects.filter(id=comment_id).first()
+        obj.approved_comment = approved
+        obj.save()
+        messages.success(request, "You'r comment has been disabled")
+        return redirect('export')
+    else:
+        messages.warning(request, "You'r not authorized")
+        return redirect('export')   
+    
+def comment_del(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_superuser:
+        get_object_or_404(Lead, id=int(request.POST["id"]))
+        comment_id = int(request.POST["id"])
+    else:
+        messages.warning(request, "You'r comment can not be deleted")
+        return redirect('export')
+    obj = Comment.objects.filter(id=comment_id).first()
+    obj.delete()
+    messages.success(request, "You'r comment has been delete")
+    return redirect('export')
 
 def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
@@ -114,40 +151,47 @@ def lead_add(request):
         messages.warning(request, "You'r lead can not be saved")
         return redirect('export')
         
-def lead_del(request):
+def lead_del_and_edit(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
-        lead = Lead.objects.filter(id=request.POST["lead_id"]).first()
-        if request.user.is_superuser:
-            lead.delete()
-            messages.success(request, "That lead is now gone!!!") 
-            return redirect('export')
-        elif request.user == lead.operator and lead.origin.description == "دیوار":
-            lead.delete()
-            messages.success(request, "That lead is now gone!!!") 
-            return redirect('export')
+        get_object_or_404(Lead, id=int(request.POST["id"]))
+        lead = Lead.objects.filter(id=request.POST["id"]).first()
+        if request.POST["submit"] == "delete" :
+            if request.user.is_superuser or request.user == lead.operator and lead.origin.description == "دیوار":
+                lead.delete()
+                messages.success(request, "That lead is now gone!!!") 
+                return redirect('export')
+            elif request.user == lead.operator and lead.origin.description == "دیوار":
+                lead.delete()
+                messages.success(request, "That lead is now gone!!!") 
+                return redirect('export')
+            else:
+                messages.warning(request, "You're not operator or lead origin is undeleteable") 
+                return redirect('export')
         else:
-            messages.warning(request, "You're not operator or lead origin is undeleteable") 
-            return redirect('export')
+            origin = Origin.objects.filter(description = 'دیوار').first()
+            name_and_family = request.POST['name_and_family']
+            gender = request.POST['gender']
+            phone_fa = digits.ar_to_fa(request.POST['phone_number'])
+            phone_en = digits.fa_to_en(phone_fa)
+            register_status = request.POST['register_status']
+            operator = request.user
+            lead = Lead.objects.filter(id=request.POST["id"]).first()
+            if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and phone_en.isdigit():
+                lead.orgin = origin
+                lead.name_and_family = name_and_family.encode("utf-8")
+                lead.gender = gender
+                lead.phone_number = phone_en
+                lead.register_status = register_status 
+                lead.operator = operator
+                lead.save()
+                messages.success(request, "You'r lead has been save")
+                return redirect('export')
+            else:
+                messages.warning(request, "Check name and family fileld or phone number")
+                return redirect('export')
+
     else:
-        messages.warning(request, "You're can not remove this lead") 
+        messages.warning(request, "You can not remove this lead") 
         return redirect('export')
 
-
-def x(request):
-    if request.user.is_superuser or request.method == "PUT" and request.user.is_authenticated \
-            and request.user.is_staff \
-                and Comment.objects.filter(id=request.POST['comment']).first().author == request.user:
-        approved_comment = request.POST['approved_comment']
-        if approved_comment == "True":
-            Comment.objects.filter(id=request.POST['comment']).update(approved_comment=True)
-        else:
-            Comment.objects.filter(id=request.POST['comment']).update(approved_comment=False)
-        if approved_comment == "True":
-            messages.success(request, "You'r comment has been approved")
-        else:
-            messages.success(request, "You'r comment has been revoked") 
-        return redirect('export')
-    else:
-        messages.success(request, "You'r comment has been save")
-        return redirect('export')
