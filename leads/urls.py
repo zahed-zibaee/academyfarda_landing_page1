@@ -6,6 +6,7 @@ urlpatterns = [
     #TODO: 1-change submit/leads to leads/saubmit 2-acount/login 3-leads/dashboard or analysis
     url(r'^api/submitnew/?$', views.api_submit, name='api_submit'),
     url(r'^export/?$', views.export, name='export'),
+    url(r'^export/all/?$', views.export_all, name='export_all'),
     url(r'^comment_add/?$', views.comment_add, name='comment_add'),
     url(r'^comment_del/?$', views.comment_del, name='comment_del'),
     url(r'^comment_approve/?$', views.comment_approve, name='comment_approve'),

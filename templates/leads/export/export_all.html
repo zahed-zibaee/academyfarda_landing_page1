@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'base/bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'base/jquery/jquery.main.js' %}"></script>
+    <script src="{% static 'base/jquery/jquery.js' %}"></script>
+    <script src="{% static 'base/bootstrap/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'base/fontawesome-free-5.11.2/css/all.css' %}">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static '/leads/export/css/style.css' %}">
+    <link rel="stylesheet" type="text/css" media="print" href="{% static '/leads/export/css/print.css' %}">
+    <script src="{% static 'leads/export/js/main.js' %}"></script>
+
+    <title></title>
+</head>
+<body>
+    <!-- Start Table -->
+    <div class="container-fluid text-center mx-auto mt-3 table-responsive" id="div">
+        {% include 'base/partials/_alerts.html' %}
+        <table class="table table-sm table-bordered table-hover">
+        <!-- Start Table_header -->
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col"><h5>#</h5></th>
+                <th scope="col"><h5>نام و نام خانوادگی</h5></th>
+                <th scope="col"><h5>تلفن</h5></th>
+                <th scope="col"><h5>منشاء</h5></th>
+                <th scope="col"><h5>جنسیت</h5></th>
+                <th scope="col"><h5>تاریخ</h5></th>
+                <th scope="col"><h5>وضعیت</h5></th>
+                <th scope="col"><h5>اپراتور</h5></th>
+            </tr>
+        </thead>
+        <!-- End Table_header -->
+        <!-- Start Table_Landing -->
+        {% if leads %}
+        {% for lead in leads %}
+            {% if lead.register_status == 'K' %}
+        <thead class="static static{{ lead.id }}" data-id="{{ lead.id }}">
+            {% elif lead.register_status == 'C'%} {# register #} 
+        <thead class="static static{{ lead.id }}" data-id="{{ lead.id }}">
+            {% else %} {# register #} 
+        <thead class="static static{{ lead.id }}" data-id="{{ lead.id }}">
+            {% endif %} {# register #}
+                <tr class="bld">
+                <th scope="row" class="collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.id }}
+                </th >
+                <th  class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.name_and_family }}
+                </th>
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.phone_number }}
+                </th>
+                {% if lead.origin %}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.origin }}
+                </th>
+                {% else %} {# origin #}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    نامشخص
+                </th>
+                {% endif %} {# origin #}
+                {% if lead.gender == 'M' %}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    مرد
+                </th>
+                {% else %} {# gender #} 
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    زن
+                </th> 
+                {% endif %} {# gender #} 
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.led_time_jalali|date:'H:i Y-m-d' }}
+                </th>
+                {% if lead.register_status == 'K' %}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    ثبت نام شده
+                </th>
+                {% elif lead.register_status == 'C'%} {# register #} 
+                <th  class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    کنسل شده
+                </th> 
+                {% else %}{# register #} 
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    نامشخص
+                </th> 
+                {% endif %} {# register #} 
+                {% if lead.operator %}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    {{ lead.operator.first_name }} {{ lead.operator.last_name }}
+                </th>
+                {% else %} {# lead.operator #}
+                <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
+                    نامشخص
+                </th>
+                {% endif %} {# lead.operator #}
+            </tr>
+        </thead>
+        <!-- Start Table_Landing_Question -->
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} " >
+            <tr>
+                <td colspan="3">درخواست</td>
+                <td colspan="6" class="text-right">{{ lead.question }}</td>
+            </tr>
+        </tbody>
+        <!-- End Table_Landing_Question -->
+        <!-- Start Table_Landing_Label -->
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}">
+                <tr>
+                    <td colspan="3">برچسب</td>
+                    <td colspan="6" class="text-left">              
+        {% for label in labels %}
+            {% if label.post.id == lead.id %}
+                {{ label.export_ }}
+            {% endif %} {# label #}
+        {% endfor %} {# label #}
+                    </td>  
+                </tr>
+        </tbody>
+        <!-- End Table_Landing_Label -->
+        <!-- Start Table_Landing_Commends -->
+        {% for comment in lead.comments.all %}
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
+            <tr>
+                <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
+                {{ comment.created_date_jalali|date:' H:i' }}
+                توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
+
+                <td colspan="5" class="text-right"> {{ comment.text }} </td> 
+
+            </tr>
+        </tbody >
+        {% endfor %} {# comment #}
+        {% endfor %} {# leads #}
+        <!-- End Table_Landing_Commends -->
+        <!-- End Table_Landing -->
+        <!-- Start Table_No_Landing -->
+        {% else %} {# lead false #} 
+        <tbody>
+            <tr>
+                <td colspan="8"> There is no data </td>
+            </tr>
+        </tbody>
+        {% endif %} {# lead false #} 
+        <!-- End Table_No_Landing -->
+        </table>
+    </div>
+    <!-- End Table -->
+</body>
+</html>
+
+
+

@@ -1,14 +1,14 @@
 setTimeout(function() {
     $('#message').fadeOut('slow');
-}, 5000 );
+}, 10000 );
 
 
 $(document).ready(function(){
-    $("table").children("tbody").hide();
-    $("table .editing").hide();
-
     $("table thead tr").children(".collapseTableHeadersbutton").click(function(){
-        var editing = $(this).data("id")
+        $(this).parent().parent(".table-success-hover").toggleClass("table-success-hover2");
+        $(this).parent().parent(".table-danger-hover").toggleClass("table-danger-hover2");
+        $(this).parent().parent(".thead-light-hover").toggleClass("thead-light-hover2");
+        var editing = $(this).data("id");
         $("table").children(".editing"+editing).hide();
         var child = $(this).data("id");
         $("table .collapseTableHeaders"+child).toggle();
@@ -17,10 +17,20 @@ $(document).ready(function(){
         });
 
     $('.collapseAll').click(function(){
-        $(".collapseTableHeaders").hide('300');
+        $(".collapseTableHeaders").hide();
+        $("table .table-success-hover2").removeClass("table-success-hover2");
+        $("table .table-danger-hover2").removeClass("table-danger-hover2");
+        $("table .thead-light-hover2").removeClass("thead-light-hover2");
+        $("table .editing").hide();
+        $("table .static").show();
         });
     $('.expandAll').click(function(){
-        $(".collapseTableHeaders").show('300');
+        $(".collapseTableHeaders").show();
+        $("table .table-success-hover2").removeClass("table-success-hover2");
+        $("table .table-danger-hover2").removeClass("table-danger-hover2");
+        $("table .thead-light-hover2").removeClass("thead-light-hover2");
+        $("table .editing").hide();
+        $("table .static").show();
         });
 
     $("table thead th .edit").click(function(){
@@ -39,18 +49,5 @@ $(document).ready(function(){
         var child = $(this).data("id");
         $("table .collapseTableHeaders"+child).hide();
         });
+
 }); 
-
-
-$(document).ready(function(){
-
-    $('.table-success-hover111').click(function(){
-        $(this).toggleClass( "table-success-hover2" );    
-    });
-    $('.table-danger-hover111').click(function(){
-        $(this).toggleClass( "table-danger-hover2" );    
-    });
-    $('.thead-light-hover111').click(function(){
-        $(this).toggleClass( "thead-light-hover2" );    
-    });
-});

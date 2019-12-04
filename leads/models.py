@@ -40,7 +40,7 @@ class Lead(models.Model):
         ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
-    question = models.TextField(blank=True, null=True)
+    question = models.TextField(blank=True)
     operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='operator', unique=False, null=True, editable=False,)
 
     def __unicode__(self):

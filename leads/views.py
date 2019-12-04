@@ -11,6 +11,7 @@ from django.contrib import messages ,auth
 from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.contrib.admin.views.decorators import staff_member_required
 
 #TODO: add comment to all project
 @csrf_exempt
@@ -54,7 +55,7 @@ def api_submit(request):
         'status': 'unknown_error',
         }, encoder=JSONEncoder)
     
-
+@staff_member_required
 def export(request):
     leads = Lead.objects.order_by('-id')
     #leads paginator
@@ -74,7 +75,19 @@ def export(request):
     data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time}
     return render(request,'leads/export/export.html', data)
 
+@staff_member_required
+def export_all(request):
+    leads = Lead.objects.order_by('-id')
+    comments = Comment.objects.all()
+    labels = Label.objects.all()
+    time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
+
+    data = {'comments': comments, 'leads':leads, 'labels': labels, 'time': time}
+    return render(request,'leads/export/export_all.html', data)
+
+
+@staff_member_required
 def comment_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff and len(request.POST['text']) > 0:
@@ -90,7 +103,7 @@ def comment_add(request):
     messages.success(request, "You'r comment has been save")
     return redirect('export')
 
-
+@staff_member_required
 def comment_approve(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
@@ -114,6 +127,7 @@ def comment_approve(request):
         messages.warning(request, "You'r not authorized")
         return redirect('export')   
     
+@staff_member_required
 def comment_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_superuser:
@@ -127,6 +141,7 @@ def comment_del(request):
     messages.success(request, "You'r comment has been delete")
     return redirect('export')
 
+@staff_member_required
 def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
@@ -150,7 +165,8 @@ def lead_add(request):
     else:
         messages.warning(request, "You'r lead can not be saved")
         return redirect('export')
-        
+
+@staff_member_required       
 def lead_del_and_edit(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:

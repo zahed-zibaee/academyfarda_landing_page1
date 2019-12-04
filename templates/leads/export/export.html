@@ -163,11 +163,11 @@
         </thead>
         <!-- Start Table_Landing_Edit -->
         {% if lead.register_status == 'K' %}
-        <thead class="table-success table-success-hover editing editing{{ lead.id }}" >
+        <thead class="table-success-hover2 editing editing{{ lead.id }}" >
         {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger table-danger-hover editing editing{{ lead.id }}">
+        <thead class="table-danger-hover2 editing editing{{ lead.id }}">
         {% else %} {# register #} 
-        <thead class="table-secondary thead-light-hover editing editing{{ lead.id }}">
+        <thead class="thead-light-hover2 editing editing{{ lead.id }}">
         {% endif %} {# register #}
             <tr class="bld d-print-none">
                 <div class="form-inline justify-content-center">
@@ -197,9 +197,9 @@
                         </th>
                         <th>
                             <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
-                                <option value="D" {% if lead.gender == 'D' %} selected="selected" {% endif %}>نامشخص</option>
-                                <option value="K" {% if lead.gender == 'K' %} selected="selected" {% endif %}>ثبت نام شده</option>
-                                <option value="C" {% if lead.gender == 'C' %} selected="selected" {% endif %}>کنسل شده</option>
+                                <option value="D" {% if lead.register_status == 'D' %} selected="selected" {% endif %}>نامشخص</option>
+                                <option value="K" {% if lead.register_status == 'K' %} selected="selected" {% endif %}>ثبت نام شده</option>
+                                <option value="C" {% if lead.register_status == 'C' %} selected="selected" {% endif %}>کنسل شده</option>
                             </select>
                         </th>
                         <th>
@@ -326,6 +326,10 @@
         </table>
     </div>
     <!-- End Table -->
+    <script>
+        $("table").children("tbody").hide();
+        $("table .editing").hide();
+    </script>
     <!-- Start Pagination -->
     <div class="container-fluid text-center mx-auto mt-3 d-print-none">
         <nav aria-label="...">
