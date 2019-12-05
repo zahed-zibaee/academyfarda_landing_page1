@@ -147,3 +147,6 @@ body {
   position: relative;
   transform: translate(0px, -2px);
 }
+.linethrough {
+  text-decoration: line-through;
+}
