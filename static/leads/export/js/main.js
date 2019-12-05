@@ -42,6 +42,9 @@ $(document).ready(function(){
         $("table .collapseTableHeaders"+child).hide();
         });
     $("table thead th .times").click(function(){
+        $("table .table-success-hover2").removeClass("table-success-hover2");
+        $("table .table-danger-hover2").removeClass("table-danger-hover2");
+        $("table .thead-light-hover2").removeClass("thead-light-hover2");
         var editing = $(this).data("id");
         $("table").children(".editing"+editing).hide(100);
         var static = $(this).data("id");

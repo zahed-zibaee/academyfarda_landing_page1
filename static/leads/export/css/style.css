@@ -125,3 +125,25 @@ body {
   position: relative;
   transform: translate(0px, -2px);
 }
+.table-success-hover3 {
+  background-color: rgb(59, 161, 59, 0.9) !important;
+  color: white;
+  box-shadow: rgb(59, 161, 59, 0.7) 0px 5px 5px;
+  position: relative;
+  transform: translate(0px, -2px);
+  
+}
+.table-danger-hover3 {
+  background-color: rgb(146, 40, 40, 0.9) !important;
+  color: white;
+  box-shadow: rgb(146, 40, 40, 0.7) 0px 5px 5px;
+  position: relative;
+  transform: translate(0px, -2px);
+}
+.thead-light-hover3 {
+  background-color: rgb(88, 88, 88, 0.9) !important;
+  color: white;
+  box-shadow: rgb(88, 88, 88, 0.7) 0px 5px 10px;
+  position: relative;
+  transform: translate(0px, -2px);
+}

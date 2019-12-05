@@ -163,11 +163,11 @@
         </thead>
         <!-- Start Table_Landing_Edit -->
         {% if lead.register_status == 'K' %}
-        <thead class="table-success-hover2 editing editing{{ lead.id }}" >
+        <thead class="table-success-hover3 editing editing{{ lead.id }}" >
         {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger-hover2 editing editing{{ lead.id }}">
+        <thead class="table-danger-hover3 editing editing{{ lead.id }}">
         {% else %} {# register #} 
-        <thead class="thead-light-hover2 editing editing{{ lead.id }}">
+        <thead class="thead-light-hover3 editing editing{{ lead.id }}">
         {% endif %} {# register #}
             <tr class="bld d-print-none">
                 <div class="form-inline justify-content-center">
