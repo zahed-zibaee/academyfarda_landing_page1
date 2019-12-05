@@ -266,36 +266,47 @@
         <!-- End Table_Landing_Commends -->
         <!-- Start Table_Landing_Commends_Edit -->
         <tbody class="d-print-none buttom editing editing{{ lead.id }}">
-            <tr class="  " id="comment{{ comment.id }}">
-                <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
-                {{ comment.created_date_jalali|date:' H:i' }}
-                توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
-
-                <td colspan="4" class="text-right"> {{ comment.text }} </td> 
+            <tr>
+                <form class="form-inline" action="{% url 'lead_del_and_edit' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ lead.id }}">
+                    <td colspan="4" class="{% if comment.approved_comment != True %} linethrough {% endif %}{# approved #}"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
+                        {{ comment.created_date_jalali|date:' H:i' }}
+                        توسط 
+                        {{ comment.author.first_name }} 
+                        {{ comment.author.last_name }} 
+                    </td>
+                    <td colspan="4" class="text-right {% if comment.approved_comment != True %} linethrough {% endif %}{# approved #}">
+                            <input name="text" type="text" class="form-control form-control-sm" value="{{ comment.text }}" id="myInput{{ lead.id }}">
+                    </td> 
+                
                 <td>
-                    <div class="form-inline justify-content-center">
-                        <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ comment.id }}">
-                                <button type="buttom" class="btn {% if comment.approved_comment == True %} btn-primary {% else %} {# approved #} btn-dark {% endif %} {# approved #}  btn-sm btn-comm comment_approval_toggle mx-1">
-                                        {% if comment.approved_comment == True %}
-                                        <i class="fa fa-comment"></i>
-                                        {% else %} {# approved #}
-                                        <i class="fa fa-comment-slash"></i>
-                                        {% endif %} {# approved #}
-                                </button>
-                        </form>
-                        {% if request.user.is_superuser %}
-                        <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ comment.id }}">
-                            <button type="submit" class="btn btn-danger btn-sm mx-1">
-                                    <i class="fa fa-trash"></i>
-                            </button>  
-                        </form>
-                        {% endif %}
-                    
-                    </div>
+                <div class="form-inline justify-content-center">
+                    <button type="submit" class="btn btn-primary btn-sm btn-comm mx-1">
+                        <i class="fa fa-check"></i>
+                    </button>
+                </form>
+                    <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ comment.id }}">
+                            <button type="buttom" class="btn {% if comment.approved_comment == True %} btn-primary {% else %} {# approved #} btn-dark {% endif %} {# approved #}  btn-sm btn-comm mx-1">
+                                    {% if comment.approved_comment == True %}
+                                    <i class="fa fa-comment"></i>
+                                    {% else %} {# approved #}
+                                    <i class="fa fa-comment-slash"></i>
+                                    {% endif %} {# approved #}
+                            </button>
+                    </form>
+                    {% if request.user.is_superuser %}
+                    <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="{{ comment.id }}">
+                        <button type="submit" class="btn btn-danger btn-sm mx-1">
+                                <i class="fa fa-trash"></i>
+                        </button>  
+                    </form>
+                    {% endif %}
+                </div>
                 </td>
             </tr>
         </tbody > 
