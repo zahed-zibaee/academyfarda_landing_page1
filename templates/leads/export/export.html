@@ -251,9 +251,13 @@
         {% for comment in lead.comments.all %}
         <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
             <tr>
-                <td colspan="4"> نوشته شده در {{ comment.created_date_jalali|date:'d-m-Y' }} ساعت 
+                <td colspan="4"> نوشته شده در 
+                {{ comment.created_date_jalali|date:'d-m-Y' }}
+                 ساعت 
                 {{ comment.created_date_jalali|date:' H:i' }}
-                توسط {{ comment.author.first_name }} {{ comment.author.last_name }} </td>
+                توسط 
+                {{ comment.author.first_name }} {{ comment.author.last_name }}
+                </td>
 
                 <td colspan="5" class="text-right"> {{ comment.text }} </td> 
 

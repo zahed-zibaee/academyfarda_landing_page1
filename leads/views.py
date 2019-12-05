@@ -13,6 +13,7 @@ from persiantools.jdatetime import JalaliDateTime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.admin.views.decorators import staff_member_required
 
+
 #TODO: add comment to all project
 @csrf_exempt
 def api_submit(request):
@@ -95,13 +96,19 @@ def comment_add(request):
         post = Lead.objects.filter(id=int(request.POST["id"])).first()
         author = request.user
         text = request.POST['text']
-    else:
-        messages.warning(request, "You'r comment can not be saved")
+        comment = Comment(post = post, author = author, text = text, created_date = datetime.now(), \
+        created_date_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
+            "%Y-%m-%d %H:%M:%S"), created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
+        comment.save()
+        messages.success(request, "You'r comment has been save")
         return redirect('export')
-    comment = Comment(post = post, author = author, text = text)
-    comment.save()
-    messages.success(request, "You'r comment has been save")
-    return redirect('export')
+    elif len(request.POST['text']) == 0:
+        messages.warning(request, "You'r comment text field is empty")
+        return redirect('export')
+    else:
+        messages.warning(request, "You'r not authorized")
+        return redirect('export')
+    
 
 @staff_member_required
 def comment_approve(request):
@@ -121,7 +128,7 @@ def comment_approve(request):
         obj = Comment.objects.filter(id=comment_id).first()
         obj.approved_comment = approved
         obj.save()
-        messages.success(request, "You'r comment has been disabled")
+        messages.success(request, "You'r comment state has been changed")
         return redirect('export')
     else:
         messages.warning(request, "You'r not authorized")
@@ -134,7 +141,7 @@ def comment_del(request):
         get_object_or_404(Lead, id=int(request.POST["id"]))
         comment_id = int(request.POST["id"])
     else:
-        messages.warning(request, "You'r comment can not be deleted")
+        messages.warning(request, "You'r not authorized")
         return redirect('export')
     obj = Comment.objects.filter(id=comment_id).first()
     obj.delete()
@@ -153,17 +160,27 @@ def lead_add(request):
         register_status = request.POST['register_status']
         operator = request.user
 
-        if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and phone_en.isdigit():
+        if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
+                phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
             lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
                  phone_number = phone_en, register_status = register_status, operator = operator)
             lead.save()
             messages.success(request, "You'r new lead has been save")
             return redirect('export')
+        elif len(name_and_family) <= 3:
+            messages.warning(request, "Check name and family fileld")
+            return redirect('export')
+        elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
+            messages.warning(request, "Phone number is repetitive")
+            return redirect('export')
+        elif len(phone_en) <= 6 and len(phone_en) >= 16 and phone_en.isdigit() is False:
+            messages.warning(request, "Phone number is in wrong format")
+            return redirect('export')
         else:
-            messages.warning(request, "Check name and family fileld or phone number")
+            messages.warning(request, "something went wrong")
             return redirect('export')
     else:
-        messages.warning(request, "You'r lead can not be saved")
+        messages.warning(request, "You'r not authorized")
         return redirect('export')
 
 @staff_member_required       
@@ -193,7 +210,8 @@ def lead_del_and_edit(request):
             register_status = request.POST['register_status']
             operator = request.user
             lead = Lead.objects.filter(id=request.POST["id"]).first()
-            if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and phone_en.isdigit():
+            if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
+                phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
                 lead.orgin = origin
                 lead.name_and_family = name_and_family.encode("utf-8")
                 lead.gender = gender
@@ -203,11 +221,20 @@ def lead_del_and_edit(request):
                 lead.save()
                 messages.success(request, "You'r lead has been save")
                 return redirect('export')
+            elif len(name_and_family) <= 3:
+                messages.warning(request, "Check name and family fileld")
+                return redirect('export')
+            elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
+                messages.warning(request, "Phone number is repetitive")
+                return redirect('export')
+            elif len(phone_en) <= 6 and len(phone_en) >= 16 and phone_en.isdigit() is False:
+                messages.warning(request, "Phone number is in wrong format")
+                return redirect('export')
             else:
-                messages.warning(request, "Check name and family fileld or phone number")
+                messages.warning(request, "something went wrong")
                 return redirect('export')
 
     else:
-        messages.warning(request, "You can not remove this lead") 
+        messages.warning(request, "You'r not authorized") 
         return redirect('export')
 

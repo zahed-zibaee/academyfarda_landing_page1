@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models
 from datetime import datetime
-from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from persiantools.jdatetime import JalaliDateTime
