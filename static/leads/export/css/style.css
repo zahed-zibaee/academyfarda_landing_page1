@@ -16,6 +16,9 @@ body {
   background-color: #fff;
   direction: ltr;
 }
+.rtl {
+  direction: rtl;
+}
 @font-face {
   font-family: 'isans';
   font-style: normal;
