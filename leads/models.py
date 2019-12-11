@@ -39,7 +39,7 @@ class Lead(models.Model):
         ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
-    question = models.TextField(blank=True)
+    question = models.TextField(blank=True, default="")
     operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='operator', unique=False, null=True, editable=False,)
 
     def __unicode__(self):
@@ -86,8 +86,11 @@ class LabelDefinition(models.Model):
         return "{}".format(self.tag)
 
 class Label(models.Model):
-    post = models.ForeignKey(Lead, on_delete=models.CASCADE, unique=False)
+    post = models.ForeignKey(Lead, on_delete=models.CASCADE)
     label = models.ForeignKey(LabelDefinition, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('post', 'label',)
     def colored_name(self):
         return format_html(
             '<span style="color: white; background-color: #{};">{}</span>',
@@ -100,6 +103,7 @@ class Label(models.Model):
             self.label.color_code,
             self.label.tag, 
         )
+    
     def __unicode__(self):
         return format_html(
             '<span style="color: white; background-color: #{};">{}</span>',

@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Origin, User, Lead, Comment, Label
+from .models import Origin, User, Lead, Comment, Label, LabelDefinition
 from datetime import datetime
 from django.contrib import messages ,auth
 from persiantools import digits
@@ -70,10 +70,10 @@ def export(request):
 
     comments = Comment.objects.all()
     labels = Label.objects.all()
+    labels_def = LabelDefinition.objects.all()
     time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
-
-    data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time}
+    data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time, 'labels_def': labels_def}
     return render(request,'leads/export/export.html', data)
 
 @staff_member_required
@@ -133,7 +133,22 @@ def comment_approve(request):
     else:
         messages.warning(request, "You'r not authorized")
         return redirect('export')   
-    
+
+@staff_member_required
+def comment_edit(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_superuser:
+        get_object_or_404(Comment, id=int(request.POST["id"]))
+        comment = Comment.objects.filter(id=int(request.POST["id"])).first()
+        text = request.POST["text"]
+        comment.text = text
+        comment.save()
+        messages.success(request, "You'r comment has been changed!!!")
+        return redirect('export')
+    else:
+        messages.warning(request, "You'r not authorized")
+        return redirect('export')
+
 @staff_member_required
 def comment_del(request):
     if request.method == "POST" and request.user.is_authenticated \
@@ -238,3 +253,21 @@ def lead_del_and_edit(request):
         messages.warning(request, "You'r not authorized") 
         return redirect('export')
 
+@staff_member_required       
+def question_edit(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_superuser:
+        get_object_or_404(Lead, id=int(request.POST["id"]))
+        lead = Lead.objects.filter(id=request.POST["id"]).first()
+        question = request.POST["text"]
+        if len(question) > 1:
+            lead.question = question
+            lead.save()
+            messages.success(request, "Your lead question has been changed")
+            return redirect('export')
+        else:
+            messages.warning(request, "your question is too short!!!") 
+            return redirect('export')
+    else:
+        messages.warning(request, "You'r not authorized") 
+        return redirect('export')

@@ -8,8 +8,11 @@ urlpatterns = [
     url(r'^export/?$', views.export, name='export'),
     url(r'^export/all/?$', views.export_all, name='export_all'),
     url(r'^comment_add/?$', views.comment_add, name='comment_add'),
+    url(r'^comment_edit/?$', views.comment_edit, name='comment_edit'),
     url(r'^comment_del/?$', views.comment_del, name='comment_del'),
     url(r'^comment_approve/?$', views.comment_approve, name='comment_approve'),
     url(r'^lead_add/?$', views.lead_add, name='lead_add'),
     url(r'^lead_del_and_edit/?$', views.lead_del_and_edit, name='lead_del_and_edit'),
+    url(r'^question_edit/?$', views.question_edit, name='question_edit'),
+    url(r'^label_add_and_del/?$', views.question_edit, name='label_add_and_del'),
 ]
