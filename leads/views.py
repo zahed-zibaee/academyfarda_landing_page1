@@ -154,12 +154,11 @@ def comment_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_superuser:
         get_object_or_404(Lead, id=int(request.POST["id"]))
-        comment_id = int(request.POST["id"])
     else:
         messages.warning(request, "You'r not authorized")
         return redirect('export')
-    obj = Comment.objects.filter(id=comment_id).first()
-    obj.delete()
+    comment = Comment.objects.filter(id=int(request.POST["id"])).first()
+    comment.delete()
     messages.success(request, "You'r comment has been delete")
     return redirect('export')
 

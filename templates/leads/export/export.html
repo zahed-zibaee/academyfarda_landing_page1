@@ -344,11 +344,12 @@
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ lead.id }}">
                         <td colspan="6" class="text-left">  
-                            <button type="button" class="btn btn-primary btn-sm btn-comm mx-1">
+                            <button type="button" value="add" class="btn btn-primary btn-sm btn-comm mx-1">
                                 <i class="fa fa-plus"></i>
                             </button>    
                             {% for label in lead.label_set.all %}
-                            <button type="button" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
+                            <input type="hidden" name="id" value="{{ label.id }}">
+                            <button type="button" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
                                 <span>{{ label.label.tag }}</span> 
                                 &nbsp;|&nbsp;
                                 <i class="fa fa-trash"></i>
