@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^lead_add/?$', views.lead_add, name='lead_add'),
     url(r'^lead_del_and_edit/?$', views.lead_del_and_edit, name='lead_del_and_edit'),
     url(r'^question_edit/?$', views.question_edit, name='question_edit'),
-    url(r'^label_add_and_del/?$', views.question_edit, name='label_add_and_del'),
+    url(r'^label_add_and_del/?$', views.label_add_and_del, name='label_add_and_del'),
 ]

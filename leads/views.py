@@ -163,6 +163,26 @@ def comment_del(request):
     return redirect('export')
 
 @staff_member_required
+def label_add_and_del(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff:
+        get_object_or_404(Lead, id=int(request.POST["id"]))
+        get_object_or_404(Label, id=int(request.POST["label_id"]))
+        if request.POST["submit"] == "delete":
+            label = Label.objects.filter(id=int(request.POST["label_id"])).first()
+            label.delete()
+            messages.success(request, "You'r label has been delete")
+            return redirect('export')
+        elif request.POST["submit"] == "add":
+            pass
+        else:
+            messages.warning(request, "You'r request is not valid")
+            return redirect('export')
+    else:
+        messages.warning(request, "You'r not authorized")
+        return redirect('export')
+
+@staff_member_required
 def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
@@ -199,6 +219,7 @@ def lead_add(request):
 
 @staff_member_required       
 def lead_del_and_edit(request):
+    #TODO: add elif if edit
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         get_object_or_404(Lead, id=int(request.POST["id"]))
@@ -215,7 +236,7 @@ def lead_del_and_edit(request):
             else:
                 messages.warning(request, "You're not operator or lead origin is undeleteable") 
                 return redirect('export')
-        else:
+        elif request.POST["submit"] == "edit":
             origin = Origin.objects.filter(description = 'دیوار').first()
             name_and_family = request.POST['name_and_family']
             gender = request.POST['gender']
@@ -233,7 +254,18 @@ def lead_del_and_edit(request):
                 lead.register_status = register_status 
                 lead.operator = operator
                 lead.save()
-                messages.success(request, "You'r lead has been save")
+                messages.success(request, "You'r lead has been changed")
+                return redirect('export')
+            elif len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
+                phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en, id=request.POST["id"])) == 1:
+                lead.orgin = origin
+                lead.name_and_family = name_and_family.encode("utf-8")
+                lead.gender = gender
+                lead.phone_number = phone_en
+                lead.register_status = register_status 
+                lead.operator = operator
+                lead.save()
+                messages.success(request, "You'r lead has been changed")
                 return redirect('export')
             elif len(name_and_family) <= 3:
                 messages.warning(request, "Check name and family fileld")
@@ -247,7 +279,9 @@ def lead_del_and_edit(request):
             else:
                 messages.warning(request, "something went wrong")
                 return redirect('export')
-
+        else:
+            messages.warning(request, "You'r request is not valid")
+            return redirect('export')
     else:
         messages.warning(request, "You'r not authorized") 
         return redirect('export')

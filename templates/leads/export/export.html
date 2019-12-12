@@ -60,9 +60,12 @@
 
                 </div>
                 <div class="form-row">
-                    <div class="col-md-3 mb-3 text-right">
-                        <label for="validationCustom01">نام و نام خانوادگی</label>
-                        <input type="text" class="form-control" id="validationCustom01">
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom05">اپراتور</label>
+                        <select class="custom-select"  id="validationCustom05">
+                            <option selected>-----</option>
+                            <option value="1">زاهد زیبایی</option>
+                        </select>
                     </div>
                     <div class="col-md-3 mb-3 text-right">
                         <label for="validationCustom02">تلفن</label>
@@ -344,12 +347,12 @@
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ lead.id }}">
                         <td colspan="6" class="text-left">  
-                            <button type="button" value="add" class="btn btn-primary btn-sm btn-comm mx-1">
+                            <button type="button" name="submit" value="add" class="btn btn-primary btn-sm btn-comm mx-1">
                                 <i class="fa fa-plus"></i>
                             </button>    
                             {% for label in lead.label_set.all %}
-                            <input type="hidden" name="id" value="{{ label.id }}">
-                            <button type="button" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
+                            <input type="hidden" name="label_id" value="{{ label.id }}">
+                            <button type="submit" name="submit" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
                                 <span>{{ label.label.tag }}</span> 
                                 &nbsp;|&nbsp;
                                 <i class="fa fa-trash"></i>
