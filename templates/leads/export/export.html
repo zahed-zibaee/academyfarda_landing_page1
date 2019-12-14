@@ -20,9 +20,10 @@
 <body>
     <!-- Start Search -->
     <div class="container-fluid mx-auto mt-3 d-print-none">
-        <div class="card rounded-10 px-4 py-3 rtl">
+        <div class="card rounded-5 rtl">
+            <h3 class="card-title py-4 px-3" id="togglecard"><i class="far  fa-caret-square-up"></i> Search </h3>
             <form action="{% url 'export' %}" method="GET">
-                <div class="form-row">
+                <div class="form-row px-3 py-1">
                     <div class="col-md-3 mb-3 text-right">
                         <label for="search_name">نام و نام خانوادگی</label>
                         <input type="text" class="form-control" id="search_name" name="name" value="{{ name }}">
@@ -40,7 +41,7 @@
                         <input type="text" class="form-control" id="validationCustom04" name="question" value="{{ question }}">
                     </div>
                 </div>
-                <div class="form-row">
+                <div class="form-row px-3 py-1">
                     <div class="col-md-2 mb-3 text-right">
                         <label for="validationCustom05">اپراتور</label>
                         <select class="custom-select"  id="validationCustom05" name='operator'>
@@ -97,12 +98,12 @@
                     </div>
                 </div>
                 
-                <div class="text-left">
+                <div class="text-left px-3 py-1">
                     <button class="btn btn-primary btn-lg mx-2 " id="clear_value_search" type="button" value="Reset">Reset</button>
                     <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
                 </div>
             </form>
-            <div class="form-inline">
+            <div class="form-inline px-3 py-1">
                 <button class="btn btn-primary expandAll mx-2">Expand All</button>
                 <button class="btn btn-primary collapseAll mx-2">Collapse All</button>
             </div>
@@ -259,6 +260,7 @@
                     <form class="form-inline" action="{% url 'lead_del_and_edit' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ lead.id }}">
+                        <input type="hidden" name="page" value="{{ leads.number }}">
                         <th>
                             {{ lead.id }}
                         </th>
@@ -485,7 +487,7 @@
             <ul class="pagination">
             {% if leads.has_previous %}
                 <li class="page-item">
-                    <a href="?page={{leads.previous_page_number}}" class="page-link">&laquo;</a>
+                    <a href="?page={{leads.previous_page_number}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">&laquo;</a>
                 </li>
             {% else %}
                 <li class="page-item disabled">
@@ -493,13 +495,14 @@
                 </li>
             {% endif %}
             {% for i in leads.paginator.page_range %}
+
             <li class="page-item {% if i == leads.number %} active {% endif %}">
-                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    <a href="?page={{i}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{i}}</a>
                 </li>
             {% endfor %}
             {% if leads.has_next %}
                 <li class="page-item">
-                    <a href="?page={{leads.next_page_number}}" class="page-link">&raquo;</a>
+                    <a href="?page={{leads.next_page_number}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">&raquo;</a>
                 </li>
             {% else %}
                 <li class="page-item">

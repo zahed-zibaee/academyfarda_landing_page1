@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from .models import Origin, Lead, Comment, Label, LabelDefinition
@@ -159,13 +159,13 @@ def comment_add(request):
             "%Y-%m-%d %H:%M:%S"), created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
         comment.save()
         messages.success(request, "You'r comment has been save")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     elif len(request.POST['text']) == 0:
         messages.warning(request, "You'r comment text field is empty")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 
 @staff_member_required
@@ -181,16 +181,16 @@ def comment_approve(request):
             approved = True
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user == author:
         obj = Comment.objects.filter(id=comment_id).first()
         obj.approved_comment = approved
         obj.save()
         messages.success(request, "You'r comment state has been changed")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')   
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 
 @staff_member_required
 def comment_edit(request):
@@ -202,10 +202,10 @@ def comment_edit(request):
         comment.text = text
         comment.save()
         messages.success(request, "You'r comment has been changed!!!")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
 def comment_del(request):
@@ -214,11 +214,11 @@ def comment_del(request):
         get_object_or_404(Lead, id=int(request.POST["id"]))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     comment = Comment.objects.filter(id=int(request.POST["id"])).first()
     comment.delete()
     messages.success(request, "You'r comment has been delete")
-    return redirect('export')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
 def label_add_and_del(request):
@@ -230,15 +230,15 @@ def label_add_and_del(request):
             label = Label.objects.filter(id=int(request.POST["label_id"])).first()
             label.delete()
             messages.success(request, "You'r label has been delete")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif request.POST["submit"] == "add":
             pass
         else:
             messages.warning(request, "You'r request is not valid")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
 def lead_add(request):
@@ -258,22 +258,22 @@ def lead_add(request):
                  phone_number = phone_en, register_status = register_status, operator = operator)
             lead.save()
             messages.success(request, "You'r new lead has been save")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(name_and_family) <= 3:
             messages.warning(request, "Check name and family fileld")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
             messages.warning(request, "Phone number is repetitive")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(phone_en) <= 6 and len(phone_en) >= 16 and phone_en.isdigit() is False:
             messages.warning(request, "Phone number is in wrong format")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "something went wrong")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized")
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
 def lead_del_and_edit(request):
@@ -286,14 +286,14 @@ def lead_del_and_edit(request):
             if request.user.is_superuser or request.user == lead.operator and lead.origin.description == "دیوار":
                 lead.delete()
                 messages.success(request, "That lead is now gone!!!") 
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif request.user == lead.operator and lead.origin.description == "دیوار":
                 lead.delete()
                 messages.success(request, "That lead is now gone!!!") 
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 messages.warning(request, "You're not operator or lead origin is undeleteable") 
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif request.POST["submit"] == "edit":
             origin = Origin.objects.filter(description = 'دیوار').first()
             name_and_family = request.POST['name_and_family']
@@ -313,7 +313,7 @@ def lead_del_and_edit(request):
                 lead.operator = operator
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en, id=request.POST["id"])) == 1:
                 lead.orgin = origin
@@ -324,25 +324,25 @@ def lead_del_and_edit(request):
                 lead.operator = operator
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif len(name_and_family) <= 3:
                 messages.warning(request, "Check name and family fileld")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
                 messages.warning(request, "Phone number is repetitive")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             elif len(phone_en) <= 6 and len(phone_en) >= 16 and phone_en.isdigit() is False:
                 messages.warning(request, "Phone number is in wrong format")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 messages.warning(request, "something went wrong")
-                return redirect('export')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "You'r request is not valid")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized") 
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
 def question_edit(request):
@@ -355,10 +355,10 @@ def question_edit(request):
             lead.question = question
             lead.save()
             messages.success(request, "Your lead question has been changed")
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "your question is too short!!!") 
-            return redirect('export')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.warning(request, "You'r not authorized") 
-        return redirect('export')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

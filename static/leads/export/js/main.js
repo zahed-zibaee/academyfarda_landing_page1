@@ -57,6 +57,11 @@ $(document).ready(function(){
         $(".card form").find("input").val("");
         $(".card form").find("select").prop('selectedIndex',0);
         });
+
+    $("#togglecard").click(function(){
+        $(this).siblings().slideToggle(500);
+        $(this).find("i").toggleClass("fa-caret-square-up fa-caret-square-down");
+        });
 }); 
 
 
