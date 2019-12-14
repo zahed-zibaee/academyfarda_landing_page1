@@ -5,14 +5,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Origin, User, Lead, Comment, Label, LabelDefinition
+from .models import Origin, Lead, Comment, Label, LabelDefinition
 from datetime import datetime
 from django.contrib import messages ,auth
 from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.admin.views.decorators import staff_member_required
-
+from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES, ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY,\
+        LABELDEFINITION_TAG
 
 #TODO: add comment to all project
 @csrf_exempt
@@ -59,6 +60,59 @@ def api_submit(request):
 @staff_member_required
 def export(request):
     leads = Lead.objects.order_by('-id')
+    data = {}
+    #search
+    if "name" in request.GET and len(request.GET["name"])>0:
+        data.update( { "name":request.GET["name"] } )
+        name = request.GET["name"]
+        if name:
+            leads = leads.filter(name_and_family__icontains=name)
+    if "phone" in request.GET and len(request.GET["phone"])>0:
+        data.update( { "phone":request.GET["phone"] } )
+        phone = request.GET["phone"]
+        if phone:
+            leads = leads.filter(phone_number__icontains=phone)
+    if "comment" in request.GET and len(request.GET["comment"])>0:
+        data.update( { "comment":request.GET["comment"] } )
+        comment = request.GET["comment"]
+        if comment:
+            leads = leads.filter(comments__text__icontains=comment).distinct()
+    if "question" in request.GET and len(request.GET["question"])>0:
+        data.update( { "question":request.GET["question"] } )
+        question = request.GET["question"]
+        if question:
+            leads = leads.filter(question__icontains=question)
+    if "operator" in request.GET and len(request.GET["operator"])>0:
+        data.update( { "operator":int(request.GET["operator"]) } )
+        operator = request.GET["operator"]
+        if operator:
+            leads = leads.filter(operator__id=operator)
+    if "origin" in request.GET and len(request.GET["origin"])>0:
+        data.update( { "origin":int(request.GET["origin"]) } )
+        origin = request.GET["origin"]
+        if origin:
+            leads = leads.filter(origin__id=origin)
+    if "gender" in request.GET and len(request.GET["gender"])>0:
+        data.update( { "gender":request.GET["gender"] } )
+        gender = request.GET["gender"]
+        if gender:
+            leads = leads.filter(gender=gender)
+    if "status" in request.GET and len(request.GET["status"])>0:
+        data.update( { "status":request.GET["status"] } )
+        status = request.GET["status"]
+        if status:
+            leads = leads.filter(register_status=status)
+    if "label1" in request.GET and len(request.GET["label1"])>0:
+        data.update( { "label1":request.GET["label1"] } )
+        label1 = request.GET["label1"]
+        if label1:
+            leads = leads.filter(label__label__color_code=label1)
+    if "label2" in request.GET and len(request.GET["label2"])>0:
+        data.update( { "label2":request.GET["label2"] } )
+        label2 = request.GET["label2"]
+        if label2:
+            leads = leads.filter(label__label__color_code=label2)
+
     #leads paginator
     paginator = Paginator(leads, 20)
     page = request.GET.get('page')
@@ -71,9 +125,13 @@ def export(request):
     comments = Comment.objects.all()
     labels = Label.objects.all()
     labels_def = LabelDefinition.objects.all()
+    origins = Origin.objects.all()
     time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
-    data = {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time, 'labels_def': labels_def}
+    data.update( {'comments': comments, 'leads':paged_leads, 'labels': labels, 'time': time, 'labels_def': labels_def, \
+        origins:'origins','REGISTRATION_STATUS':REGISTRATION_STATUS, 'GENDER_CHOICES':GENDER_CHOICES,\
+            'ORIGIN_DESCRIPTION':ORIGIN_DESCRIPTION, 'USER_NAME_AND_FAMILY':USER_NAME_AND_FAMILY,\
+                'LABELDEFINITION_TAG':LABELDEFINITION_TAG,} )
     return render(request,'leads/export/export.html', data)
 
 @staff_member_required

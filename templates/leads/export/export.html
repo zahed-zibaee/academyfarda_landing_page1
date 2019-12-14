@@ -21,68 +21,85 @@
     <!-- Start Search -->
     <div class="container-fluid mx-auto mt-3 d-print-none">
         <div class="card rounded-10 px-4 py-3 rtl">
-            <form>
+            <form action="{% url 'export' %}" method="GET">
                 <div class="form-row">
                     <div class="col-md-3 mb-3 text-right">
-                        <label for="validationCustom01">نام و نام خانوادگی</label>
-                        <input type="text" class="form-control" id="validationCustom01">
+                        <label for="search_name">نام و نام خانوادگی</label>
+                        <input type="text" class="form-control" id="search_name" name="name" value="{{ name }}">
                     </div>
                     <div class="col-md-3 mb-3 text-right">
                         <label for="validationCustom02">تلفن</label>
-                        <input type="text" class="form-control" id="validationCustom02">
+                        <input type="text" class="form-control" id="validationCustom02" name="phone" value="{{ phone }}">
                     </div>
-                    <div class="col-md-2 mb-3 text-right">
-                        <label for="validationCustom03">منشاء</label>
-                        <select class="custom-select"  id="validationCustom05">
-                            <option selected>-----</option>
-                            <option value="1">دیوار</option>
-                            <option value="2">تپسل</option>
-                            <option value="3">سایت</option>
-                        </select>
+                    <div class="col-md-3 mb-3 text-right">
+                        <label for="validationCustom03">نظرات</label>
+                        <input type="text" class="form-control" id="validationCustom03" name="comment" value="{{ comment }}">
                     </div>
-                    <div class="col-md-2 mb-3 text-right">
-                        <label for="validationCustom04">جنسیت</label>
-                        <select class="custom-select"  id="validationCustom05">
-                            <option selected>-----</option>
-                            <option value="1">مرد</option>
-                            <option value="2">زن</option>
-                        </select>
+                    <div class="col-md-3 mb-3 text-right">
+                        <label for="validationCustom04">درخواست</label>
+                        <input type="text" class="form-control" id="validationCustom04" name="question" value="{{ question }}">
                     </div>
-                    <div class="col-md-2 mb-3 text-right">
-                        <label for="validationCustom05">وضعیت</label>
-                        <select class="custom-select"  id="validationCustom05">
-                            <option selected>-----</option>
-                            <option value="1">نامشخص</option>
-                            <option value="2">ثبت نام شده</option>
-                            <option value="3">کنسل شده</option>
-                        </select>
-                    </div>
-
                 </div>
                 <div class="form-row">
                     <div class="col-md-2 mb-3 text-right">
                         <label for="validationCustom05">اپراتور</label>
-                        <select class="custom-select"  id="validationCustom05">
-                            <option selected>-----</option>
-                            <option value="1">زاهد زیبایی</option>
+                        <select class="custom-select"  id="validationCustom05" name='operator'>
+                            <option {% if operator %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in USER_NAME_AND_FAMILY.items %}
+                            <option value="{{ key }}" {% if key == operator %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# USER_NAME_AND_FAMILY #}
                         </select>
                     </div>
-                    <div class="col-md-3 mb-3 text-right">
-                        <label for="validationCustom02">تلفن</label>
-                        <input type="text" class="form-control" id="validationCustom02">
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom06">منشاء</label>
+                        <select class="custom-select"  id="validationCustom06" name='origin'>
+                            <option {% if origin %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in ORIGIN_DESCRIPTION.items %}
+                            <option value="{{ key }}" {% if key == origin %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# ORIGIN_DESCRIPTION #}
+                        </select>
                     </div>
                     <div class="col-md-2 mb-3 text-right">
-                        <label for="validationCustom03">منشاء</label>
-                        <input type="text" class="form-control" id="validationCustom03">
+                        <label for="validationCustom07">جنسیت</label>
+                        <select class="custom-select"  id="validationCustom07" name='gender'>
+                            <option {% if gender %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in GENDER_CHOICES.items %}
+                            <option value="{{ key }}" {% if key == gender %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# GENDER_CHOICES #}
+                        </select>
                     </div>
                     <div class="col-md-2 mb-3 text-right">
-                        <label for="validationCustom04">جنسیت</label>
-                        <input type="text" class="form-control" id="validationCustom04">
+                        <label for="validationCustom08">وضعیت</label>
+                        <select class="custom-select"  id="validationCustom08" name='status'>
+                            <option {% if status %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in REGISTRATION_STATUS.items %}
+                            <option value="{{ key }}" {% if key == status %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# REGISTRATION_STATUS #}
+                        </select>
                     </div>
-                    
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom09">برچسب 1</label>
+                        <select class="custom-select"  id="validationCustom09" name='label1'>
+                            <option {% if label1 %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in LABELDEFINITION_TAG.items %}
+                            <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label1 %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# LABELDEFINITION_TAG #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom10">برچسب 2</label>
+                        <select class="custom-select"  id="validationCustom10" name='label2'>
+                            <option {% if label2 %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in LABELDEFINITION_TAG.items %}
+                            <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label2 %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# LABELDEFINITION_TAG #}
+                        </select>
+                    </div>
                 </div>
+                
                 <div class="text-left">
-                    <button class="btn btn-primary btn-lg" type="submit">Search</button>
+                    <button class="btn btn-primary btn-lg mx-2 " id="clear_value_search" type="button" value="Reset">Reset</button>
+                    <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
                 </div>
             </form>
             <div class="form-inline">

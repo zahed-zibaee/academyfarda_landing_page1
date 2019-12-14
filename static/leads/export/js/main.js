@@ -52,5 +52,12 @@ $(document).ready(function(){
         var child = $(this).data("id");
         $("table .collapseTableHeaders"+child).hide();
         });
-
+    
+    $("#clear_value_search").click(function(){
+        $(".card form").find("input").val("");
+        $(".card form").find("select").prop('selectedIndex',0);
+        });
 }); 
+
+
+
