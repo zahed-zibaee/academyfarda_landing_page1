@@ -241,7 +241,7 @@
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
                     <div class="form-row justify-content-center">
-                    <button type="button" class="btn btn-primary btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}">
+                    <button type="button" class="btn btn-primary btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}"  value="delete"  >
                         <i class="fas fa-edit"></i>
                     </button>
                 </th>
@@ -249,11 +249,11 @@
         </thead>
         <!-- Start Table_Landing_Edit -->
         {% if lead.register_status == 'K' %}
-        <thead class="table-success-hover3 editing editing{{ lead.id }}" >
+        <thead class="table-success-hover3 editing editing{{ lead.id }}" style="display: none;">
         {% elif lead.register_status == 'C'%} {# register #} 
-        <thead class="table-danger-hover3 editing editing{{ lead.id }}">
+        <thead class="table-danger-hover3 editing editing{{ lead.id }}" style="display: none;">
         {% else %} {# register #} 
-        <thead class="thead-light-hover3 editing editing{{ lead.id }}">
+        <thead class="thead-light-hover3 editing editing{{ lead.id }}" style="display: none;">
         {% endif %} {# register #}
             <tr class="bld d-print-none">
                 <div class="form-inline justify-content-center">
@@ -303,7 +303,7 @@
                         <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                             <i class="fa fa-check" ></i>
                         </button>
-                        <button type="submit" class="btn btn-danger btn-sm mx-1" name="submit" value="delete">
+                        <button type="submit" class="btn btn-danger btn-sm mx-1" name="submit" value="delete"  >
                             <i class="fas fa-trash"></i>
                         </button>
                         </th>
@@ -313,7 +313,7 @@
         </thead>
         <!-- End Table_Landing_Edit -->
         <!-- Start Table_Landing_Question -->
-        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} ">
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" style="display: none;" ">
             <tr>
                 <td colspan="3">درخواست</td>
                 <td colspan="6" class="text-right">{{ lead.question }}</td>
@@ -322,7 +322,7 @@
         <!-- End Table_Landing_Question -->
         {% if request.user.is_superuser %} {# question edit #}
         <!-- Start Table_Landing_Question_Edit -->
-        <tbody class="d-print-none editing editing{{ lead.id }}">
+        <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
             <tr>
                 <form action="{% url 'question_edit' %}" method="POST">
                     {% csrf_token %}
@@ -342,7 +342,7 @@
         <!-- End Table_Landing_Question_Edit -->
         {% endif %}
         <!-- Start Table_Landing_Label -->
-        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}">
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" style="display: none;"">
                 <tr>
                     <td colspan="3">برچسب</td>
                     <td colspan="6" class="text-left">              
@@ -359,7 +359,7 @@
         </tbody>
         <!-- End Table_Landing_Label -->
         <!-- Start Table_Landing_Label_Edit -->
-        <tbody class="d-print-none editing editing{{ lead.id }}">
+        <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
                 <tr>
                     <td colspan="3">برچسب</td>
                     <form action="{% url 'label_add_and_del' %}" method="POST">
@@ -371,7 +371,7 @@
                             </button>    
                             {% for label in lead.label_set.all %}
                             <input type="hidden" name="label_id" value="{{ label.id }}">
-                            <button type="submit" name="submit" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
+                            <button type="submit" name="submit" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};"   >
                                 <span>{{ label.label.tag }}</span> 
                                 &nbsp;|&nbsp;
                                 <i class="fa fa-trash"></i>
@@ -384,7 +384,7 @@
         <!-- End Table_Landing_Label_Edit -->
         <!-- Start Table_Landing_Commends -->
         {% for comment in lead.comments.all %}
-        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }} {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
+        <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" style="display: none;" {% if comment.approved_comment != True %} d-print-none {% endif %}{# approved #} " >
             <tr>
                 <td colspan="4" class="{% if comment.approved_comment != True %} linethrough {% endif %}{# approved #}"> نوشته شده در 
                 {{ comment.created_date_jalali|date:'d-m-Y' }}
@@ -400,7 +400,7 @@
         </tbody >
         <!-- End Table_Landing_Commends -->
         <!-- Start Table_Landing_Commends_Edit -->
-        <tbody class="d-print-none editing editing{{ lead.id }}">
+        <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
             <tr>
                 <form class="form-inline" action="{% url 'comment_edit' %}" method="POST">
                     {% csrf_token %}
@@ -436,7 +436,7 @@
                     <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
                             {% csrf_token %}
                             <input type="hidden" name="id" value="{{ comment.id }}">
-                        <button type="submit" class="btn btn-danger btn-sm mx-1">
+                        <button type="submit" class="btn btn-danger btn-sm mx-1" >
                                 <i class="fa fa-trash"></i>
                         </button>  
                     </form>
@@ -448,7 +448,7 @@
         <!-- End Table_Landing_Commends_Edit -->
         {% endfor %} {# comment #}
         <!-- Start Table_Landing_Commends_New -->
-        <tbody class="d-print-none editing editing{{ lead.id }}">
+        <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
             <tr>
                 <td colspan="4"> نظر جدید </td>
                     <form action="{% url 'comment_add' %}" method="POST">
@@ -476,10 +476,7 @@
         </table>
     </div>
     <!-- End Table -->
-    <script>
-        $("table").children("tbody").hide();
-        $("table .editing").hide();
-    </script>
+
     <!-- Start Pagination -->
     <div class="container-fluid text-center mx-auto mt-3 d-print-none">
         <nav aria-label="...">
@@ -516,6 +513,3 @@
     <!-- End Pagination -->
 </body>
 </html>
-
-
-
