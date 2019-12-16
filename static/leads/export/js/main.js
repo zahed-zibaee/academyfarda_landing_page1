@@ -58,11 +58,47 @@ $(document).ready(function(){
         $(".card form").find("select").prop('selectedIndex',0);
         });
 
-    $("#togglecard").click(function(){
+    $(".togglecard").click(function(){
         $(this).siblings().slideToggle(500);
         $(this).find("i").toggleClass("fa-caret-square-up fa-caret-square-down");
         });
-}); 
 
 
-
+    var to, from;
+    to = $(".range-to-example").persianDatepicker({
+        inline: true,
+        format: "L",
+        altField: '.range-to-example-alt',
+        altFormat: 'X',
+        initialValue: false,
+        responsive: true,
+        onSelect: function (unix) {
+            to.touched = true;
+            if (from && from.options && from.options.maxDate != unix) {
+                var cachedValue = from.getState().selected.unixDate;
+                from.options = {maxDate: unix};
+                if (from.touched) {
+                    from.setDate(cachedValue);
+                }
+            }
+        }
+    });
+    from = $(".range-from-example").persianDatepicker({
+        inline: true,
+        format: "L",
+        altField: '.range-from-example-alt',
+        altFormat: 'X',
+        initialValue: false,
+        responsive: true,
+        onSelect: function (unix) {
+            from.touched = true;
+            if (to && to.options && to.options.minDate != unix) {
+                var cachedValue = to.getState().selected.unixDate;
+                to.options = {minDate: unix};
+                if (to.touched) {
+                    to.setDate(cachedValue);
+                }
+            }
+        }
+    });
+});
