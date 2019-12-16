@@ -6,7 +6,7 @@ from django.http import JsonResponse, HttpResponseRedirect
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from .models import Origin, Lead, Comment, Label, LabelDefinition
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib import messages ,auth
 from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime
@@ -14,6 +14,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.admin.views.decorators import staff_member_required
 from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES, ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY,\
         LABELDEFINITION_TAG
+import pytz
 
 #TODO: add comment to all project
 @csrf_exempt
@@ -112,6 +113,21 @@ def export(request):
         label2 = request.GET["label2"]
         if label2:
             leads = leads.filter(label__label__color_code=label2)
+    if "date_from" in request.GET and len(request.GET["date_from"])>0:
+        data.update( { "date_from":request.GET["date_from"] } )
+        date_from = request.GET["date_from"]
+        if date_from:
+            utc_dt = datetime.utcfromtimestamp(float(date_from)).replace(tzinfo=pytz.utc)
+            just_date = datetime.strptime(utc_dt.strftime("%Y-%m-%d"), "%Y-%m-%d")
+            leads = leads.filter(led_time__gte=just_date)
+    if "date_to" in request.GET and len(request.GET["date_to"])>0:
+        data.update( { "date_to":request.GET["date_to"] } )
+        date_to = request.GET["date_to"]
+        if date_to:
+            utc_dt = datetime.utcfromtimestamp(float(date_to)).replace(tzinfo=pytz.utc)
+            just_date = datetime.strptime(utc_dt.strftime("%Y-%m-%d"), "%Y-%m-%d")
+            just_date += timedelta(days=1)
+            leads = leads.filter(led_time__lte=just_date)
 
     #leads paginator
     paginator = Paginator(leads, 20)
