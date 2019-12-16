@@ -211,7 +211,7 @@ def comment_edit(request):
 def comment_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_superuser:
-        get_object_or_404(Lead, id=int(request.POST["id"]))
+        get_object_or_404(Comment, id=int(request.POST["id"]))
     else:
         messages.warning(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
