@@ -325,10 +325,31 @@
                         <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                             <i class="fa fa-check" ></i>
                         </button>
-                        <button type="submit" class="btn btn-danger btn-sm mx-1" name="submit" value="delete"  >
+                        <button type="button" class="btn btn-danger btn-sm mx-1" data-toggle="modal" data-target="#Popup_Lead_Delete">
                             <i class="fas fa-trash"></i>
                         </button>
                         </th>
+                        <!-- Popup_Lead_Delete Start -->
+                        <div class="modal fade" id="Popup_Lead_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                Are you sure you want to delete lead number {{ lead.id }}?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger" name="submit" value="delete">Delete</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <!-- Popup_Lead_Delete END  -->
                     </form>
                 </div>   
             </tr>
@@ -381,28 +402,35 @@
         </tbody>
         <!-- End Table_Landing_Label -->
         <!-- Start Table_Landing_Label_Edit -->
-        <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
-                <tr>
-                    <td colspan="3">برچسب</td>
-                    <form action="{% url 'label_add_and_del' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="id" value="{{ lead.id }}">
-                        <td colspan="6" class="text-left">  
-                            <button type="button" name="submit" value="add" class="btn btn-primary btn-sm btn-comm mx-1">
-                                <i class="fa fa-plus"></i>
-                            </button>    
-                            {% for label in lead.label_set.all %}
-                            <input type="hidden" name="label_id" value="{{ label.id }}">
-                            <button type="submit" name="submit" value="delete" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};"   >
-                                <span>{{ label.label.tag }}</span> 
-                                &nbsp;|&nbsp;
-                                <i class="fa fa-trash"></i>
-                            </button> 
-                            {% endfor %} {# label #}    
-                        </td>
-                    </form>
-                </tr>
+        {% for label in lead.label_set.all %}
+        <tbody class="editing editing{{ lead.id }}" style="display: none;">
+            <tr>
+                <form action="{% url 'label_edit_and_del' %}" method="POST">
+                {% csrf_token %}
+                    <input type="hidden" name="lead_id" value="{{lead.id}}">
+                    <input type="hidden" name="label_id" value="{{label.id}}">
+                <td colspan="3">برچسب</td>
+                <td colspan="5" class="text-left">
+                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
+                            {% for labels_def in labels_def %}
+                            <option name="label" value="{{ labels_def.id }}" {% if label.label.id == labels_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ labels_def.color_code }};">
+                                {{ labels_def.tag }}
+                            </option>
+                            {% endfor %} {# labels_def #}
+                        </select>
+                </td> 
+                <td colspan="1">
+                    <button type="submit" class="btn btn-primary btn-sm mx-2" name="submit" value="edit">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button type="submit" class="btn btn-danger btn-sm mx-2"  name="submit" value="delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+                </form>
+            </tr>
         </tbody>
+        {% endfor %} {# label #}
         <!-- End Table_Landing_Label_Edit -->
         <!-- Start Table_Landing_Commends -->
         {% for comment in lead.comments.all %}
@@ -533,5 +561,6 @@
         </nav>
     </div>
     <!-- End Pagination -->
+
 </body>
 </html>

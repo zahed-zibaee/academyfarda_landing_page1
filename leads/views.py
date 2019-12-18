@@ -141,6 +141,7 @@ def export(request):
     comments = Comment.objects.all()
     labels = Label.objects.all()
     labels_def = LabelDefinition.objects.all()
+    
     origins = Origin.objects.all()
     time = JalaliDateTime.now().strftime("%H:%M %Y-%m-%d")
 
@@ -237,17 +238,17 @@ def comment_del(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
-def label_add_and_del(request):
+def label_edit_and_del(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
-        get_object_or_404(Lead, id=int(request.POST["id"]))
+        get_object_or_404(Lead, id=int(request.POST["lead_id"]))
         get_object_or_404(Label, id=int(request.POST["label_id"]))
         if request.POST["submit"] == "delete":
             label = Label.objects.filter(id=int(request.POST["label_id"])).first()
             label.delete()
             messages.success(request, "You'r label has been delete")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif request.POST["submit"] == "add":
+        elif request.POST["submit"] == "edit":
             pass
         else:
             messages.warning(request, "You'r request is not valid")
