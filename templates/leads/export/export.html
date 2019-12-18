@@ -394,7 +394,6 @@
                                 <button type="button" class="btn btn-sm mx-2" style="color: white; background-color: #{{ label.label.color_code }};">
                                     {{ label.label.tag }}
                                 </button>
-
                             {% endif %} {# label #}
                         {% endfor %} {# label #}
                     </td>  
@@ -411,13 +410,13 @@
                     <input type="hidden" name="label_id" value="{{label.id}}">
                 <td colspan="3">برچسب</td>
                 <td colspan="5" class="text-left">
-                        <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
-                            {% for labels_def in labels_def %}
-                            <option name="label" value="{{ labels_def.id }}" {% if label.label.id == labels_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ labels_def.color_code }};">
-                                {{ labels_def.tag }}
-                            </option>
-                            {% endfor %} {# labels_def #}
-                        </select>
+                    <select class="form-control form-control-sm" name="label">
+                        {% for label_def in labels_def %}
+                        <option value="{{ label_def.id }}" {% if label.label.id == label_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ label_def.color_code }};">
+                            {{ label_def.tag }}
+                        </option>
+                        {% endfor %} {# labels_def #}
+                    </select>
                 </td> 
                 <td colspan="1">
                     <button type="submit" class="btn btn-primary btn-sm mx-2" name="submit" value="edit">

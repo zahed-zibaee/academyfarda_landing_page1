@@ -249,7 +249,15 @@ def label_edit_and_del(request):
             messages.success(request, "You'r label has been delete")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif request.POST["submit"] == "edit":
-            pass
+            if len(Label.objects.filter(label__id=int(request.POST["label"]), post__id=int(request.POST["lead_id"]))) == 0:
+                label = Label.objects.filter(id=int(request.POST["label_id"])).first()
+                label.label = LabelDefinition.objects.filter(id=int(request.POST["label"])).first()
+                label.save()
+                messages.success(request, "You'r label has been changed")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.success(request, "This label exist")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "You'r request is not valid")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
