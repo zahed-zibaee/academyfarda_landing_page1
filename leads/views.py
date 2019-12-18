@@ -256,7 +256,7 @@ def label_edit_and_del(request):
                 messages.success(request, "You'r label has been changed")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                messages.success(request, "This label exist")
+                messages.warning(request, "This label exist")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "You'r request is not valid")
