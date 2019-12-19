@@ -181,7 +181,7 @@ def comment_add(request):
         messages.warning(request, "You'r comment text field is empty")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 
@@ -197,7 +197,7 @@ def comment_approve(request):
         else:
             approved = True
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user == author:
         obj = Comment.objects.filter(id=comment_id).first()
@@ -206,7 +206,7 @@ def comment_approve(request):
         messages.success(request, "You'r comment state has been changed")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 
 @staff_member_required
@@ -221,7 +221,7 @@ def comment_edit(request):
         messages.success(request, "You'r comment has been changed!!!")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
@@ -230,7 +230,7 @@ def comment_del(request):
             and request.user.is_superuser:
         get_object_or_404(Comment, id=int(request.POST["id"]))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     comment = Comment.objects.filter(id=int(request.POST["id"])).first()
     comment.delete()
@@ -266,7 +266,7 @@ def label_edit_and_del(request):
             messages.warning(request, "You'r request is not valid")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
@@ -286,7 +286,7 @@ def label_add(request):
             messages.warning(request, "This label exist")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
@@ -322,7 +322,7 @@ def lead_add(request):
             messages.warning(request, "something went wrong")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized")
+        messages.error(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
@@ -394,7 +394,7 @@ def lead_del_and_edit(request):
             messages.warning(request, "You'r request is not valid")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.danger(request, "You'r not authorized") 
+        messages.error(request, "You'r not authorized") 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
@@ -410,5 +410,5 @@ def question_edit(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     else:
-        messages.danger(request, "You'r not authorized") 
+        messages.error(request, "You'r not authorized") 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
