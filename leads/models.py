@@ -87,8 +87,13 @@ class LabelDefinition(models.Model):
 
 class Label(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE)
-    label = models.ForeignKey(LabelDefinition, on_delete=models.CASCADE)
-
+    label = models.ForeignKey(LabelDefinition, on_delete=models.SET_NULL, null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, editable=False)
+    created_date = models.DateTimeField(default=datetime.now(), editable=False)
+    created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
+        editable=False, null=False, blank=False)
     class Meta:
         unique_together = ('post', 'label',)
     def colored_name(self):

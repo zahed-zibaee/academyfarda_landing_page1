@@ -21,7 +21,7 @@ import pytz
 def api_submit(request):
     #TODO: frontend make lead page input pup red when error, calasify this if
     post_keys = request.POST.keys() 
-    #check if there is a token and token is valid and phone is exist and not repetitive than is phone digits and name exits and not too short
+    #check if there is a token and token is valid and phone is not exist and not repetitive than is phone digits and name exits and not too short
     if 'token' in post_keys and Origin.objects.filter(token = request.POST['token']).exists() and Origin.objects.filter(token_activation = True) \
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
@@ -181,7 +181,7 @@ def comment_add(request):
         messages.warning(request, "You'r comment text field is empty")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 
@@ -197,7 +197,7 @@ def comment_approve(request):
         else:
             approved = True
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user == author:
         obj = Comment.objects.filter(id=comment_id).first()
@@ -206,7 +206,7 @@ def comment_approve(request):
         messages.success(request, "You'r comment state has been changed")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))   
 
 @staff_member_required
@@ -221,7 +221,7 @@ def comment_edit(request):
         messages.success(request, "You'r comment has been changed!!!")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
@@ -230,7 +230,7 @@ def comment_del(request):
             and request.user.is_superuser:
         get_object_or_404(Comment, id=int(request.POST["id"]))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     comment = Comment.objects.filter(id=int(request.POST["id"])).first()
     comment.delete()
@@ -240,15 +240,16 @@ def comment_del(request):
 @staff_member_required
 def label_edit_and_del(request):
     if request.method == "POST" and request.user.is_authenticated \
-            and request.user.is_staff:
+            and request.user.is_staff :
         get_object_or_404(Lead, id=int(request.POST["lead_id"]))
         get_object_or_404(Label, id=int(request.POST["label_id"]))
-        if request.POST["submit"] == "delete":
+        if request.POST["submit"] == "delete" and request.user == Label.objects.filter(id=int(request.POST["label_id"])).first().owner:
             label = Label.objects.filter(id=int(request.POST["label_id"])).first()
             label.delete()
             messages.success(request, "You'r label has been delete")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif request.POST["submit"] == "edit":
+        elif request.POST["submit"] == "edit" and request.user == Label.objects.filter(id=int(request.POST["label_id"])).first().owner:
+            get_object_or_404(LabelDefinition, id=int(request.POST["label"]))
             if len(Label.objects.filter(label__id=int(request.POST["label"]), post__id=int(request.POST["lead_id"]))) == 0:
                 label = Label.objects.filter(id=int(request.POST["label_id"])).first()
                 label.label = LabelDefinition.objects.filter(id=int(request.POST["label"])).first()
@@ -258,11 +259,34 @@ def label_edit_and_del(request):
             else:
                 messages.warning(request, "This label exist")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif request.user != Label.objects.filter(id=int(request.POST["label_id"])).first().owner:
+            messages.warning(request, "This is not you'r label")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             messages.warning(request, "You'r request is not valid")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+@staff_member_required
+def label_add(request):
+    if request.method == "POST" and request.user.is_authenticated \
+            and request.user.is_staff:
+        get_object_or_404(Lead, id=int(request.POST["lead_id"]))
+        get_object_or_404(LabelDefinition, id=int(request.POST["label"]))
+        if len(Label.objects.filter(label__id=int(request.POST["label"]), post__id=int(request.POST["lead_id"]))) == 0:
+            post = Lead.objects.filter(id=int(request.POST["lead_id"])).first()
+            label1 = LabelDefinition.objects.filter(id=int(request.POST["label"])).first()
+            label = Label(post = post, label = label1, owner = request.user)
+            label.save()
+            messages.success(request, "You'r label has been changed")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "This label exist")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required
@@ -276,6 +300,7 @@ def lead_add(request):
         phone_en = digits.fa_to_en(phone_fa)
         register_status = request.POST['register_status']
         operator = request.user
+        origin = Origin.objects.filter(id=int(request.POST['origin'])).first()
 
         if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
@@ -297,7 +322,7 @@ def lead_add(request):
             messages.warning(request, "something went wrong")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized")
+        messages.danger(request, "You'r not authorized")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
@@ -327,6 +352,7 @@ def lead_del_and_edit(request):
             phone_en = digits.fa_to_en(phone_fa)
             register_status = request.POST['register_status']
             operator = request.user
+            origin = Origin.objects.filter(id=int(request.POST['origin'])).first()
             lead = Lead.objects.filter(id=request.POST["id"]).first()
             if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
@@ -336,6 +362,7 @@ def lead_del_and_edit(request):
                 lead.phone_number = phone_en
                 lead.register_status = register_status 
                 lead.operator = operator
+                lead.origin = origin
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -347,6 +374,7 @@ def lead_del_and_edit(request):
                 lead.phone_number = phone_en
                 lead.register_status = register_status 
                 lead.operator = operator
+                lead.origin = origin
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -366,7 +394,7 @@ def lead_del_and_edit(request):
             messages.warning(request, "You'r request is not valid")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        messages.warning(request, "You'r not authorized") 
+        messages.danger(request, "You'r not authorized") 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 @staff_member_required       
@@ -376,14 +404,11 @@ def question_edit(request):
         get_object_or_404(Lead, id=int(request.POST["id"]))
         lead = Lead.objects.filter(id=request.POST["id"]).first()
         question = request.POST["text"]
-        if len(question) > 1:
-            lead.question = question
-            lead.save()
-            messages.success(request, "Your lead question has been changed")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        else:
-            messages.warning(request, "your question is too short!!!") 
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        lead.question = question
+        lead.save()
+        messages.success(request, "Your lead question has been changed")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
     else:
-        messages.warning(request, "You'r not authorized") 
+        messages.danger(request, "You'r not authorized") 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
