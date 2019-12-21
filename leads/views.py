@@ -9,7 +9,7 @@ from .models import Origin, Lead, Comment, Label, LabelDefinition
 from datetime import datetime, timedelta
 from django.contrib import messages ,auth
 from persiantools import digits
-from persiantools.jdatetime import JalaliDateTime
+from persiantools.jdatetime import JalaliDateTime, JalaliDate
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.admin.views.decorators import staff_member_required
 from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES, ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY,\
@@ -63,26 +63,18 @@ def export(request):
     leads = Lead.objects.order_by('-id')
     data = {}
     #search
-    if "name" in request.GET and len(request.GET["name"])>0:
-        data.update( { "name":request.GET["name"] } )
-        name = request.GET["name"]
-        if name:
-            leads = leads.filter(name_and_family__icontains=name)
-    if "phone" in request.GET and len(request.GET["phone"])>0:
-        data.update( { "phone":request.GET["phone"] } )
-        phone = request.GET["phone"]
-        if phone:
-            leads = leads.filter(phone_number__icontains=phone)
-    if "comment" in request.GET and len(request.GET["comment"])>0:
-        data.update( { "comment":request.GET["comment"] } )
-        comment = request.GET["comment"]
-        if comment:
-            leads = leads.filter(comments__text__icontains=comment).distinct()
-    if "question" in request.GET and len(request.GET["question"])>0:
-        data.update( { "question":request.GET["question"] } )
-        question = request.GET["question"]
-        if question:
-            leads = leads.filter(question__icontains=question)
+    if "phrase" in request.GET and len(request.GET["phrase"])>0:
+        data.update( { "phrase":request.GET["phrase"] } )
+        phrase = request.GET["phrase"]
+        if phrase:
+            p_name = leads.filter(name_and_family__icontains=phrase)
+            p_phone = leads.filter(phone_number__icontains=phrase)
+            p_comment = leads.filter(comments__text__icontains=phrase)
+            p_question = leads.filter(question__icontains=phrase)
+            
+            leads = p_name | p_phone | p_comment | p_question
+            leads = leads.distinct()
+
     if "operator" in request.GET and len(request.GET["operator"])>0:
         data.update( { "operator":int(request.GET["operator"]) } )
         operator = request.GET["operator"]
@@ -114,20 +106,29 @@ def export(request):
         if label2:
             leads = leads.filter(label__label__color_code=label2)
     if "date_from" in request.GET and len(request.GET["date_from"])>0:
-        data.update( { "date_from":request.GET["date_from"] } )
         date_from = request.GET["date_from"]
         if date_from:
-            utc_dt = datetime.utcfromtimestamp(float(date_from)).replace(tzinfo=pytz.utc)
-            just_date = datetime.strptime(utc_dt.strftime("%Y-%m-%d"), "%Y-%m-%d")
-            leads = leads.filter(led_time__gte=just_date)
+            date_from_s =date_from.split("/")
+            date_from = JalaliDate(int(date_from_s[0]), int(date_from_s[1]), int(date_from_s[2])).to_gregorian()
+            data.update( { "date_from":date_from.strftime("%Y-%m-%d")} )
+            leads = leads.filter(led_time__gte=date_from)
     if "date_to" in request.GET and len(request.GET["date_to"])>0:
-        data.update( { "date_to":request.GET["date_to"] } )
         date_to = request.GET["date_to"]
         if date_to:
-            utc_dt = datetime.utcfromtimestamp(float(date_to)).replace(tzinfo=pytz.utc)
-            just_date = datetime.strptime(utc_dt.strftime("%Y-%m-%d"), "%Y-%m-%d")
-            just_date += timedelta(days=1)
-            leads = leads.filter(led_time__lte=just_date)
+            date_to_s =date_to.split("/")
+            date_to = JalaliDate(int(date_to_s[0]), int(date_to_s[1]), int(date_to_s[2])).to_gregorian()
+            data.update( { "date_to":date_to.strftime("%Y-%m-%d")} )
+            date_to += timedelta(days=1)
+            leads = leads.filter(led_time__lte=date_to)
+    if "date_to" not in data:
+        date = datetime.now()
+        date = date.strftime("%Y-%m-%d")
+        date = data.update( { "date_to":date} )
+    if "date_from" not in data:
+        date = datetime.now()
+        date += timedelta(days=-30)
+        date = date.strftime("%Y-%m-%d")
+        data.update( { "date_from":date} )
 
     #leads paginator
     paginator = Paginator(leads, 20)
@@ -327,13 +328,12 @@ def lead_add(request):
 
 @staff_member_required       
 def lead_del_and_edit(request):
-    #TODO: add elif if edit
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
         get_object_or_404(Lead, id=int(request.POST["id"]))
         lead = Lead.objects.filter(id=request.POST["id"]).first()
         if request.POST["submit"] == "delete" :
-            if request.user.is_superuser or request.user == lead.operator and lead.origin.description == "دیوار":
+            if request.user.is_superuser:
                 lead.delete()
                 messages.success(request, "That lead is now gone!!!") 
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -344,7 +344,8 @@ def lead_del_and_edit(request):
             else:
                 messages.warning(request, "You're not operator or lead origin is undeleteable") 
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif request.POST["submit"] == "edit":
+        elif request.POST["submit"] == "edit" and request.user == lead.operator\
+                and (lead.origin.description == "دیوار" or lead.origin.description == "سایت"):
             origin = Origin.objects.filter(description = 'دیوار').first()
             name_and_family = request.POST['name_and_family']
             gender = request.POST['gender']

@@ -64,41 +64,192 @@ $(document).ready(function(){
         });
 
 
-    var to, from;
-    to = $(".range-to-example").persianDatepicker({
-        inline: true,
-        format: "L",
-        altField: '.range-to-example-alt',
-        altFormat: 'X',
-        initialValue: false,
-        responsive: true,
-        onSelect: function (unix) {
-            to.touched = true;
-            if (from && from.options && from.options.maxDate != unix) {
-                var cachedValue = from.getState().selected.unixDate;
-                from.options = {maxDate: unix};
-                if (from.touched) {
-                    from.setDate(cachedValue);
-                }
+    $("#range-to-example").persianDatepicker({
+        "inline": false,
+        "format": "L",
+        "viewMode": "day",
+        "initialValue": true,
+        "autoClose": true,
+        "position": "auto",
+        "altFormat": "l",
+        "altField": "#range-to-example-alt",
+        "onlyTimePicker": false,
+        "onlySelectOnDate": true,
+        "calendarType": "persian",
+        "inputDelay": 800,
+        "observer": true,
+        "persianDigit" :false,
+        "calendar": {
+            "persian": {
+            "locale": "en",
+            "showHint": false,
+            "leapYearMode": "algorithmic"
+            },
+            "gregorian": {
+            "locale": "en",
+            "showHint": false
             }
-        }
+        },
+        "navigator": {
+            "enabled": true,
+            "scroll": {
+            "enabled": false
+            },
+            "text": {
+            "btnNextText": "<",
+            "btnPrevText": ">"
+            }
+        },
+        "toolbox": {
+            "enabled": true,
+            "calendarSwitch": {
+            "enabled": false,
+            "format": "MMMM"
+            },
+            "todayButton": {
+            "enabled": true,
+            "text": {
+                "fa": "امروز",
+                "en": "Today"
+            }
+            },
+            "submitButton": {
+            "enabled": false,
+            "text": {
+                "fa": "تایید",
+                "en": "Submit"
+            }
+            },
+            "text": {
+            "btnToday": "امروز"
+            }
+        },
+        "timePicker": {
+            "enabled": false,
+            "step": 1,
+            "hour": {
+            "enabled": true,
+            "step": null
+            },
+            "minute": {
+            "enabled": true,
+            "step": null
+            },
+            "second": {
+            "enabled": true,
+            "step": null
+            },
+            "meridian": {
+            "enabled": true
+            }
+        },
+        "dayPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY MMMM"
+        },
+        "monthPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "yearPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "responsive": true
     });
-    from = $(".range-from-example").persianDatepicker({
-        inline: true,
-        format: "L",
-        altField: '.range-from-example-alt',
-        altFormat: 'X',
-        initialValue: false,
-        responsive: true,
-        onSelect: function (unix) {
-            from.touched = true;
-            if (to && to.options && to.options.minDate != unix) {
-                var cachedValue = to.getState().selected.unixDate;
-                to.options = {minDate: unix};
-                if (to.touched) {
-                    to.setDate(cachedValue);
-                }
+    $("#range-from-example").persianDatepicker({
+        "inline": false,
+        "format": "L",
+        "viewMode": "day",
+        "initialValue": true,
+        "minDate": null,
+        "maxDate": null,
+        "autoClose": true,
+        "position": "auto",
+        "altFormat": "l",
+        "altField": "#range-from-example-alt",
+        "onlyTimePicker": false,
+        "onlySelectOnDate": true,
+        "calendarType": "persian",
+        "inputDelay": 800,
+        "observer": true,
+        "persianDigit" :false,
+        "calendar": {
+            "persian": {
+            "locale": "en",
+            "showHint": false,
+            "leapYearMode": "algorithmic"
+            },
+            "gregorian": {
+            "locale": "en",
+            "showHint": false
             }
-        }
+        },
+        "navigator": {
+            "enabled": true,
+            "scroll": {
+            "enabled": false
+            },
+            "text": {
+            "btnNextText": "<",
+            "btnPrevText": ">"
+            }
+        },
+        "toolbox": {
+            "enabled": true,
+            "calendarSwitch": {
+            "enabled": false,
+            "format": "MMMM"
+            },
+            "todayButton": {
+            "enabled": true,
+            "text": {
+                "fa": "امروز",
+                "en": "Today"
+            }
+            },
+            "submitButton": {
+            "enabled": false,
+            "text": {
+                "fa": "تایید",
+                "en": "Submit"
+            }
+            },
+            "text": {
+            "btnToday": "امروز"
+            }
+        },
+        "timePicker": {
+            "enabled": false,
+            "step": 1,
+            "hour": {
+            "enabled": true,
+            "step": null
+            },
+            "minute": {
+            "enabled": true,
+            "step": null
+            },
+            "second": {
+            "enabled": true,
+            "step": null
+            },
+            "meridian": {
+            "enabled": true
+            }
+        },
+        "dayPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY MMMM"
+        },
+        "monthPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "yearPicker": {
+            "enabled": true,
+            "titleFormat": "YYYY"
+        },
+        "responsive": true 
     });
 });

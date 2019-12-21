@@ -25,108 +25,95 @@
     <!-- Start Search -->
     <div class="container-fluid mx-auto mt-3 d-print-none">
         <div class="card rounded-5 rtl">
-            <h3 class="card-title pt-4 px-3 togglecard"><i class="far  fa-caret-square-up"></i> Search & Filters </h3>
             <form action="{% url 'export' %}" method="GET">
-                <div id="phrase">
-                    <h5 class="card-title py-4 px-3 togglecard"><i class="far  fa-caret-square-up"></i> Phrase Search </h5>
-                    <div class="form-row px-3 py-1" style="display: none;">
-                        <div class="col-md-3 mb-3 text-right">
-                            <label for="search_name">نام و نام خانوادگی</label>
-                            <input type="text" class="form-control" id="search_name" name="name" value="{{ name }}">
-                        </div>
-                        <div class="col-md-3 mb-3 text-right">
-                            <label for="validationCustom02">تلفن</label>
-                            <input type="text" class="form-control" id="validationCustom02" name="phone" value="{{ phone }}">
-                        </div>
-                        <div class="col-md-3 mb-3 text-right">
-                            <label for="validationCustom03">نظرات</label>
-                            <input type="text" class="form-control" id="validationCustom03" name="comment" value="{{ comment }}">
-                        </div>
-                        <div class="col-md-3 mb-3 text-right">
-                            <label for="validationCustom04">درخواست</label>
-                            <input type="text" class="form-control" id="validationCustom04" name="question" value="{{ question }}">
-                        </div>
-                    </div>
-                    <div class="form-row px-3 py-1" style="display: none;">
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom05">اپراتور</label>
-                            <select class="custom-select"  id="validationCustom05" name='operator'>
-                                <option {% if operator %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in USER_NAME_AND_FAMILY.items %}
-                                <option value="{{ key }}" {% if key == operator %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# USER_NAME_AND_FAMILY #}
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom06">منشاء</label>
-                            <select class="custom-select"  id="validationCustom06" name='origin'>
-                                <option {% if origin %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in ORIGIN_DESCRIPTION.items %}
-                                <option value="{{ key }}" {% if key == origin %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# ORIGIN_DESCRIPTION #}
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom07">جنسیت</label>
-                            <select class="custom-select"  id="validationCustom07" name='gender'>
-                                <option {% if gender %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in GENDER_CHOICES.items %}
-                                <option value="{{ key }}" {% if key == gender %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# GENDER_CHOICES #}
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom08">وضعیت</label>
-                            <select class="custom-select"  id="validationCustom08" name='status'>
-                                <option {% if status %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in REGISTRATION_STATUS.items %}
-                                <option value="{{ key }}" {% if key == status %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# REGISTRATION_STATUS #}
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom09">برچسب 1</label>
-                            <select class="custom-select"  id="validationCustom09" name='label1'>
-                                <option {% if label1 %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in LABELDEFINITION_TAG.items %}
-                                <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label1 %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# LABELDEFINITION_TAG #}
-                            </select>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom10">برچسب 2</label>
-                            <select class="custom-select"  id="validationCustom10" name='label2'>
-                                <option {% if label2 %} {% else %} selected {% endif %} value="">-----</option>
-                                {% for value, key in LABELDEFINITION_TAG.items %}
-                                <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label2 %} selected {% endif %}>{{ value }}</option>
-                                {% endfor %} {# LABELDEFINITION_TAG #}
-                            </select>
+                <h3 class="card-title pt-4 px-3"> Search </h3>
+                <div class="form-row px-3 py-1">
+                    <div class="col mb-3 text-right">
+                        <label for="search_phrase">جست و جو عبارت</label>
+                        <input type="text" class="form-control" id="search_phrase" name="phrase" value="{{ phrase }}">
                     </div>
                 </div>
+                <h3 class="card-title pt-4 px-3 togglecard"><i class="far  fa-caret-square-up"></i> Search & Filters </h3>
+                <div class="form-row px-3 py-1">
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom05">اپراتور</label>
+                        <select class="custom-select"  id="validationCustom05" name='operator'>
+                            <option {% if operator %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in USER_NAME_AND_FAMILY.items %}
+                            <option value="{{ key }}" {% if key == operator %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# USER_NAME_AND_FAMILY #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom06">منشاء</label>
+                        <select class="custom-select"  id="validationCustom06" name='origin'>
+                            <option {% if origin %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in ORIGIN_DESCRIPTION.items %}
+                            <option value="{{ key }}" {% if key == origin %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# ORIGIN_DESCRIPTION #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom07">جنسیت</label>
+                        <select class="custom-select"  id="validationCustom07" name='gender'>
+                            <option {% if gender %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in GENDER_CHOICES.items %}
+                            <option value="{{ key }}" {% if key == gender %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# GENDER_CHOICES #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom08">وضعیت</label>
+                        <select class="custom-select"  id="validationCustom08" name='status'>
+                            <option {% if status %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in REGISTRATION_STATUS.items %}
+                            <option value="{{ key }}" {% if key == status %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# REGISTRATION_STATUS #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom09">برچسب 1</label>
+                        <select class="custom-select"  id="validationCustom09" name='label1'>
+                            <option {% if label1 %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in LABELDEFINITION_TAG.items %}
+                            <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label1 %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# LABELDEFINITION_TAG #}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="validationCustom10">برچسب 2</label>
+                        <select class="custom-select"  id="validationCustom10" name='label2'>
+                            <option {% if label2 %} {% else %} selected {% endif %} value="">-----</option>
+                            {% for value, key in LABELDEFINITION_TAG.items %}
+                            <option value="{{ key }}" style="background-color: #{{ key }}; color:white;" {% if key == label2 %} selected {% endif %}>{{ value }}</option>
+                            {% endfor %} {# LABELDEFINITION_TAG #}
+                        </select>
+                     </div>
                 </div>
-                <div id="date">
-                    <h5 class="card-title py-4 px-3 togglecard"><i class="far  fa-caret-square-up"></i> Phrase Search </h5>
-                    <div class="form-row px-3 py-1"  style="display: none;"> 
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom11">از تاریخ</label>
-                            <input type="hidden" class="form-control range-from-example-alt " name="date_from">
-                            <div class="range-from-example" id="validationCustom11"></div>
-                        </div>
-                        <div class="col-md-2 mb-3 text-right">
-                            <label for="validationCustom12">تا تاریخ</label>
-                            <input type="hidden" class="form-control range-to-example-alt hidden" name="date_to">
-                            <div class="range-to-example" id="validationCustom12"></div>
-                        </div>
-                    </div>    
-                </div> 
-                <div class="text-left px-3 py-1">
-                    <button class="btn btn-dark btn-lg mx-2 " id="clear_value_search" type="button" value="Reset">Reset</button>
-                    <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
-                </div>      
-                <div class="form-inline px-3 py-1">
-                    <button type="button" class="btn btn-primary expandAll mx-2">Expand All</button>
-                    <button type="button" class="btn btn-primary collapseAll mx-2">Collapse All</button>
+                <div class="form-row px-3 py-1">
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="range-from-example">از تاریخ</label>
+                        <input type="hidden" id="range-from-example-alt" name="date_from">
+                        <input id="range-from-example" class="form-control" value="{{ date_from }}">
+                    </div>
+                    <div class="col-md-2 mb-3 text-right">
+                        <label for="range-to-example">تا تاریخ</label>
+                        <input type="hidden" id="range-to-example-alt" name="date_to" >
+                        <input id="range-to-example" class="form-control" value="{{ date_to }}">
+                    </div>
                 </div>
+                
+                    <div class="text-left px-3 py-1">
+                        <button class="btn btn-dark btn-lg mx-2 " id="clear_value_search" type="button" value="Reset">Reset</button>
+                        <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
+                    </div>
+                
+                
+                    <div class="form-inline px-3 py-1">
+                        <button type="button" class="btn btn-primary expandAll mx-2">Expand All</button>
+                        <button type="button" class="btn btn-primary collapseAll mx-2">Collapse All</button>
+                    </div>
+                
             </form>
         </div>
     </div>
@@ -335,9 +322,11 @@
                         <button type="submit" class="btn btn-info btn-sm mx-1" name="submit" value="edit">
                             <i class="fa fa-check" ></i>
                         </button>
+                        {% if request.user.is_superuser %} {# superuser permition #}
                         <button type="button" class="btn btn-danger btn-sm mx-1" data-toggle="modal" data-target="#Popup_Lead_Delete">
                             <i class="fas fa-trash"></i>
                         </button>
+                        {% endif %}{# superuser permition #}
                         </th>
                         <!-- Popup_Lead_Delete Start -->
                         <div class="modal fade" id="Popup_Lead_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -402,12 +391,10 @@
                 <tr>
                     <td colspan="3">برچسب</td>
                     <td colspan="6" class="text-left">              
-                        {% for label in labels %}
-                            {% if label.post.id == lead.id %}
+                        {% for label in lead.label_set.all %}
                                 <button type="button" class="btn btn-sm mx-1" style="color: white; background-color: #{{ label.label.color_code }};">
                                     {{ label.label.tag }}
                                 </button>
-                            {% endif %} {# label #}
                         {% endfor %} {# label #}
                     </td>  
                 </tr>
@@ -422,18 +409,28 @@
                     <input type="hidden" name="lead_id" value="{{lead.id}}">
                     <input type="hidden" name="label_id" value="{{label.id}}">
                 <td colspan="3">
-                    <div class="card" style="color: white; background-color: #{{ label.label.color_code }};">
                         برچسب در تاریخ {{label.created_date_jalali_str}} ایجاد شده
-                    </div>
                 </td>
-                <td colspan="5" class="text-left">
-                    <select class="form-control form-control-sm" name="label">
-                        {% for label_def in labels_def %}
-                        <option value="{{ label_def.id }}" {% if label.label.id == label_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ label_def.color_code }};">
-                            {{ label_def.tag }}
-                        </option>
-                        {% endfor %} {# labels_def #}
-                    </select>
+                <td colspan="5" class="text-right">
+                    <div class="form-row">
+                        <div class="col-2">
+                            <div class="card text-center" style="color: white; background-color: #{{ label.label.color_code }};">
+                                {{label.label.tag}}
+                            </div>
+                        </div>
+                        <div class="col-1 text-center">
+                            <i class="fas fa-2x fa-long-arrow-alt-left"></i>
+                        </div>
+                        <div class="col-9">
+                            <select class="form-control form-control-sm" name="label">
+                                {% for label_def in labels_def %}
+                                <option value="{{ label_def.id }}" {% if label.label.id == label_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ label_def.color_code }};">
+                                    {{ label_def.tag }}
+                                </option>
+                                {% endfor %} {# labels_def #}
+                            </select>
+                        </div>
+                    </div>  
                 </td> 
                 <td colspan="1">
                     <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
@@ -510,7 +507,11 @@
                         {{ comment.author.last_name }} 
                     </td>
                     <td colspan="4" class="text-right {% if comment.approved_comment != True %} linethrough {% endif %}{# approved #}">
+                        {% if request.user.is_superuser %} {# superuser permition #}
                             <input name="text" type="text" class="form-control form-control-sm" value="{{ comment.text }}">
+                        {% else %}{# superuser permition #}
+                            {{ comment.text }}
+                        {% endif %}{# superuser permition #}
                     </td> 
                 
                 <td>
