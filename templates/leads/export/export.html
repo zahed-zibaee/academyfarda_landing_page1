@@ -24,16 +24,16 @@
 <body>
     <!-- Start Search -->
     <div class="container-fluid mx-auto mt-3 d-print-none">
-        <div class="card rounded-5 rtl">
-            <form action="{% url 'export' %}" method="GET">
-                <h3 class="card-title pt-4 px-3"> Search </h3>
+        <div class="card rounded-5 rtl p-2">
+            <form action="{% url 'export' %}" method="GET" autocomplete="off">
+                <h3 class="card-title pt-2 px-2"> Search </h3>
                 <div class="form-row px-3 py-1">
                     <div class="col mb-3 text-right">
                         <label for="search_phrase">جست و جو عبارت</label>
                         <input type="text" class="form-control" id="search_phrase" name="phrase" value="{{ phrase }}">
                     </div>
                 </div>
-                <h3 class="card-title pt-4 px-3 togglecard"><i class="far  fa-caret-square-up"></i> Search & Filters </h3>
+                <div id="advanced_search" style="display: none;">
                 <div class="form-row px-3 py-1">
                     <div class="col-md-2 mb-3 text-right">
                         <label for="validationCustom05">اپراتور</label>
@@ -102,19 +102,23 @@
                         <input id="range-to-example" class="form-control" value="{{ date_to }}">
                     </div>
                 </div>
-                
+                </div> <!-- end of advanced search -->
                     <div class="text-left px-3 py-1">
-                        <button class="btn btn-dark btn-lg mx-2 " id="clear_value_search" type="button" value="Reset">Reset</button>
+                        <button class="btn btn-info btn-lg mx-2" id="togglecard" type="button">Advanced Search</button>
+                        <button class="btn btn-info btn-lg mx-2" id="togglecard2" type="button">Options</button>
+                        <button class="btn btn-dark btn-lg mx-2 " id="clear_value_search" type="button">Reset</button>
                         <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
                     </div>
-                
-                
-                    <div class="form-inline px-3 py-1">
-                        <button type="button" class="btn btn-primary expandAll mx-2">Expand All</button>
-                        <button type="button" class="btn btn-primary collapseAll mx-2">Collapse All</button>
-                    </div>
-                
             </form>
+        </div>
+    </div>
+    <div class="container-fluid mx-auto mt-3 d-print-none" id="options" style="display: none;">
+        <div class="card rounded-5 rtl p-2">
+            <h3 class="card-title pt-2 px-2"> Options </h3>
+            <div class="form-inline px-3 py-1">
+                <button type="button" class="btn btn-primary expandAll mx-2">Expand All</button>
+                <button type="button" class="btn btn-primary collapseAll mx-2">Collapse All</button>
+            </div>
         </div>
     </div>
     <!-- End Search -->
@@ -293,7 +297,7 @@
                             </select>
                         </th>
                         <th>
-                            <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="gender">
+                            <select class="form-control form-control-sm" name="gender">
                                 <option value="M" {% if lead.gender == 'M' %} selected="selected" {% endif %}>مرد</option>
                                 <option value="F" {% if lead.gender == 'F' %} selected="selected" {% endif %}>زن</option>
                             </select>
@@ -302,7 +306,7 @@
                             {{ time }}
                         </th>
                         <th>
-                            <select class="form-control form-control-sm" id="exampleFormControlSelect1" name="register_status">
+                            <select class="form-control form-control-sm" name="register_status">
                                 <option value="D" {% if lead.register_status == 'D' %} selected="selected" {% endif %}>نامشخص</option>
                                 <option value="K" {% if lead.register_status == 'K' %} selected="selected" {% endif %}>ثبت نام شده</option>
                                 <option value="C" {% if lead.register_status == 'C' %} selected="selected" {% endif %}>کنسل شده</option>
@@ -339,7 +343,7 @@
                                 </button>
                                 </div>
                                 <div class="modal-body">
-                                Are you sure you want to delete lead number {{ lead.id }}?
+                                Are you sure you want to delete lead [N:{{ lead.id }} - Name:{{ lead.name_and_family }} - Phone:{{ lead.phone_number }}]?
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -439,10 +443,31 @@
                     <button type="submit" class="btn btn-info btn-sm mx-1" name="submit" value="edit">
                         <i class="fas fa-check"></i>
                     </button>
-                    <button type="submit" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete">
+                    <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
+                <!-- Popup_Label_Delete Start -->
+                <div class="modal fade" id="Popup_Label_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        Are you sure you want to delete lable <span style="color:white; background-color: #{{ label.label.color_code }};">{{ label.label.tag }}</span>?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" name="submit" value="delete">Delete</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- Popup_Lead_Delete END  -->
                 </form>
             </tr>
         </tbody>
@@ -520,28 +545,50 @@
                         <i class="fa fa-check"></i>
                     </button>
                 </form>
-                    <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="id" value="{{ comment.id }}">
-                            <button type="buttom" class="btn {% if comment.approved_comment == True %} btn-primary {% else %} {# approved #} btn-secondary {% endif %} {# approved #}  btn-sm btn-comm mx-1">
-                                    {% if comment.approved_comment == True %}
-                                    <i class="fa fa-comment"></i>
-                                    {% else %} {# approved #}
-                                    <i class="fa fa-comment-slash"></i>
-                                    {% endif %} {# approved #}
-                            </button>
-                    </form>
-                    {% if request.user.is_superuser %}
-                    <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="id" value="{{ comment.id }}">
-                        <button type="submit" class="btn btn-danger btn-sm mx-1" >
-                                <i class="fa fa-trash"></i>
-                        </button>  
-                    </form>
-                    {% endif %}
+                <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ comment.id }}">
+                    <button type="buttom" class="btn {% if comment.approved_comment == True %} btn-primary {% else %} {# approved #} btn-secondary {% endif %} {# approved #}  btn-sm btn-comm mx-1">
+                            {% if comment.approved_comment == True %}
+                            <i class="fa fa-comment"></i>
+                            {% else %} {# approved #}
+                            <i class="fa fa-comment-slash"></i>
+                            {% endif %} {# approved #}
+                    </button>
+                </form>
+                {% if request.user.is_superuser %}
+                <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{ comment.id }}">
+                    <button type="button" class="btn btn-danger btn-sm mx-1"  data-toggle="modal" data-target="#Popup_Comment_Delete">
+                            <i class="fa fa-trash"></i>
+                    </button>  
+                
+                {% endif %}
                 </div>
                 </td>
+                 <!-- Popup_Comment_Delete Start -->
+                 <div class="modal fade" id="Popup_Comment_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                        Are you sure you want to delete comment [N: {{comment.id}} - Text: {{comment.text}}]?
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger" name="submit" value="delete">Delete</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <!-- Popup_Comment_Delete END  -->
+                </form>
             </tr>
         </tbody > 
         <!-- End Table_Landing_Commends_Edit -->

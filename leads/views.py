@@ -120,15 +120,21 @@ def export(request):
             data.update( { "date_to":date_to.strftime("%Y-%m-%d")} )
             date_to += timedelta(days=1)
             leads = leads.filter(led_time__lte=date_to)
-    if "date_to" not in data:
-        date = datetime.now()
-        date = date.strftime("%Y-%m-%d")
-        date = data.update( { "date_to":date} )
     if "date_from" not in data:
         date = datetime.now()
         date += timedelta(days=-30)
+        leads = leads.filter(led_time__gte=date)
         date = date.strftime("%Y-%m-%d")
         data.update( { "date_from":date} )
+    if "date_to" not in data:
+        date = datetime.now()
+        leads = leads.filter(led_time__lte=date)
+        date = date.strftime("%Y-%m-%d")
+        date = data.update( { "date_to":date} )
+    if "operator" not in data:
+        data.update( { "operator":request.user.id } )
+        leads = leads.filter(operator__id=request.user.id)
+
 
     #leads paginator
     paginator = Paginator(leads, 20)
