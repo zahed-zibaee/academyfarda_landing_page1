@@ -142,7 +142,6 @@
         </thead>
         <!-- End Table_header -->
         <!-- Start Table_New -->
-        {% if leads %}
         <thead>
             <tr class="bld d-print-none">
                 <form action="{% url 'lead_add' %}" method="POST">
@@ -196,6 +195,7 @@
             </tr>
         </thead>
         <!-- End Table_New -->
+        {% if leads %}
         <!-- Start Table_Landing -->
         {% for lead in leads %}
             {% if lead.register_status == 'K' %}
@@ -417,15 +417,15 @@
                 </td>
                 <td colspan="5" class="text-right">
                     <div class="form-row">
-                        <div class="col-2">
+                        <div class="col-5">
                             <div class="card text-center" style="color: white; background-color: #{{ label.label.color_code }};">
                                 {{label.label.tag}}
                             </div>
                         </div>
-                        <div class="col-1 text-center">
+                        <div class="col-2 text-center">
                             <i class="fas fa-2x fa-long-arrow-alt-left"></i>
                         </div>
-                        <div class="col-9">
+                        <div class="col-5">
                             <select class="form-control form-control-sm" name="label">
                                 {% for label_def in labels_def %}
                                 <option value="{{ label_def.id }}" {% if label.label.id == label_def.id %} selected="selected" {% endif %} style="color: white; background-color: #{{ label_def.color_code }};">
