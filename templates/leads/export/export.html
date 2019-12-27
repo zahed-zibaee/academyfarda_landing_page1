@@ -106,7 +106,7 @@
                     <div class="text-left px-3 py-1">
                         <button class="btn btn-info btn-lg mx-2" id="togglecard" type="button">Advanced Search</button>
                         <button class="btn btn-info btn-lg mx-2" id="togglecard2" type="button">Options</button>
-                        <button class="btn btn-dark btn-lg mx-2 " id="clear_value_search" type="button">Reset</button>
+                        <button class="btn btn-secondary btn-lg mx-2 " id="clear_value_search" type="button">Reset Fields</button>
                         <button class="btn btn-primary btn-lg mx-2" type="submit">Search</button>
                     </div>
             </form>
@@ -183,7 +183,7 @@
                         {{ request.user.first_name }} {{ request.user.last_name }}
                     </th>
                     <th class="d-print-none">
-                        <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
+                        <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
                             <span class="bolder">R</span>
                         </button>
                         <button type="submit" class="btn btn-success btn-sm ">
@@ -260,7 +260,7 @@
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
                     <div class="form-row justify-content-center">
-                    <button type="button" class="btn btn-primary btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}"  value="delete"  >
+                    <button type="button" class="btn btn-info btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}"  value="delete"  >
                         <i class="fas fa-edit"></i>
                     </button>
                 </th>
@@ -323,7 +323,7 @@
                         <button type="button" class="btn btn-dark btn-sm mx-1 times" data-id="{{ lead.id }}">
                             <i class="fa fa-times" ></i>
                         </button>
-                        <button type="submit" class="btn btn-info btn-sm mx-1" name="submit" value="edit">
+                        <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                             <i class="fa fa-check" ></i>
                         </button>
                         {% if request.user.is_superuser %} {# superuser permition #}
@@ -378,10 +378,10 @@
                         <input name="text" type="text" class="form-control form-control-sm" value="{{ lead.question }}">    
                     </td>
                     <td colspan="1">
-                        <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
+                        <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
                             <span class="bolder">R</span>
                         </button>
-                        <button type="submit" class="btn btn-info btn-sm btn-comm mx-1">
+                        <button type="submit" class="btn btn-primary btn-sm btn-comm mx-1">
                             <i class="fa fa-check"></i>
                         </button>
                     </td>
@@ -437,10 +437,10 @@
                     </div>  
                 </td> 
                 <td colspan="1">
-                    <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
+                    <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
                         <span class="bolder">R</span>
                     </button>
-                    <button type="submit" class="btn btn-info btn-sm mx-1" name="submit" value="edit">
+                    <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                         <i class="fas fa-check"></i>
                     </button>
                     <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
@@ -491,7 +491,7 @@
                     </select>
                 </td>
                 <td colspan="1">
-                    <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
+                    <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
                         <span class="bolder">R</span>
                     </button>
                     <button type="submit" class="btn btn-success btn-sm mx-1">
@@ -541,7 +541,7 @@
                 
                 <td>
                 <div class="form-inline justify-content-center">
-                    <button type="submit" class="btn btn-info btn-sm btn-comm mx-1">
+                    <button type="submit" class="btn btn-primary btn-sm btn-comm mx-1">
                         <i class="fa fa-check"></i>
                     </button>
                 </form>
@@ -604,7 +604,7 @@
                             <input name="text" type="text" class="form-control form-control-sm" placeholder="نظر شما">
                         </td> 
                         <td class="d-print-none">
-                            <button class="btn btn-dark btn-sm mx-1" type="Reset" value="Reset">
+                            <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
                                 <span class="bolder">R</span>
                             </button>
                             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
