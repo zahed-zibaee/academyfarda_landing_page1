@@ -414,7 +414,7 @@
                     <input type="hidden" name="lead_id" value="{{lead.id}}">
                     <input type="hidden" name="label_id" value="{{label.id}}">
                 <td colspan="3">
-                        برچسب در تاریخ {{label.created_date_jalali_str}} ایجاد شده
+                        برچسب در تاریخ {{label.created_date_jalali_str}} توسط {{label.owner.first_name}} {{label.owner.last_name}} ایجاد شده
                 </td>
                 <td colspan="5" class="text-right">
                     <div class="form-row">
@@ -444,9 +444,11 @@
                     <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                         <i class="fas fa-check"></i>
                     </button>
+                    {% if request.user.id == label.owner.id %}
                     <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
                         <i class="fas fa-trash"></i>
                     </button>
+                    {% endif %}
                 </td>
                 <!-- Popup_Label_Delete Start -->
                 <div class="modal fade" id="Popup_Label_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

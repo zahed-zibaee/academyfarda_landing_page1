@@ -285,7 +285,9 @@ def label_add(request):
         if len(Label.objects.filter(label__id=int(request.POST["label"]), post__id=int(request.POST["lead_id"]))) == 0:
             post = Lead.objects.filter(id=int(request.POST["lead_id"])).first()
             label1 = LabelDefinition.objects.filter(id=int(request.POST["label"])).first()
-            label = Label(post = post, label = label1, owner = request.user)
+            label = Label(post = post, label = label1, owner = request.user , created_date = datetime.now(), \
+                created_date_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
+                    "%Y-%m-%d %H:%M:%S"), created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
             label.save()
             messages.success(request, "You'r label has been changed")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -300,7 +302,6 @@ def label_add(request):
 def lead_add(request):
     if request.method == "POST" and request.user.is_authenticated \
             and request.user.is_staff:
-        origin = Origin.objects.filter(description = 'دیوار').first()
         name_and_family = request.POST['name_and_family']
         gender = request.POST['gender']
         phone_fa = digits.ar_to_fa(request.POST['phone_number'])
@@ -312,8 +313,12 @@ def lead_add(request):
         if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
             lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
-                 phone_number = phone_en, register_status = register_status, operator = operator)
+                 phone_number = phone_en, register_status = register_status,\
+                    led_time = datetime.now(),led_time_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+                        ,"%Y-%m-%d %H:%M:%S"), led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
+            
             lead.save()
+            lead.operator.add(request.user.id)
             messages.success(request, "You'r new lead has been save")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(name_and_family) <= 3:

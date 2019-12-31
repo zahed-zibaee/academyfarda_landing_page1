@@ -74,7 +74,7 @@ class Lead_admin(admin.ModelAdmin):
     search_fields = ('phone_number', 'name_and_family', 'question')
     #calumn value on Lead
     list_display = ['id','name_and_family','phone_number','gender','led_time_jalali_str', \
-        'origin','operator','register_status','question']
+        'origin','register_status','question']
     #calumn value on Lead get 
     list_display_links = ['name_and_family',]
     #make editable 
@@ -106,13 +106,13 @@ class Lead_admin(admin.ModelAdmin):
                     and 'question' not in form.changed_data:
                 super(Lead_admin, self).save_model(request, obj, form, change)
             elif not change:
-                obj.operator = request.user
+                obj.operator.add(request.user)
                 obj.origin = Origin.objects.filter(description = 'دیوار').first()
                 super(Lead_admin, self).save_model(request, obj, form, change)
             else:
                 pass
         else:
-            obj.operator = request.user
+            obj.operator.add(request.user)
             super(Lead_admin, self).save_model(request, obj, form, change)
     #for export as csv
     #TODO: need to be modified
