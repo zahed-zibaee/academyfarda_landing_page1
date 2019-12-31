@@ -313,12 +313,10 @@ def lead_add(request):
         if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
             lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
-                 phone_number = phone_en, register_status = register_status,\
+                 phone_number = phone_en, register_status = register_status, operator = operator,\
                     led_time = datetime.now(),led_time_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
                         ,"%Y-%m-%d %H:%M:%S"), led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
-            
             lead.save()
-            lead.operator.add(request.user.id)
             messages.success(request, "You'r new lead has been save")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(name_and_family) <= 3:
