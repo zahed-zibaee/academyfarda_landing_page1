@@ -35,6 +35,7 @@
                 </div>
                 <div id="advanced_search" style="display: none;">
                 <div class="form-row px-3 py-1">
+                    {% if request.user.is_superuser %}
                     <div class="col-md-2 mb-3 text-right">
                         <label for="validationCustom05">اپراتور</label>
                         <select class="custom-select"  id="validationCustom05" name='operator'>
@@ -44,6 +45,7 @@
                             {% endfor %} {# USER_NAME_AND_FAMILY #}
                         </select>
                     </div>
+                    {% endif %}
                     <div class="col-md-2 mb-3 text-right">
                         <label for="validationCustom06">منشاء</label>
                         <select class="custom-select"  id="validationCustom06" name='origin'>
@@ -252,7 +254,9 @@
                 {% endif %} {# register #} 
                 {% if lead.operator %}
                 <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
-                    {{ lead.operator.first_name }} {{ lead.operator.last_name }}
+                    {% for operator in lead.operator.all %}
+                    {{ operator.first_name }} {{ operator.last_name }} {% if forloop.counter < lead.operator.all|length  %} - {% endif %}
+                    {% endfor %}
                 </th>
                 {% else %} {# lead.operator #}
                 <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
@@ -367,7 +371,6 @@
             </tr>
         </tbody>
         <!-- End Table_Landing_Question -->
-        {% if request.user.is_superuser %} {# question edit #}
         <!-- Start Table_Landing_Question_Edit -->
         <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
             <tr>
@@ -390,7 +393,6 @@
             </tr>
         </tbody>
         <!-- End Table_Landing_Question_Edit -->
-        {% endif %}
         <!-- Start Table_Landing_Label -->
         <tbody class="collapseTableHeaders collapseTableHeaders{{ lead.id }}" style="display: none;">
                 <tr>
@@ -444,7 +446,7 @@
                     <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                         <i class="fas fa-check"></i>
                     </button>
-                    {% if request.user.id == label.owner.id %}
+                    {% if request.user.id == label.owner.id or request.user.is_superuser %}
                     <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
                         <i class="fas fa-trash"></i>
                     </button>

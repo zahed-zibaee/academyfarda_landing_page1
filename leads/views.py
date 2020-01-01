@@ -60,8 +60,19 @@ def api_submit(request):
     
 @staff_member_required
 def export(request):
-    leads = Lead.objects.order_by('-id')
+    
     data = {}
+    #operators can not know each other leads
+    if request.user.is_superuser:
+        leads = Lead.objects.order_by('-id')
+        if "operator" in request.GET and len(request.GET["operator"])>0:
+            data.update( { "operator":int(request.GET["operator"]) } )
+            operator = request.GET["operator"]
+            if operator:
+                leads = leads.filter(operator__id=operator)
+    else:
+        leads = Lead.objects.filter(operator__id=request.user.id).order_by('-id')
+
     #search
     if "phrase" in request.GET and len(request.GET["phrase"])>0:
         data.update( { "phrase":request.GET["phrase"] } )
@@ -75,11 +86,6 @@ def export(request):
             leads = p_name | p_phone | p_comment | p_question
             leads = leads.distinct()
 
-    if "operator" in request.GET and len(request.GET["operator"])>0:
-        data.update( { "operator":int(request.GET["operator"]) } )
-        operator = request.GET["operator"]
-        if operator:
-            leads = leads.filter(operator__id=operator)
     if "origin" in request.GET and len(request.GET["origin"])>0:
         data.update( { "origin":int(request.GET["origin"]) } )
         origin = request.GET["origin"]
@@ -122,18 +128,16 @@ def export(request):
             leads = leads.filter(led_time__lte=date_to)
     if "date_from" not in request.GET:
         date = datetime.now()
-        date += timedelta(days=-30)
+        date -= timedelta(days=30)
         leads = leads.filter(led_time__gte=date)
         date = date.strftime("%Y-%m-%d")
         data.update( { "date_from":date} )
     if "date_to" not in request.GET:
         date = datetime.now()
+        date += timedelta(days=1)
         leads = leads.filter(led_time__lte=date)
         date = date.strftime("%Y-%m-%d")
         date = data.update( { "date_to":date} )
-    if "operator" not in request.GET:
-        data.update( { "operator":request.user.id } )
-        leads = leads.filter(operator__id=request.user.id)
 
 
     #leads paginator
@@ -313,18 +317,27 @@ def lead_add(request):
         if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
             lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
-                 phone_number = phone_en, register_status = register_status, operator = operator,\
-                    led_time = datetime.now(),led_time_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-                        ,"%Y-%m-%d %H:%M:%S"), led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
+                 phone_number = phone_en, register_status = register_status,\
+                    led_time = datetime.now(),led_time_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"),\
+                        "%Y-%m-%d %H:%M:%S"), led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
             lead.save()
+            lead.operator.add(operator)
             messages.success(request, "You'r new lead has been save")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(name_and_family) <= 3:
             messages.warning(request, "Check name and family fileld")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
-            messages.warning(request, "Phone number is repetitive")
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            lead = Lead.objects.filter(phone_number=phone_en).first()
+            if request.user in lead.operator.all():
+                messages.warning(request, "Phone number is repetitive")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                lead.operator.add(request.user)
+                lead.save()
+                messages.info(request, "lead is repetitive but you added to this lead operators")
+                messages.success(request, "You'r new lead has been save")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(phone_en) <= 6 and len(phone_en) >= 16 and phone_en.isdigit() is False:
             messages.warning(request, "Phone number is in wrong format")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -346,15 +359,12 @@ def lead_del_and_edit(request):
                 lead.delete()
                 messages.success(request, "That lead is now gone!!!") 
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-            elif request.user == lead.operator and lead.origin.description == "دیوار":
-                lead.delete()
-                messages.success(request, "That lead is now gone!!!") 
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                messages.warning(request, "You're not operator or lead origin is undeleteable") 
+                messages.warning(request, "You're not superuser") 
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        elif request.POST["submit"] == "edit" and request.user == lead.operator\
-                and (lead.origin.description == "دیوار" or lead.origin.description == "سایت"):
+        elif request.POST["submit"] == "edit" and request.user in lead.operator.all()\
+                and lead.operator.all().first() == request.user and (lead.origin.description == "دیوار"\
+                    or lead.origin.description == "سایت"):
             origin = Origin.objects.filter(description = 'دیوار').first()
             name_and_family = request.POST['name_and_family']
             gender = request.POST['gender']
@@ -370,8 +380,7 @@ def lead_del_and_edit(request):
                 lead.name_and_family = name_and_family.encode("utf-8")
                 lead.gender = gender
                 lead.phone_number = phone_en
-                lead.register_status = register_status 
-                lead.operator = operator
+                lead.register_status = register_status
                 lead.origin = origin
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
@@ -383,7 +392,6 @@ def lead_del_and_edit(request):
                 lead.gender = gender
                 lead.phone_number = phone_en
                 lead.register_status = register_status 
-                lead.operator = operator
                 lead.origin = origin
                 lead.save()
                 messages.success(request, "You'r lead has been changed")
@@ -409,16 +417,25 @@ def lead_del_and_edit(request):
 
 @staff_member_required       
 def question_edit(request):
-    if request.method == "POST" and request.user.is_authenticated \
-            and request.user.is_superuser:
+    if request.method == "POST" and request.user.is_staff:
         get_object_or_404(Lead, id=int(request.POST["id"]))
         lead = Lead.objects.filter(id=request.POST["id"]).first()
         question = request.POST["text"]
-        lead.question = question
-        lead.save()
-        messages.success(request, "Your lead question has been changed")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
+        if request.user.is_superuser:
+            lead.question = question
+            lead.save()
+            messages.success(request, "Your lead question has been changed")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        elif request.method == "POST" and request.user.is_authenticated \
+                and request.user in lead.operator.all()\
+                    and lead.operator.all().first() == request.user:
+            lead.question = question
+            lead.save()
+            messages.success(request, "Your lead question has been changed")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            messages.warning(request, "you are not first operator of this lead") 
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.error(request, "You'r not authorized") 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

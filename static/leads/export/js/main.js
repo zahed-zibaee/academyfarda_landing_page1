@@ -1,5 +1,5 @@
 setTimeout(function() {
-    $('#message').fadeOut('slow');
+    $('.message').fadeOut(1000);
 }, 10000 );
 
 
