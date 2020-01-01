@@ -151,14 +151,24 @@ class Lead_admin(admin.ModelAdmin):
     #action for change oprators
     def operator_change_to_z_zibaee(self, request, queryset):
         try:
-            queryset.update( operator = User.objects.get(username='z.zibaee') )
+            for lead in queryset:
+                lead.operator.add(User.objects.get(username='z.zibaee'))
         except:
             pass
     operator_change_to_z_zibaee.short_description = u"Change Operator to z.zibaee"
     actions.append(operator_change_to_z_zibaee)
+    def operator_change_to_l_mohammadi(self, request, queryset):
+        try:
+            for lead in queryset:
+                lead.operator.add(User.objects.get(username='l.mohammadi'))
+        except:
+            pass
+    operator_change_to_l_mohammadi.short_description = u"Change Operator to l.mohammadi"
+    actions.append(operator_change_to_l_mohammadi)
     def operator_change_to_s_yari(self, request, queryset):
         try:
-            queryset.update( operator = User.objects.get(username='s.yari') )
+            for lead in queryset:
+                lead.operator.add(User.objects.get(username='s.yari'))
         except:
             pass
     operator_change_to_s_yari.short_description = u"Change Operator to s.yari"
