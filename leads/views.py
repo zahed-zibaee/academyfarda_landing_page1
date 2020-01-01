@@ -378,16 +378,13 @@ def lead_del_and_edit(request):
             register_status = request.POST['register_status']
             origin = Origin.objects.filter(id=int(request.POST['origin'])).first()
             lead = Lead.objects.filter(id=request.POST["id"]).first()
-            lead.orgin = origin
-            lead.name_and_family = name_and_family.encode("utf-8")
-            lead.gender = gender
-            lead.phone_number = phone_en
-            lead.register_status = register_status
-            #if lead is registered save operator
-            if register_status == "K":
-                lead.registered_by = request.user
+            #later we need for regester leads with 2 or more operators
+            if name_and_family == lead.name_and_family and gender == lead.gender\
+                and phone_en == lead.phone_number and register_status != lead.register_status\
+                    and origin == lead.origin:
+                status_changed = True
             else:
-                lead.registered_by = None
+                status_changed = False
             #fields should be valid
             if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                     phone_en.isdigit():
@@ -395,17 +392,52 @@ def lead_del_and_edit(request):
                 if (len(Lead.objects.filter(phone_number=phone_en)) == 1 \
                     and lead.id == Lead.objects.filter(phone_number=phone_en).first().id)\
                         or len(Lead.objects.filter(phone_number=phone_en)) == 0:
+                    if request.user.is_superuser:
+                        lead.orgin = origin
+                        lead.name_and_family = name_and_family.encode("utf-8")
+                        lead.gender = gender
+                        lead.phone_number = phone_en
+                        lead.register_status = register_status
+                        #if lead is registered save operator
+                        if register_status == "K":
+                            lead.registered_by = request.user
+                        else:
+                            lead.registered_by = None
+                        lead.save()
+                        messages.success(request, "You'r lead has been changed")
+                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                     #only single owner operator can change this lead or superuser
-                    if request.user in lead.operator.all() and len(lead.operator.all()) < 2:
+                    elif request.user in lead.operator.all() and len(lead.operator.all()) < 2:
+                        lead.orgin = origin
+                        lead.name_and_family = name_and_family.encode("utf-8")
+                        lead.gender = gender
+                        lead.phone_number = phone_en
+                        lead.register_status = register_status
+                        #if lead is registered save operator
+                        if register_status == "K":
+                            lead.registered_by = request.user
+                        else:
+                            lead.registered_by = None
                         lead.save()
                         messages.success(request, "You'r lead has been changed")
                         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-                    elif request.user.is_superuser:
-                        lead.save()
-                        messages.success(request, "You'r lead has been changed")
-                        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                    #want make operator register    
+                    elif status_changed and request.user in lead.operator.all() and len(lead.operator.all()) > 1:
+                        if (lead.register_status == "K" and lead.registered_by == request.user) or  lead.register_status != "K":
+                            lead.register_status = register_status
+                            #if lead is registered save operator
+                            if register_status == "K":
+                                lead.registered_by = request.user
+                            else:
+                                lead.registered_by = None
+                            lead.save()
+                            messages.success(request, "You'r lead has been registered")
+                            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                        else:
+                            messages.warning(request, "You'r can not change lead status")
+                            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
                     else:
-                        messages.error(request, "This is not you'r lead") 
+                        messages.warning(request, "This is not you'r lead") 
                         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))                  
                 else:
                     messages.warning(request, "Phone number is repititive")
@@ -444,7 +476,7 @@ def question_edit(request):
             messages.success(request, "Your lead question has been changed")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
-            messages.warning(request, "you are not first operator of this lead") 
+            messages.warning(request, "you are not only operator of this lead") 
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         messages.error(request, "You'r not authorized") 
