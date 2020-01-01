@@ -40,8 +40,8 @@ class Lead(models.Model):
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     question = models.TextField(blank=True, default="")
-    operator = models.ManyToManyField(User, related_name='operator', unique=False, null=True)
-
+    operator = models.ManyToManyField(User, related_name='operator', unique=False, editable=False)
+    registered_by = models.ForeignKey(User, related_name='registered_by',unique=False, null=True, editable=False)
     def __unicode__(self):
         return "{} ----- {}".format(self.phone_number, self.name_and_family)
 

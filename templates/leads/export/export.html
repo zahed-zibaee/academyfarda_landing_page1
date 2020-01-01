@@ -252,10 +252,17 @@
                     نامشخص
                 </th> 
                 {% endif %} {# register #} 
-                {% if lead.operator %}
+                {% if lead.operator %} {# lead.operator #}
                 <th class="buttomALL collapseTableHeadersbutton" data-id="{{ lead.id }}">
                     {% for operator in lead.operator.all %}
-                    {{ operator.first_name }} {{ operator.last_name }} {% if forloop.counter < lead.operator.all|length  %} - {% endif %}
+                    {% if operator != lead.registered_by and lead.register_status == "K" %} 
+                    <span class="text-secondary"> 
+                    {% else %} 
+                    <span class=""> 
+                    {% endif %}
+                    {{ operator.first_name }} {{ operator.last_name }}
+                    </span> 
+                    {% if forloop.counter < lead.operator.all|length  %} - {% endif %}
                     {% endfor %}
                 </th>
                 {% else %} {# lead.operator #}
@@ -409,6 +416,7 @@
         <!-- End Table_Landing_Label -->
         <!-- Start Table_Landing_Label_Edit -->
         {% for label in lead.label_set.all %}
+        {% if request.user.id == label.owner.id or request.user.is_superuser %}
         <tbody class="editing editing{{ lead.id }}" style="display: none;">
             <tr>
                 <form action="{% url 'label_edit_and_del' %}" method="POST">
@@ -437,20 +445,16 @@
                                 {% endfor %} {# labels_def #}
                             </select>
                         </div>
-                    </div>  
+                    </div>
                 </td> 
                 <td colspan="1">
-                    <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
-                        <span class="bolder">R</span>
-                    </button>
                     <button type="submit" class="btn btn-primary btn-sm mx-1" name="submit" value="edit">
                         <i class="fas fa-check"></i>
                     </button>
-                    {% if request.user.id == label.owner.id or request.user.is_superuser %}
+                    
                     <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
                         <i class="fas fa-trash"></i>
-                    </button>
-                    {% endif %}
+                    </button> 
                 </td>
                 <!-- Popup_Label_Delete Start -->
                 <div class="modal fade" id="Popup_Label_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -476,6 +480,7 @@
                 </form>
             </tr>
         </tbody>
+        {% endif %} {# label edit permition #}
         {% endfor %} {# label #}
         <!-- End Table_Landing_Label_Edit -->
         <!-- Start Table_Landing_Label_Add -->
@@ -496,9 +501,6 @@
                     </select>
                 </td>
                 <td colspan="1">
-                    <button class="btn btn-secondary btn-sm mx-1" type="Reset" value="Reset">
-                        <span class="bolder">R</span>
-                    </button>
                     <button type="submit" class="btn btn-success btn-sm mx-1">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -525,6 +527,7 @@
         </tbody >
         <!-- End Table_Landing_Commends -->
         <!-- Start Table_Landing_Commends_Edit -->
+        {% if request.user == comment.author or request.user.is_superuser %}
         <tbody class="d-print-none editing editing{{ lead.id }}" style="display: none;">
             <tr>
                 <form class="form-inline" action="{% url 'comment_edit' %}" method="POST">
@@ -545,11 +548,13 @@
                     </td> 
                 
                 <td>
+                {% if request.user.is_superuser %}
                 <div class="form-inline justify-content-center">
                     <button type="submit" class="btn btn-primary btn-sm btn-comm mx-1">
                         <i class="fa fa-check"></i>
                     </button>
                 </form>
+                {% endif %}
                 <form class="form-inline" action="{% url 'comment_approve' %}" method="POST">
                     {% csrf_token %}
                     <input type="hidden" name="id" value="{{ comment.id }}">
@@ -596,6 +601,7 @@
                 </form>
             </tr>
         </tbody > 
+        {% endif %} {# edit comment permition #}
         <!-- End Table_Landing_Commends_Edit -->
         {% endfor %} {# comment #}
         <!-- Start Table_Landing_Commends_New -->
