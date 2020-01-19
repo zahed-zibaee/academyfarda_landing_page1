@@ -142,7 +142,7 @@ def export(request):
 
 
     #leads paginator
-    paginator = Paginator(leads, 25)
+    paginator = Paginator(leads, 30)
     page = request.GET.get('page')
     if page:
         paged_leads = paginator.page(page)

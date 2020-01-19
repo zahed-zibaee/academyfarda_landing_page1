@@ -652,11 +652,29 @@
                     <a class="page-link">&laquo;</a>
                 </li>
             {% endif %}
-            {% for i in leads.paginator.page_range %}
+            {% if leads.number > 4 %}
                 <li class="page-item {% if i == leads.number %} active {% endif %}">
-                    <a href="?page={{i}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{i}}</a>
+                    <a href="?page={{1}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{1}}</a>
                 </li>
+                ....
+            {% endif %}
+            {% for i in leads.paginator.page_range %}
+            {% with j=i %}    
+            {% if leads.number <= j|add:3 and leads.number|add:3 >= i %}
+            <li class="page-item {% if i == leads.number %} active {% endif %}">
+                <a href="?page={{i}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{i}}</a>
+            </li>
+            {% endif %}
+            {% endwith %}
             {% endfor %}
+            {% with j=leads.number %}    
+            {% if leads.number|add:+3 < leads.paginator.page_range|last %}
+            ....
+            <li class="page-item {% if i == leads.number %} active {% endif %}">
+                <a href="?page={{leads.paginator.page_range|last}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{leads.paginator.page_range|last}}</a>
+            </li>
+            {% endif %}
+            {% endwith %}
             {% if leads.has_next %}
                 <li class="page-item">
                     <a href="?page={{leads.next_page_number}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">&raquo;</a>
