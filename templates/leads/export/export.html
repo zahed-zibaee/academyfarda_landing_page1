@@ -272,7 +272,7 @@
                 {% endif %} {# lead.operator #}
                 <th class="d-print-none">
                     <div class="form-row justify-content-center">
-                    <button type="button" class="btn btn-info btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}"  value="delete"  >
+                    <button type="button" class="btn btn-info btn-sm edit edit{{ lead.id }}" data-id="{{ lead.id }}"  value="delete">
                         <i class="fas fa-edit"></i>
                     </button>
                 </th>
@@ -339,13 +339,13 @@
                             <i class="fa fa-check" ></i>
                         </button>
                         {% if request.user.is_superuser %} {# superuser permition #}
-                        <button type="button" class="btn btn-danger btn-sm mx-1" data-toggle="modal" data-target="#Popup_Lead_Delete">
+                        <button type="button" class="btn btn-danger btn-sm mx-1" data-toggle="modal" data-target="#Popup_Lead_Delete{{ lead.id }}">
                             <i class="fas fa-trash"></i>
                         </button>
                         {% endif %}{# superuser permition #}
                         </th>
                         <!-- Popup_Lead_Delete Start -->
-                        <div class="modal fade" id="Popup_Lead_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="Popup_Lead_Delete{{ lead.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -452,12 +452,12 @@
                         <i class="fas fa-check"></i>
                     </button>
                     
-                    <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete">
+                    <button type="button" class="btn btn-danger btn-sm mx-1"  name="submit" value="delete" data-toggle="modal" data-target="#Popup_Label_Delete{{label.id}}">
                         <i class="fas fa-trash"></i>
                     </button> 
                 </td>
                 <!-- Popup_Label_Delete Start -->
-                <div class="modal fade" id="Popup_Label_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="Popup_Label_Delete{{label.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -570,7 +570,7 @@
                 <form class="form-inline" action="{% url 'comment_del' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="id" value="{{ comment.id }}">
-                    <button type="button" class="btn btn-danger btn-sm mx-1"  data-toggle="modal" data-target="#Popup_Comment_Delete">
+                    <button type="button" class="btn btn-danger btn-sm mx-1"  data-toggle="modal" data-target="#Popup_Comment_Delete{{ comment.id }}">
                             <i class="fa fa-trash"></i>
                     </button>  
                 
@@ -578,7 +578,7 @@
                 </div>
                 </td>
                  <!-- Popup_Comment_Delete Start -->
-                 <div class="modal fade" id="Popup_Comment_Delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                 <div class="modal fade" id="Popup_Comment_Delete{{ comment.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -638,7 +638,6 @@
         </table>
     </div>
     <!-- End Table -->
-
     <!-- Start Pagination -->
     <div class="container-fluid text-center mx-auto mt-3 d-print-none">
         <nav aria-label="...">
@@ -654,8 +653,7 @@
                 </li>
             {% endif %}
             {% for i in leads.paginator.page_range %}
-
-            <li class="page-item {% if i == leads.number %} active {% endif %}">
+                <li class="page-item {% if i == leads.number %} active {% endif %}">
                     <a href="?page={{i}}&{% for key,value in request.GET.items %}{% if key != "page" %}{{ key }}={{ value }}&{% endif %}{% endfor %}" class="page-link">{{i}}</a>
                 </li>
             {% endfor %}
@@ -673,6 +671,5 @@
         </nav>
     </div>
     <!-- End Pagination -->
-
 </body>
 </html>
