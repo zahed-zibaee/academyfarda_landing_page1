@@ -331,18 +331,23 @@ def lead_add(request):
             lead.operator.add(operator)
             messages.success(request, "You'r new lead has been save")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-        #if same phone number added by 2 or more operators
+        #if same phone number added by 1 or more operators
         elif len(Lead.objects.filter(phone_number=phone_en)) == 1:
             lead = Lead.objects.filter(phone_number=phone_en).first()
             if request.user in lead.operator.all():
                 messages.warning(request, "Phone number is repetitive")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
-                lead.operator.add(request.user)
-                lead.save()
-                messages.info(request, "lead is repetitive but you added to this lead operators")
-                messages.success(request, "You'r new lead has been save")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                if lead.register_status != "K":
+                    lead.operator.add(request.user)
+                    lead.save()
+                    messages.info(request, "lead is repetitive but you added to this lead operators")
+                    messages.success(request, "You'r new lead has been save")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+                else:
+                    messages.info(request, "lead is repetitive and registered by another operator")
+                    messages.warning(request, "You'r new lead did not changed!")
+                    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         elif len(name_and_family) <= 3:
             messages.warning(request, "Check name and family fileld")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
