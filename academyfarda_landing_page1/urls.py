@@ -21,9 +21,7 @@ from . import views
 #TODO change from leads import views as leads_views to something dynamic
 urlpatterns = [
     url(r'^adminlogin/?', admin.site.urls),
-    url(r'^leads/', include('leads.urls')),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^crm/', include('CRM.urls')),
+
 
 ]
 

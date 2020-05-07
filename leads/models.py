@@ -115,3 +115,5 @@ class Label(models.Model):
             self.label.color_code,
             self.label.tag,
         )
+
+       
