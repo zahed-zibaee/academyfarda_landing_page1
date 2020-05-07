@@ -8,7 +8,7 @@ from django.db import models
 class Score(models.Model):
     name = models.CharField(max_length=100, null=False)
     family = models.CharField(max_length=100, null=False)
-    id_card = forms.RegexField(regex=r'^[\d-]+$', required=True, max_length=50, null=False)
+    id_card = models.CharField(max_length=100,null=False)
     score_t1 = models.FloatField(default=-1)
     score_t2 = models.FloatField(default=-1)
     score_a1 = models.FloatField(default=-1)
