@@ -36,5 +36,5 @@ def import_exam_csv(file_location="exams/score.csv"):
                 confirmation = False
             Score.objects.create(name=row[0], family=row[1], id_card=row[2], score_t1=float(row[3]), score_a1=float(
                 row[4]), score_a2=float(row[5]), score_total=float(row[6]), code_govahi=int(row[7]), confirmation=confirmation)
-            return 0
+        return 0
             
