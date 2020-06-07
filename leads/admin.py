@@ -164,7 +164,7 @@ class Lead_admin(admin.ModelAdmin):
         except:
             pass
     operator_change_to_f_safari.short_description = u"Change Operator to f_safari"
-    actions.append(operator_change_to_l_mohammadi)
+    actions.append(operator_change_to_f_safari)
     def operator_change_to_s_yari(self, request, queryset):
         try:
             for lead in queryset:
