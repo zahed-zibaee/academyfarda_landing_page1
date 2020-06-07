@@ -12,6 +12,7 @@ from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime, JalaliDate
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
 from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES, ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY,\
         LABELDEFINITION_TAG
 import pytz
@@ -29,9 +30,10 @@ def api_submit(request):
         #change arabic numbers to persian and than to english
         phone_fa = digits.ar_to_fa(request.POST['phone'])
         phone_en = digits.fa_to_en(phone_fa)
-        Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
+        mylead = Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
             question = request.POST.get('question', default=''), \
                 origin = Origin.objects.filter(token = request.POST['token']).first())
+        mylead.operator.add(User.objects.filter(username = "f.safari").first())
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
