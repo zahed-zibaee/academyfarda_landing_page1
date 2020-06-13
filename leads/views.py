@@ -23,7 +23,7 @@ def api_submit(request):
     #TODO: frontend make lead page input pup red when error, calasify this if
     post_keys = request.POST.keys() 
     #check if there is a token and token is valid and phone is not exist and not repetitive than is phone digits and name exits and not too short
-    if 'token' in post_keys and Origin.objects.filter(token = request.POST['token']).exists() and Origin.objects.filter(token_activation = True) \
+    if 'token' in post_keys and Origin.objects.filter(token = request.POST['token'], token_activation = True).exists()\
             and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
                 and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
                     and len(request.POST['name']) > 2 :
@@ -37,8 +37,7 @@ def api_submit(request):
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
-    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token']).exists() is False\
-         or Origin.objects.filter(token_activation = False):
+    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token'], token_activation = True).exists() is False:
         return JsonResponse({
         'status': 'registeration_error',
         }, encoder=JSONEncoder)
