@@ -3,3 +3,4 @@ django-jalali-date
 mysqlclient
 pytz
 persiantools
+zeep
