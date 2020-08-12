@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^question_edit/?$', views.question_edit, name='question_edit'),
     url(r'^label_edit_and_del/?$', views.label_edit_and_del, name='label_edit_and_del'),
     url(r'^label_add/?$', views.label_add, name='label_add'),
+    
 ]

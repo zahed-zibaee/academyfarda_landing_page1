@@ -90,3 +90,4 @@ academyfarda_landing_page1/settings.py
 
 .env
 db.sqlite3
+config.py

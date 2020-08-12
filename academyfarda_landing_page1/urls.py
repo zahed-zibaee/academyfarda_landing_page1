@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^leads/', include('leads.urls')),
     url(r'^accounts/', include('accounts.urls')),
     url(r'^crm/', include('CRM.urls')),
+    url(r'^payments/', include('payments.urls')),
 
 ]
 
