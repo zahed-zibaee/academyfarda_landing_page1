@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 REGISTRATION_STATUS = {
     'ثبت نام شده ':'K', 
     'کنسل شده':'C', 
+ 
     'نا مشخص':'D', 
 }
-    
+
 GENDER_CHOICES = {
     'مرد ': 'M',
     'زن':'F',

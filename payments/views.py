@@ -9,11 +9,11 @@ MERCHANT = zarinpal_MERCHANT
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 amount = 1000  # Toman / Required
 description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"  # Required
-mobile = '09123456789'  # Optional
-CallbackURL = 'http://academyfarda.com/payment/verify/' # Important: need to edit for realy server.
+mobile = '09376868321'  # Optional
+CallbackURL = "https://www.academyfarda.com/payment/verify/" # Important: need to edit for realy server.
 
 def send_request(request):
-    result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL)
+    result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL=CallbackURL)
     if result.Status == 100:
         return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
     else:
@@ -30,3 +30,5 @@ def verify(request):
             return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
     else:
         return HttpResponse('Transaction failed or canceled by user')
+
+    
