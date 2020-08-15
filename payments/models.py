@@ -33,7 +33,7 @@ class Teacher(models.Model):
     def __unicode__(self):
         return "{} {}".format(self.name, self.family)
 
-class Class(Product):
+class Course(Product):
     CLASS_TYPE_CHOICES = (
         ('0', 'regular'),
         ('1', 'intensive'),
@@ -56,14 +56,9 @@ class Class(Product):
         return "{} {} {} {}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
 
 class Cart(models.Model):
-    class1 = models.ManyToManyField(Class)
+    course = models.ManyToManyField(Course)
     discount = models.ManyToManyField(Discount)
 
-    def total_amount_class(self):
-        if(discount.active):
-            return (self.class1.amount - self.discount.amount)
-        else:
-            return self.class1.amount
 
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
