@@ -57,7 +57,8 @@ class Course(Product):
 
 class Cart(models.Model):
     course = models.ManyToManyField(Course)
-    discount = models.ManyToManyField(Discou
+    discount = models.ManyToManyField(Discount)
+
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
     family= models.CharField(max_length=200, null=True, blank=False)
@@ -79,7 +80,7 @@ class PaymentInformation(models.Model):
         max_length=11, null=False, blank=False)
     phone_number2 = models.CharField(validators=[phone_regex], \
         max_length=11, null=True, blank=False)
-    origin = models.CharField(max_length=200, null=True, blank=False)
+    origin_town = models.CharField(max_length=200, null=True, blank=False)
     birthday = models.DateField(blank=False, null=True)
     address = models.TextField(max_length=2000,blank=False, null=True)
     PAYMENT_TYPE_CHOICES = (
