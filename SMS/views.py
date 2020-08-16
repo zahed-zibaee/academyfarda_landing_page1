@@ -32,8 +32,7 @@ def OTP(request):
         return HttpResponse('code: ' + str(response.Status))
     else:
         return HttpResponse('Error code: ' + str(response.Status))
-        
-        
+             
 def status(request):
     api = KavenegarAPI('')
     params = {

@@ -57,9 +57,7 @@ class Course(Product):
 
 class Cart(models.Model):
     course = models.ManyToManyField(Course)
-    discount = models.ManyToManyField(Discount)
-
-
+    discount = models.ManyToManyField(Discou
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
     family= models.CharField(max_length=200, null=True, blank=False)

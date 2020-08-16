@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from .models import * 
 
 # Register your models here.
-admin.site.register(Save)
+admin.site.register(TextSave)
 admin.site.register(Sent)
 
