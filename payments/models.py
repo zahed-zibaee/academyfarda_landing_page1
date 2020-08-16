@@ -68,15 +68,21 @@ class PaymentInformation(models.Model):
         ('F', 'Female'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
-    father_name= models.CharField(max_length=200, null=True, blank=False)
+    father_name = models.CharField(max_length=200, null=True, blank=False)
     meli_regex = RegexValidator(regex=r'^\d{10}$', \
         message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
-    meli = models.CharField(validators=[meli_regex], \
+    code_meli = models.CharField(validators=[meli_regex], \
+        max_length=10, null=True, blank=False, unique=True)
+    code_shenasname = models.CharField(validators=[meli_regex], \
         max_length=10, null=True, blank=False, unique=True)
     phone_regex = RegexValidator(regex=r'^09\d{9}$', \
         message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], \
         max_length=11, null=False, blank=False)
+    phone_number2 = models.CharField(validators=[phone_regex], \
+        max_length=11, null=True, blank=False)
+    origin = models.CharField(max_length=200, null=True, blank=False)
+    birthday = models.DateField(blank=False, null=True)
     address = models.TextField(max_length=2000,blank=False, null=True)
     PAYMENT_TYPE_CHOICES = (
         ('0', 'نقدی'),
