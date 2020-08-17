@@ -7,4 +7,4 @@ from .models import *
 # Register your models here.
 admin.site.register(TextSave)
 admin.site.register(Sent)
-
+admin.site.register(Verify)

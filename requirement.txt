@@ -4,4 +4,4 @@ mysqlclient
 pytz
 persiantools
 zeep
-kavenegar
+requests
