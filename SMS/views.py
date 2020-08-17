@@ -2,53 +2,40 @@
 from __future__ import unicode_literals
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-import json
-from urllib import quote
-from random import randint
-from requests import get
-
-from .config import API_key as apikey
+from .models import Verify, Sent
+from persiantools import digits
+from datetime import datetime
 
 
-def send(request):
-    api = "https://api.kavenegar.com/v1/" + apikey + "/sms/send.json"
-    coded_message = quote("test")
-    data = {
-        'receptor':'09376868321,',
-        'message':message,
-        'sender':'10004000770077',
-    }
-    response = requests.get(api, params=data)
-    api_status = response.json()['return']['status'] 
-    messageid = response.json()['entries']['messageid'] 
-    unixdate = response.json()['entries']['date'] 
-    message = response.json()['entries']['message'] 
-    receptor = response.json()['entries']['receptor'] 
-    return HttpResponse(str(status))
 
-def status(request):
-    messageid = "1447131035"
-    api = "https://api.kavenegar.com/v1/" + apikey + "/sms/status.json"
-    data = {
-        'messageid':'1447131035,',
-    }
-    response = requests.get(api, params=data)
-    api_status = response.json()['return']['status'] 
-    message_status = response.json()['entries'][0]['status']
-    return HttpResponse(str(status))
 
 def lookup(request):
-    random1 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)])
-    random2 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)])
-    messageid = "1447131035"
-    api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"
-    data = {
-        'receptor':'09376868321',
-        'token':random1,
-        'token2':random2,
-        'template':'this is test for %token and %token2',
-    }
-    response = requests.get(api, params=data)
-    api_status = response.json()['return']['status'] 
-    message_status = response.json()['entries'][0]['status']
-    return HttpResponse(str(status))
+    #TODO add user login or logout
+    if request.method == 'POST':
+        ip = request.POST['ip']
+        phone_fa = digits.ar_to_fa(request.POST['phone'])
+        phone_en = digits.fa_to_en(phone_fa)
+
+        if Verify.objects.filter(ip = ip, expiration_time__gte = datetime.now()).exists():
+            messages.error(request, "Too many request")
+            return redirect("#")
+        else:
+            obj = Verify.objects.create(sent = Sent.objects.create(phone_en), ip = ip)
+            obj.send()
+            return redirect("#")
+    else:
+        messages.error(request, "Bad method")
+        return render(request,'leads/login/login.html')
+
+def validate(request):
+    if request.method == 'POST':
+        token1_fa = digits.ar_to_fa(request.POST['token1'])
+        token1_en = digits.fa_to_en(token1_fa)
+        token2_fa = digits.ar_to_fa(request.POST['token2'])
+        token2_en = digits.fa_to_en(token2_fa)
+        phone_fa = digits.ar_to_fa(request.POST['phone'])
+        phone_en = digits.fa_to_en(phone_fa)
+
+    else:
+        messages.error(request, "Bad method")
+        return render(request,'leads/login/login.html')

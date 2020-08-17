@@ -8,7 +8,7 @@ from datetime import datetime,timedelta
 from persiantools.jdatetime import JalaliDateTime
 from random import randint
 from requests import get
-from urllib import quote
+from django.utils.six.moves.urllib.parse import quote
 
 from .config import API_key as apikey 
 
@@ -29,8 +29,21 @@ class Sent(models.Model):
     created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     text = models.TextField(max_length=2000,blank=True, null=False)
-    massageid = models.IntegerField(null=True, blank=True)
-    status = models.IntegerField(null=True, blank=True)
+    messageid = models.BigIntegerField(null=True, blank=True)
+    STATUS_CHOICES = (
+        ('0', 'بررسی نشده'),
+        ('1', 'در صف ارسال قرار دارد'),
+        ('2', 'زمان بندی شده (ارسال در تاریخ معین)'),
+        ('4', 'ارسال شده به مخابرات'),
+        ('5', 'ارسال شده به مخابرات'),
+        ('6', 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می‌باشد'),
+        ('10', 'رسیده به گیرنده'),
+        ('11', 'نرسیده به گیرنده ، این وضعیت به دلایلی از جمله خاموش یا خارج از دسترس بودن گیرنده اتفاق می افتد'),
+        ('13', 'ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده می‌شود'),
+        ('14', 'بلاک شده است، عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده می‌شود'),
+        ('100', 'شناسه پیامک نامعتبر است'),
+    )
+    status = models.IntegerField(null=True, blank=True, choices=STATUS_CHOICES)
     user = models.ForeignKey(User, null=True, blank=True)
 
     def send(self):
@@ -43,29 +56,60 @@ class Sent(models.Model):
         }
         response = get(api, params=data)
         if (response.json()['return']['status'] == 200):
-            self.messageid = int(response.json()['entries']['messageid']) 
-            self.created_date = datetime.now().fromtimestamp(int(response.json()['entries']['date'])) 
+            self.messageid = int(response.json()['entries'][0]['messageid']) 
+            self.created_date = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
+            self.save()
         else:
-            print("error" + response.json()['return']['status'])
+            print("error" + str(response.json()['return']['status']))
 
-    def verify(self):
+    def check_status(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/sms/status.json"
         data = {
-        'messageid': massageid,
+        'messageid': self.messageid,
         }
         response = get(api, params=data)
         if (response.json()['return']['status'] == 200):
            self.status =  int(response.json()['entries'][0]['status'])
+           self.save()
+        else:
+            print("error" + str(response.json()['return']['status']))
+
 
 class Verify(models.Model):
     sent = models.ForeignKey(Sent, null=False, blank=False)
-    ip = models.GenericIPAddressField(null=False, blank=False)
+    ip = models.GenericIPAddressField(null=True, blank=True)
     token1 = models.CharField(max_length=3, null=False, blank=False, default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
     token2 = models.CharField(max_length=3, null=False, blank=False, default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
-    exception_time = models.DateTimeField(default=(datetime.now() + timedelta(minutes=1)), editable=False)
+    expiration_time = models.DateTimeField(default=(datetime.now() + timedelta(minutes=1)), editable=False)
     STATUS_CHOICES = (
             ('K', 'ok'),
             ('N', 'not ok'),
     )
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="U", null=False, blank=False)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="N", null=False, blank=False)
 
+    def send(self):
+        api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"
+        data = {
+            'receptor': self.sent.receptor,
+            'token': self.token1,
+            'token2': self.token2,
+            'template':'default',
+        }
+        response = get(api, params=data)
+        if (response.json()['return']['status'] == 200):
+            self.sent.messageid = int(response.json()['entries'][0]['messageid']) 
+            self.sent.text = str(response.json()['entries'][0]['message']) 
+            self.sent.created_date = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
+            self.sent.save()
+            self.save()
+        else:
+            print("error" + str(response.json()['return']['status']))
+
+    def check_status(self):
+        self.sent.check_status()
+
+    def validate(self, token1, token2):
+        if self.token1 == token1 and self.token2 == token2:
+            return True
+        else:
+            return False
