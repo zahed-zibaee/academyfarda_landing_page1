@@ -59,8 +59,10 @@ class Sent(models.Model):
             self.messageid = int(response.json()['entries'][0]['messageid']) 
             self.created_date = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
             self.save()
+            return True
         else:
             print("error" + str(response.json()['return']['status']))
+            return False
 
     def check_status(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/sms/status.json"
@@ -71,8 +73,10 @@ class Sent(models.Model):
         if (response.json()['return']['status'] == 200):
            self.status =  int(response.json()['entries'][0]['status'])
            self.save()
+           return True
         else:
             print("error" + str(response.json()['return']['status']))
+            return False
 
 
 class Verify(models.Model):
