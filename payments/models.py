@@ -5,6 +5,8 @@ from django.db import models
 from django.core.validators import RegexValidator
 from datetime import datetime
 from persiantools.jdatetime import JalaliDateTime
+from SMS.models import Verify
+import pytz
 
 # Create your models here.
 
@@ -12,15 +14,36 @@ class Product(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
     active = models.NullBooleanField(null=True, blank=False)
+
+    def __unicode__(self):
+        return "{}-{}".format(self.name, self.amount, self.active)
+
     class meta:
         abstract = True
 
 class Discount(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
-    code = models.CharField(max_length=100, null=False, blank=False)
+    code = models.CharField(max_length=100, null=False, blank=False, unique=True)
     product = models.ForeignKey(Product, null=False, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
+    expiration_time = models.DateTimeField(null=False, blank=False)
     active = models.NullBooleanField(null=True, blank=False)
+    
+    def __unicode__(self):
+        return "{}-{}-{}-{}-{}".format(self.name, self.product, self.code, self.amount, self.active)
+
+    def is_active(self):
+        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True and self.product.active == True:
+            return True
+        else:
+            return False
+
+    def last_amount(self):
+        if self.is_active():
+            return (self.product.amount - self.amount)
+        else:
+            return False
+
 
 class Teacher(models.Model):
     name = models.CharField(max_length=200, null=False, blank=False)
@@ -31,7 +54,7 @@ class Teacher(models.Model):
         max_length=10, null=False, blank=False, unique=True)
 
     def __unicode__(self):
-        return "{} {}".format(self.name, self.family)
+        return "{}-{}".format(self.name, self.family)
 
 class Course(Product):
     CLASS_TYPE_CHOICES = (
@@ -50,14 +73,18 @@ class Course(Product):
         ('1', 'SA-TH'),
     )
     day = models.CharField(max_length=1, choices=DAY_CHOICES, null=False, blank=False)
-    teacher = models.ForeignKey(Teacher, related_name='teacher', null=False, blank=False)
+    teacher = models.ForeignKey(Teacher, related_name='teacher', null=True, blank=True)
 
     def __unicode__(self):
-        return "{} {} {} {}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
+        return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
 
 class Cart(models.Model):
     course = models.ManyToManyField(Course)
     discount = models.ManyToManyField(Discount)
+    verification = models.ForeignKey(Verify)
+
+    def __unicode__(self):
+        return "{}-{}-{}-{}".format(self.id, self.course, self.discount, self.verification)
 
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
@@ -90,6 +117,9 @@ class PaymentInformation(models.Model):
     payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES, null=False, blank=False, default="0")
     cart = models.ForeignKey(Cart, related_name='cart', null=False, blank=False)
     
+    def __unicode__(self):
+        return "{}-{}-{}-{}".format(self.id, self.name, self.family, self.cart)
+
     
 class Payment(models.Model):
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False)
@@ -102,3 +132,5 @@ class Payment(models.Model):
     status = models.NullBooleanField(null=True, blank=False)
     ref_id = models.CharField(max_length=50, null=True, blank=False)
     
+    def __unicode__(self):
+        return "{}-{}-{}".format(self.id, self.ref_id, self.status)
