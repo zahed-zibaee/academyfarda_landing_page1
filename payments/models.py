@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.core.validators import RegexValidator
-from datetime import datetime
+from datetime import datetime,timedelta
 from persiantools.jdatetime import JalaliDateTime
 from SMS.models import Verify
+from zeep import Client
 import pytz
 
 # Create your models here.
@@ -26,7 +27,7 @@ class Discount(models.Model):
     code = models.CharField(max_length=100, null=False, blank=False, unique=True)
     product = models.ForeignKey(Product, null=False, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
-    expiration_time = models.DateTimeField(null=False, blank=False)
+    expiration_time = models.DateTimeField(null=False, blank=False, default=datetime.now() + timedelta(days=+36500))
     active = models.NullBooleanField(null=True, blank=False)
     
     def __unicode__(self):
@@ -86,6 +87,19 @@ class Cart(models.Model):
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.id, self.course, self.discount, self.verification)
 
+    def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
+        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+        print(MERCHANT)
+        print(amount)
+        print(description)
+        print(mobile)
+        print(callbackurl)
+        result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL = callbackurl)
+        if result.Status == 100:
+            return [True, str(result.Authority)]
+        else:
+            return [False, str(result.Status)]
+
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
     family= models.CharField(max_length=200, null=True, blank=False)
@@ -98,9 +112,8 @@ class PaymentInformation(models.Model):
     meli_regex = RegexValidator(regex=r'^\d{10}$', \
         message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
     code_meli = models.CharField(validators=[meli_regex], \
-        max_length=10, null=True, blank=False, unique=True)
-    code_shenasname = models.CharField(validators=[meli_regex], \
-        max_length=10, null=True, blank=False, unique=True)
+        max_length=10, null=True, blank=False)
+    code_shenasname = models.CharField(max_length=10, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^09\d{9}$', \
         message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], \
@@ -123,12 +136,9 @@ class PaymentInformation(models.Model):
     
 class Payment(models.Model):
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False)
+    amount = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
-    created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
-    created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
-        editable=False, null=False, blank=False)
     status = models.NullBooleanField(null=True, blank=False)
     ref_id = models.CharField(max_length=50, null=True, blank=False)
     

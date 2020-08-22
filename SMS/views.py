@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 @csrf_exempt
 def lookup(request):
     """this is a view to send sms authenticator to phone
-    this POST request need ip address and phone number
+    this POST request need ip address and phone number and returns status and verify id
     status0: submited
     status1: bad request
     status2: wait for a minutes
@@ -51,33 +51,3 @@ def lookup(request):
             return JsonResponse({'status':'0','id':obj.id})
     else:
         return JsonResponse({'status':'1','id':'-1'})
-
-@csrf_exempt
-def validate(request):
-    """this view validate sms code
-    this POST request need 2 tokens named token1 and token2, one id that related to Verify object and whatnext
-    status0: OK
-    status1: bad request
-    status2: token is wrong
-    status3: object is not found
-    return: status and a href url for redirection"""
-    if request.method == 'POST' and 'token1' in request.POST.keys() and 'token2' in request.POST.keys()\
-        and 'id' in request.POST.keys() and 'whatnext' in 'post_key':
-        token1_fa = digits.ar_to_fa(request.POST['token1'])
-        token1_en = digits.fa_to_en(token1_fa)
-        token2_fa = digits.ar_to_fa(request.POST['token2'])
-        token2_en = digits.fa_to_en(token2_fa)
-        try:
-            obj = Verify.objects.get(id=int(request.POST["id"])).first()
-        except:
-            return JsonResponse({'status':'3','href':''})
-        if obj.validate(token1_en,token2_en):
-            what_next = request.POST['whatnext']
-            if what_next == 'CART_COURSE' and 'discount_code' in request.POST.keys() and 'course_id' in request.POST.keys():
-                
-
-                return JsonResponse({'status':'0','href':''})
-        else:
-            return JsonResponse({'status':'2','href':''})
-    else:
-        return JsonResponse({'status':'1','href':''})
