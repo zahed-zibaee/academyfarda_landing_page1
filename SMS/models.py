@@ -118,10 +118,9 @@ class Verify(models.Model):
             self.sent.save()
             self.save()
             self.check_status()
-            return True
+            return 200
         else:
-            print("error" + str(response.json()['return']['status']))
-            return False
+            return response.json()['return']['status']
             
     def check_status(self):
         self.sent.check_status()
