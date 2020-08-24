@@ -22,7 +22,6 @@ def lookup(request):
     status3: you blocked for a day
     return: status code and an object id(Verify)
     """
-
     if request.method == 'POST' and 'phone' in request.POST.keys():
         try:
             ip = request.META['REMOTE_ADDR']
@@ -39,7 +38,7 @@ def lookup(request):
         #exist in last min
         elif Verify.objects.filter(sent__receptor = phone_en, sent__created_date__lt = datetime.now()\
             , sent__created_date__gt = datetime.now() + timedelta(minutes=-2)).exists():
-                return HttpResponseForbidden("not allowed to make more than one message every two minutes")
+                return HttpResponseForbidden("not allowed to make more than one message every minute")
         else:
             obj = Verify.objects.create(sent = Sent.objects.create( receptor = phone_en)\
             , ip = ip, token1=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),\

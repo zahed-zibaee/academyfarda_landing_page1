@@ -177,6 +177,6 @@ def cart_course_create(request):
             , authority = authority[1], created_date = datetime.now())
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
-        return HttpResponseRedirect(url)
+        return JsonResponse({'url':url})
     else:
         return HttpResponseBadRequest("bad request")
