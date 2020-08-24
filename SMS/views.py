@@ -44,7 +44,7 @@ def lookup(request):
             obj = Verify.objects.create(sent = Sent.objects.create( receptor = phone_en)\
             , ip = ip, token1=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),\
                 token2 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]) )
-            obj.expiration_time = datetime.now() + timedelta(minutes=5)
+            obj.expiration_time = datetime.now() + timedelta(minutes=1)
             obj.save()
             status = obj.send()
             return JsonResponse({'status':status,'id':obj.id,'status_message':status_codes[str(status)]})

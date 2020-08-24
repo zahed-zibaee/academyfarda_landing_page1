@@ -127,7 +127,7 @@ def cart_course_create(request):
         pattern = re_compile("^.{10,2000}$")
         if pattern.match(request.POST['address']) == False:
             return HttpResponseBadRequest("address is too short or too long")
-        pattern = re_compile("^.{^option[1-2]}$")
+        pattern = re_compile("^option[1-2]$")
         if pattern.match(request.POST['payment_type']) == False:
             return HttpResponseBadRequest("payment type is only has two options")
         ########### sms code validation
