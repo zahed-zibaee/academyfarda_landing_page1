@@ -13,7 +13,7 @@ import pytz
 
 class Product(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
-    amount = models.BigIntegerField(null=False, blank=False)
+    price = models.BigIntegerField(null=False, blank=False)
     active = models.NullBooleanField(null=True, blank=False)
 
     def __unicode__(self):
@@ -39,9 +39,9 @@ class Discount(models.Model):
         else:
             return False
 
-    def last_amount(self):
+    def get_total(self):
         if self.is_active():
-            return (self.product.amount - self.amount)
+            return (self.product.price - self.amount)
         else:
             return False
 
@@ -75,6 +75,7 @@ class Course(Product):
     )
     day = models.CharField(max_length=1, choices=DAY_CHOICES, null=False, blank=False)
     teacher = models.ForeignKey(Teacher, related_name='teacher', null=True, blank=True)
+    show = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
@@ -136,7 +137,7 @@ class PaymentInformation(models.Model):
     
 class Payment(models.Model):
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False)
-    amount = models.BigIntegerField(null=True, blank=True)
+    total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     status = models.NullBooleanField(null=True, blank=False)

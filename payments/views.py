@@ -23,7 +23,7 @@ def verify(request):
         if request.GET.get('Status') == 'OK':
             payment = Payment.objects.filter(authority = request.GET['Authority']).first()
             client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-            result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], Payment.amount)
+            result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], Payment.total)
             if result.Status == 100:
                 payment.status = True
                 payment.ref_id = result.RefID
@@ -64,8 +64,8 @@ def check_discount_course(request):
              Discount.objects.filter(code = discount_code_fa_en,
              product = course.id).first().is_active():
             discount = Discount.objects.filter(code = discount_code_fa_en).first()
-            amount = discount.last_amount()
-            return JsonResponse({'amount':amount})
+            total = discount.get_total()
+            return JsonResponse({'total':total})
         else:
             return HttpResponseNotFound("code not found")
     else:
@@ -166,17 +166,29 @@ def cart_course_create(request):
             , phone_number = verify.sent.receptor, address = request.POST['address'], cart = cart)
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
-        amount = int(discount.last_amount())
+        amount = int(discount.get_total())
         mobile = verify.sent.receptor
         callbackurl = "https://academyfarda.com/payments/verify"
         authority = cart.get_href(MERCHANT, description, amount, mobile, callbackurl)
         if authority[0] == False:
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
-        payment = Payment.objects.create(payment_info = paymentinfo,amount = discount.last_amount()\
+        payment = Payment.objects.create(payment_info = paymentinfo,total = discount.get_total()\
             , authority = authority[1], created_date = datetime.now())
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})
     else:
         return HttpResponseBadRequest("bad request")
+
+
+@csrf_exempt
+def get_courses(request):
+    if request.method == 'POST':
+        dic = {}
+        dic["course"] = []
+        for course in Course.objects.all():
+            dic["course"].append({"id":course.id,"name":course.name,"active":course.active})
+
+    else:
+        HttpResponseBadRequest("bad request")

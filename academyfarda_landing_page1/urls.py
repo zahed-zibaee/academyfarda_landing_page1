@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^crm/', include('CRM.urls')),
     url(r'^payments/', include('payments.urls')),
     url(r'^SMS/', include('SMS.urls')),
+    url(r'^hi/?$', views.hi, name="hi"),
 ]
 
 handler404 = views.error_404
