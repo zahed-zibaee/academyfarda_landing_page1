@@ -59,31 +59,61 @@ class Teacher(models.Model):
 
 class Course(Product):
     CLASS_TYPE_CHOICES = (
-        ('0', 'regular'),
-        ('1', 'intensive'),
+        ('R', 'regular'),
+        ('I', 'intensive'),
     )
     class_type = models.CharField(max_length=1, choices=CLASS_TYPE_CHOICES, null=False, blank=False)
     TIME_CHOICES = (
-        ('0', '9-12'),
-        ('1', '13-16'),
-        ('2', '17-20'),
+        ('912', '9-12'),
+        ('1316', '13-16'),
+        ('1720', '17-20'),
     )
-    time = models.CharField(max_length=1, choices=TIME_CHOICES, null=False, blank=False)
+    time = models.CharField(max_length=4, choices=TIME_CHOICES, null=False, blank=False)
     DAY_CHOICES = (
-        ('0', 'SA-WE'),
-        ('1', 'SA-TH'),
+        ('STW', 'SA-WE'),
+        ('STT', 'SA-TH'),
+        ('E', 'even'),
+        ('O', 'odd'),
     )
-    day = models.CharField(max_length=1, choices=DAY_CHOICES, null=False, blank=False)
+    day = models.CharField(max_length=4, choices=DAY_CHOICES, null=False, blank=False)
     teacher = models.ForeignKey(Teacher, related_name='teacher', null=True, blank=True)
     show = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
 
+    def get_name(self):
+        string = "کلاس "
+        if self.class_type == "I":
+            string += "عادی "
+        elif self.class_type == "R":
+            string += "فشرده "
+        string += "- "
+        if self.time == "912":
+            string += "۹ تا ۱۲ "
+        elif self.time == "1316":
+            string += "۱۳ تا ۱۶ "
+        elif self.time == "1720":
+            string += "۱۷ تا ۲۰ "
+        string += "- "
+        if self.day=="STW":
+            string += "شنبه تا چهار‌شنبه "
+        elif self.day=="STT":
+            string += "شنبه تا پنج‌شنبه "
+        elif self.day=="O":
+            string += "فرد "
+        elif self.day=="E":
+            string += "زوج "
+        if self.teacher != None:
+            string += "- "
+            string += "استاد " + self.teacher.name + " " + self.teacher.family + " "
+        return string
+
+
 class Cart(models.Model):
     course = models.ManyToManyField(Course)
     discount = models.ManyToManyField(Discount)
-    verification = models.ForeignKey(Verify)
+    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True )
 
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.id, self.course, self.discount, self.verification)
@@ -129,14 +159,14 @@ class PaymentInformation(models.Model):
         ('1', 'اقساط'),
     )
     payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES, null=False, blank=False, default="0")
-    cart = models.ForeignKey(Cart, related_name='cart', null=False, blank=False)
+    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False, on_delete=models.SET_NULL)
     
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.id, self.name, self.family, self.cart)
 
     
 class Payment(models.Model):
-    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False)
+    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False, on_delete=models.SET_NULL)
     total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
