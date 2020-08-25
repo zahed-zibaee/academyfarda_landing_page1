@@ -187,8 +187,8 @@ def get_courses(request):
     if request.method == 'POST':
         dic = {}
         dic["course"] = []
-        for course in Course.objects.all():
+        for course in Course.objects.filter(show=True):
             dic["course"].append({"id":course.id,"name":course.name,"active":course.active})
-
+        return JsonResponse(dic)
     else:
-        HttpResponseBadRequest("bad request")
+        return HttpResponseBadRequest("bad request")
