@@ -175,3 +175,9 @@ class Payment(models.Model):
     
     def __unicode__(self):
         return "{}-{}-{}".format(self.id, self.ref_id, self.status)
+
+
+    def get_jalali_date(self):
+        return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
+    def get_tehran_time(self):
+        return JalaliDateTime(self.created_date).strftime("%H:%M:%S")

@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest\
 from django.shortcuts import redirect, render
 from zeep import Client
 from .config import zarinpal_MERCHANT as MERCHANT
+from .zarinpall_errors import error_code as ERRORCODE
 from .models import *
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -21,25 +22,38 @@ def verify(request):
     """
     if request.method == 'GET':
         if request.GET.get('Status') == 'OK':
-            payment = Payment.objects.filter(authority = request.GET['Authority']).first()
+            try:
+                payment = Payment.objects.filter(authority = request.GET['Authority']).first()
+            except:
+                return HttpResponseNotFound("payment not found")
             client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-            result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], Payment.total)
+            result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], payment.total)
             if result.Status == 100:
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
-                data = {'ref_id':result.RefID}
-                return render(request,'', data)
+                data = {'status':"OK",'payment':payment}
+                return render(request,'receipt/index.html', data)
             elif result.Status == 101:
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
-                data = {'ref_id':result.RefID}
-                return render(request,'', data)
+                data = {'status':"OK",'payment':payment}
+                return render(request,'receipt/index.html', data)
             else:
-                return HttpResponseServerError("Transaction failed with error code:" + str(result.Status))
+                try:
+                    error = "\"" + ERRORCODE[result.Status] + "\""
+                except:
+                    error = "\"" + "نامشخص" + "\""
+                data = {'status':"ERROR",'error':error,'payment':payment}
+                return render(request,'receipt/index.html', data)
         else:
-            return HttpResponseServerError("Transaction failed or canceled by user")
+            try:
+                payment = Payment.objects.filter(authority = request.GET['Authority']).first()
+            except:
+                return HttpResponseNotFound("payment not found")
+            data = {'status':"NOK",'payment':payment}
+            return render(request,'receipt/index.html', data)
     else:
         return HttpResponseNotAllowed("bad request. request must be GET")
 

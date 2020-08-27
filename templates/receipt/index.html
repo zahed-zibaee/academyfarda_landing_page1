@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css" integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'base/fontawesome-free-5.11.2/css/all.css' %}"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="{% static 'base/media/logo/50X50.png' %}"
+    />
+    <link rel="stylesheet" href="{% static 'receipt/css/style.css' %}" />
+    <title>{% block title %}رسید دیجیتال{% endblock %}</title>
+  </head>
+  <body>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-12 justify-content-center">
+          <div class="card">
+            <h5 class="card-header  ">
+              <div class="logo d-flex justify-content-center align-items-center">
+                <img
+                src="{% static 'base/media/logo/500X500.png' %}"
+                alt="logo academyfarda"
+                width="75"
+                height="75"
+                />
+                <div class="text">
+                  <h1 class="h3 mb-0">آموزشگاه متخصصان فردا</h1>
+                  <h5 class="mb-0">رسید خرید دیجیتال</h5>
+                </div>
+              </div>
+            </h5>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6 border-l">
+                  <p class="card-title">
+                    اطلاعات پرداخت
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">وضعیت:</span>
+                    {% if status == 'OK' %}
+                    <span class="text-success">پرداخت با موفقیت انجام شد.</span>
+                    {% elif status == 'NOK' %}
+                    <span class="text-danger">پرداخت ناموفق است و یا توسط مشتری کنسل شده.</span>
+                    {% elif status == "ERROR" %}
+                    <span class="text-danger">استعلام پرداخت با ارور {{error}} مواجه شد.</span>
+                    {% endif %}
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">به نام:</span>
+                    <span>{{payment.payment_info.name}} {{payment.payment_info.family}}</span>
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">درگاه:</span>
+                    <span>زرینپال</span>
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">شماره پیگیری:</span>
+                    {% if status == "OK" %}
+                    <span>{{ payment.ref_id }}</span>
+                    {% endif %}
+                  </p>
+                </div>
+                <div class="col-6">
+                  <p class="card-title">
+                    اطلاعات فاکتور
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">شماره فاکتور:</span>
+                    <span>{{ payment.id }}</span>
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">تاریخ:</span>
+                    <span>{{ payment.get_jalali_date }}</span>
+                  </p>
+                  <p class="card-text">
+                    <span class="statics">زمان:</span>
+                    <span>{{ payment.get_tehran_time }}</span>
+                  </p>
+                  <p class="card-text d-flex">
+                    <span class="statics">چاپ:</span>
+                    <button class="btn btn-info btn-sm ml-2" onClick="window.print()"><i class="fa fa-print" aria-hidden="true"></i></button>
+                  </p>
+                </div>
+                <div class="col-12 p-4">
+                  <table class="table table-striped">
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">کالا یا خدمات</th>
+                        <th scope="col">تعداد</th>
+                        <th scope="col">تخفیف</th>
+                        <th scope="col">قیمت</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>ثبت نام اولیه دوره تعمیرات موبایل</td>
+                        <td>1</td>
+                        <td><span>0</span><span class="ml-1">تومان</span></td>
+                        <td><span>150000</span><span class="ml-1">تومان</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="card-text text-right mx-5">
+                        <span class="statics">هزینه کل:</span>
+                        <span>150000</span><span class="ml-1">تومان</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <p class="card-text ">
+                        <span>لطفا این رسید را چاپ کنید، از آن عکس بگیرید و یا مقادیر آن را یادداشت کنید. امکان ارائه دوباره رسید وجود ندارد.</span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer text-muted">
+              <div class="row">
+                <div class="col-1 d-flex justify-content-center align-items-center">
+                  <span class="pr-2">آدرس:</span>
+                </div>
+                <div class="col-11">
+                  <span>شعبه میدان ولیعصر: بالاتر از میدان ولیعصر، بعد از سینما استقلال، پلاک 1706، طبقه سوم، آموزشگاه متخصصان فردا</span><br>
+                  <span>شعبه میدان انقلاب: خیابان انقلاب، رو به روی درب اصلی دانشگاه تهران، ابتدای خیابان فخر رازی، پلاک 85، طبقه 4، واحد 10، آموزشگاه متخصصان فردا </span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-1 d-flex justify-content-center align-items-center">
+                  <span class="pr-2">تلفن:</span>
+                </div>
+                <div class="col-11">
+                  <span>021-88894358</span>
+                  <span class="">, </span>
+                  <span>021-66468181</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.rtlcss.com/bootstrap/v4.2.1/js/bootstrap.min.js" integrity="sha384-a9xOd0rz8w0J8zqj1qJic7GPFfyMfoiuDjC9rqXlVOcGO/dmRqzMn34gZYDTel8k" crossorigin="anonymous"></script>
+</html>
