@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="fa">
   <head>
@@ -79,6 +80,7 @@
                   <p class="card-text">
                     <span class="statics">شماره فاکتور:</span>
                     <span>{{ payment.id }}</span>
+
                   </p>
                   <p class="card-text">
                     <span class="statics">تاریخ:</span>
@@ -107,18 +109,26 @@
                     <tbody>
                       <tr>
                         <th scope="row">1</th>
-                        <td>ثبت نام اولیه دوره تعمیرات موبایل</td>
+                        {% for course in payment.payment_info.cart.course.all %}
+                        <td>ثبت‌نام {{ course.get_name }}</td>
+                        {% endfor %}
                         <td>1</td>
-                        <td><span>0</span><span class="ml-1">تومان</span></td>
-                        <td><span>150000</span><span class="ml-1">تومان</span></td>
+                        {% for discount in payment.payment_info.cart.discount.all %}
+                        <td><span>{{discount.amount|intcomma}}</span><span class="ml-1">تومان</span></td>
+                        {% endfor %}
+                        {% for discount in payment.payment_info.cart.discount.all %}
+                        <td><span>{{discount.product.price|intcomma}}</span><span class="ml-1">تومان</span></td>
+                        {% endfor %}
                       </tr>
                     </tbody>
                   </table>
                   <div class="row">
                     <div class="col-12">
                       <p class="card-text text-right mx-5">
-                        <span class="statics">هزینه کل:</span>
-                        <span>150000</span><span class="ml-1">تومان</span>
+                        <span class="statics">قابل پرداخت:</span>
+                        {% for discount in payment.payment_info.cart.discount.all %}
+                        <span>{{discount.get_total|intcomma}}</span><span class="ml-1">تومان</span>
+                        {% endfor %}
                       </p>
                     </div>
                   </div>

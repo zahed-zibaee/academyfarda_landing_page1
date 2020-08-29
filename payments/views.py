@@ -44,7 +44,7 @@ def verify(request):
                 try:
                     error = "\"" + ERRORCODE[result.Status] + "\""
                 except:
-                    error = "\"" + "نامشخص" + "\""
+                    error = "\"" + "نامشخص" + " " + str(result.Status) + "\""
                 data = {'status':"ERROR",'error':error,'payment':payment}
                 return render(request,'receipt/index.html', data)
         else:
