@@ -61,27 +61,29 @@ def verify(request):
 
 
 @csrf_exempt
-def check_discount_course(request):
-    """this method will check if discount exist and valid
+def get_course_total(request):
+    """this method will check if discount exist and valid or returns course amount
     it return status code and amount
     """
-    if request.method == 'POST' and 'course_id' in request.POST.keys()\
-        and 'discount_code' in request.POST.keys() :
-        discount_code_fa = digits.ar_to_fa(request.POST['discount_code'])
-        discount_code_fa_en = digits.fa_to_en(discount_code_fa)
+    if request.method == 'POST' and 'course_id' in request.POST.keys():
         if Course.objects.filter(id = request.POST['course_id']).exists():
             course = Course.objects.get(id = request.POST['course_id'])
         else:
             return HttpResponseNotFound("course not found")
-        if Discount.objects.filter(code = discount_code_fa_en, product =\
-             Product.objects.get(id = course.id)).exists() and\
-             Discount.objects.filter(code = discount_code_fa_en,
-             product = course.id).first().is_active():
-            discount = Discount.objects.filter(code = discount_code_fa_en).first()
-            total = discount.get_total()
-            return JsonResponse({'total':total})
+        if 'discount_code' in request.POST.keys():
+            discount_code_fa = digits.ar_to_fa(request.POST['discount_code'])
+            discount_code_fa_en = digits.fa_to_en(discount_code_fa)
+            if Discount.objects.filter(code = discount_code_fa_en, product =\
+                Product.objects.get(id = course.id)).exists() and\
+                Discount.objects.filter(code = discount_code_fa_en,
+                product = course.id).first().is_active():
+                discount = Discount.objects.filter(code = discount_code_fa_en).first()
+                total = discount.get_total()
+                return JsonResponse({'total':total})
+            else:
+                return HttpResponseNotFound("code not found")
         else:
-            return HttpResponseNotFound("code not found")
+            return JsonResponse({'total':course.price})
     else:
         return HttpResponseBadRequest("bad request")
 
