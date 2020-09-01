@@ -32,7 +32,7 @@ def verify(request):
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
-                payment.send_receipt_course(
+                payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
