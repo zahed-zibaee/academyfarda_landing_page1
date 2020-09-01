@@ -85,6 +85,24 @@ class Sent(models.Model):
             print("error" + str(response.json()['return']['status']))
             return False
 
+    def send_receipt_course(self, ref_id):
+        api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"
+        data = {
+            'receptor': self.receptor,
+            'token': ref_id,
+            'template':'coursereceipt',
+        }
+        response = get(api, params=data)
+        if (response.json()['return']['status'] == 200):
+            self.messageid = int(response.json()['entries'][0]['messageid']) 
+            self.text = str(response.json()['entries'][0]['message']) 
+            self.sent_time = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
+            self.gone = True
+            self.save()
+            self.check_status()
+            return 200
+        else:
+            return response.json()['return']['status']
 
 class Verify(models.Model):
     sent = models.ForeignKey(Sent, null=False, blank=False)

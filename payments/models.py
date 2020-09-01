@@ -5,7 +5,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from datetime import datetime,timedelta
 from persiantools.jdatetime import JalaliDateTime
-from SMS.models import Verify
+from SMS.models import Verify, Sent
 from zeep import Client
 import pytz
 
@@ -172,7 +172,8 @@ class Payment(models.Model):
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     status = models.NullBooleanField(null=True, blank=False)
     ref_id = models.CharField(max_length=50, null=True, blank=False)
-    
+    send_receipt = models.BooleanField(default=False)
+
     def __unicode__(self):
         return "{}-{}-{}".format(self.id, self.ref_id, self.status)
 
@@ -181,3 +182,13 @@ class Payment(models.Model):
         return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Tehran"))).strftime("%Y/%m/%d")
     def get_tehran_time(self):
         return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
+
+    def send_receipt_course(self):
+        sms = Sent.objects.create(receptor = self.payment_info.phone_number, created_date = datetime.now())
+        res_code = sms.send_receipt_course(self.ref_id)
+        if res_code == 200:
+            self.send_receipt = True
+            self.save()
+            return res_code
+        else:
+            return res_code

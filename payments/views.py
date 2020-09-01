@@ -23,7 +23,7 @@ def verify(request):
     if request.method == 'GET':
         if request.GET.get('Status') == 'OK':
             try:
-                payment = Payment.objects.filter(authority = request.GET['Authority']).first()
+                payment = Payment.objects.filter(authority = request.GET['Authority']).order_by("-created_date").first()
             except:
                 return HttpResponseNotFound("payment not found")
             client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -32,6 +32,7 @@ def verify(request):
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
+                payment.send_receipt_course(
                 data = {'status':"OK",'payment':payment}
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
