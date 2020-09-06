@@ -19,6 +19,14 @@ class Product(models.Model):
     def __unicode__(self):
         return "{}-{}".format(self.name, self.amount, self.active)
 
+    
+    def is_active(self):
+        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
+             and self.product.active == True:
+            return True
+        else:
+            return False
+
     class meta:
         abstract = True
 
@@ -34,7 +42,8 @@ class Discount(models.Model):
         return "{}-{}-{}-{}-{}".format(self.name, self.product, self.code, self.amount, self.active)
 
     def is_active(self):
-        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True and self.product.active == True:
+        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
+             and self.product.active == True:
             return True
         else:
             return False
@@ -80,7 +89,8 @@ class Course(Product):
     show = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(), self.get_day_display(), self.teacher)
+        return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(),\
+             self.get_day_display(), self.teacher)
 
     def get_name(self):
         string = "کلاس "
@@ -158,15 +168,18 @@ class PaymentInformation(models.Model):
         ('0', 'نقدی'),
         ('1', 'اقساط'),
     )
-    payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES, null=False, blank=False, default="0")
-    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False, on_delete=models.SET_NULL)
+    payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES,\
+         null=False, blank=False, default="0")
+    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
+         on_delete=models.SET_NULL)
     
     def __unicode__(self):
         return "{}-{}-{}-{}".format(self.id, self.name, self.family, self.cart)
 
     
 class Payment(models.Model):
-    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False, null=True, blank=False, on_delete=models.SET_NULL)
+    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False\
+        , null=True, blank=False, on_delete=models.SET_NULL)
     total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
@@ -184,7 +197,8 @@ class Payment(models.Model):
         return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
 
     def send_receipt_course(self):
-        sms = Sent.objects.create(receptor = self.payment_info.phone_number, created_date = datetime.now())
+        sms = Sent.objects.create(receptor = self.payment_info.phone_number,\
+             created_date = datetime.now())
         res_code = sms.send_receipt_course(self.ref_id)
         if res_code == 200:
             self.send_receipt = True

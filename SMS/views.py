@@ -30,19 +30,18 @@ def lookup(request):
         phone_fa = digits.ar_to_fa(request.POST['phone'])
         phone_en = digits.fa_to_en(phone_fa)
         #esist in last 24h same ip
-        if Verify.objects.filter(ip = ip, sent__created_date__lt = datetime.now()\
-            , sent__created_date__gt = datetime.now() + timedelta(days=-1)).exists()\
-            and len(Verify.objects.filter(ip = ip, sent__created_date__lt = datetime.now()\
-            , sent__created_date__gt = datetime.now() + timedelta(days=-1))) > 9:
-                return HttpResponseForbidden("not allowed to make more than 9 message every day")
+        if len(Verify.objects.filter(ip = ip, sent__created_date__lt = datetime.now()\
+             , sent__created_date__gt = datetime.now() + timedelta(days=-1))) > 10:
+                return HttpResponseForbidden("not allowed to make more than 10 messages every day")
         #exist in last min
         elif Verify.objects.filter(sent__receptor = phone_en, sent__created_date__lt = datetime.now()\
-            , sent__created_date__gt = datetime.now() + timedelta(minutes=-2)).exists():
+            , sent__created_date__gt = datetime.now() + timedelta(minutes=-1)).exists():
                 return HttpResponseForbidden("not allowed to make more than one message every minute")
         else:
             obj = Verify.objects.create(sent = Sent.objects.create( receptor = phone_en)\
-            , ip = ip, token1=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),\
-                token2 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]) )
+             , ip = ip, token1=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),\
+             token2 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]) \
+             ,created_date = datetime.now())
             obj.expiration_time = datetime.now() + timedelta(minutes=1)
             obj.save()
             status = obj.send()

@@ -27,7 +27,10 @@ def verify(request):
             except:
                 return HttpResponseNotFound("payment not found")
             client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-            result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], payment.total)
+            try:
+                result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], payment.total)
+            except:
+                return HttpResponseServerError("can not connect to zarinpal server")
             if result.Status == 100:
                 payment.status = True
                 payment.ref_id = result.RefID
@@ -160,21 +163,11 @@ def cart_course_create(request):
                 discount = Discount.objects.filter(code = request.POST['discount_code']).first()
             else:
                 return HttpResponseForbidden("discount code is not valid")
-        ########### if discount code is not posted 
-        else:
-            #put discount code as one with 0 discount
-            if Discount.objects.filter(product = Product.objects.get(id = \
-                course.id), amount = 0, active = True).exists():
-                discount = Discount.objects.filter(product = Product.objects.get(id =\
-                course.id), amount = 0, active = True).first()
-            else:
-                discount = Discount.objects.create(product = Product.objects.get(id =\
-                course.id), amount = 0, active = True, code = ''.join(["{}".format(randint(0, 9))\
-                 for num in range(0, 20)]))
         ########## make a cart
         cart = Cart.objects.create(verification = verify)
         cart.course.add(course)
-        cart.discount.add(discount)
+        if discount:
+            cart.discount.add(discount)
         cart.save()
         ########## make a payment_info
         paymentinfo = PaymentInformation.objects.create(name = request.POST['name'],\
@@ -183,7 +176,12 @@ def cart_course_create(request):
             , phone_number = verify.sent.receptor, address = request.POST['address'], cart = cart)
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
-        amount = int(discount.get_total())
+        if discount:
+            amount = int(discount.get_total())
+        else:
+            amount = 0
+            for course in cart.course.all():
+                amount += course.price
         mobile = verify.sent.receptor
         callbackurl = "https://academyfarda.com/payments/verify"
         authority = cart.get_href(MERCHANT, description, amount, mobile, callbackurl)
