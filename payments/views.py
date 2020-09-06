@@ -166,7 +166,7 @@ def cart_course_create(request):
         ########## make a cart
         cart = Cart.objects.create(verification = verify)
         cart.course.add(course)
-        if discount:
+        if 'discount' in locals():
             cart.discount.add(discount)
         cart.save()
         ########## make a payment_info
@@ -176,7 +176,7 @@ def cart_course_create(request):
             , phone_number = verify.sent.receptor, address = request.POST['address'], cart = cart)
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
-        if discount:
+        if 'discount' in locals():
             amount = int(discount.get_total())
         else:
             amount = 0
@@ -188,8 +188,8 @@ def cart_course_create(request):
         if authority[0] == False:
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
-        payment = Payment.objects.create(payment_info = paymentinfo,total = discount.get_total()\
-            , authority = authority[1], created_date = datetime.now())
+        payment = Payment.objects.create(payment_info = paymentinfo,total = amount\
+             , authority = authority[1], created_date = datetime.now())
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})
