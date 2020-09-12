@@ -10,6 +10,7 @@ from random import randint
 from requests import get
 from django.utils.six.moves.urllib.parse import quote
 
+from .statuscode import status_choices as STATUS_CHOICES
 from .config import API_key as apikey 
 
 # Create your models here.
@@ -31,24 +32,16 @@ class Sent(models.Model):
     text = models.TextField(max_length=2000,blank=True, null=False)
     messageid = models.BigIntegerField(null=True, blank=True)
     gone = models.BooleanField(default=False)
-    STATUS_CHOICES = (
-        ('0', 'بررسی نشده'),
-        ('1', 'در صف ارسال قرار دارد'),
-        ('2', 'زمان بندی شده (ارسال در تاریخ معین)'),
-        ('4', 'ارسال شده به مخابرات'),
-        ('5', 'ارسال شده به مخابرات'), 
-        ('6', 'خطا در ارسال پیام که توسط سر شماره پیش می آید و به معنی عدم رسیدن پیامک می‌باشد'),
-        ('10', 'رسیده به گیرنده'),
-        ('11', 'نرسیده به گیرنده ، این وضعیت به دلایلی از جمله خاموش یا خارج از دسترس بودن گیرنده اتفاق می افتد'),
-        ('13', 'ارسال پیام از سمت کاربر لغو شده یا در ارسال آن مشکلی پیش آمده که هزینه آن به حساب برگشت داده می‌شود'),
-        ('14', 'بلاک شده است، عدم تمایل گیرنده به دریافت پیامک از خطوط تبلیغاتی که هزینه آن به حساب برگشت داده می‌شود'),
-        ('100', 'شناسه پیامک نامعتبر است'),
-    )
-    status = models.IntegerField(null=True, blank=True, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=3, null=True, blank=True, choices=STATUS_CHOICES)
     user = models.ForeignKey(User, null=True, blank=True)
 
     def __unicode__(self):
-        return "{} {}".format(self.receptor, self.text[0:15]+"...")
+        return "{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+             self.text[0:20]+"...", self.user ,self.gone, self.status)
+
+    def __str__(self):
+        return "{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+             self.text[0:20]+"...", self.user ,self.gone, self.status)
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/sms/send.json"
@@ -107,9 +100,12 @@ class Sent(models.Model):
 class Verify(models.Model):
     sent = models.ForeignKey(Sent, null=False, blank=False)
     ip = models.GenericIPAddressField(null=True, blank=True)
-    token1 = models.CharField(max_length=3, null=False, blank=False, default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
-    token2 = models.CharField(max_length=3, null=False, blank=False, default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
-    expiration_time = models.DateTimeField(default=(datetime.now() + timedelta(minutes=5)), editable=False)
+    token1 = models.CharField(max_length=3, null=False, blank=False, \
+        default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
+    token2 = models.CharField(max_length=3, null=False, blank=False, \
+        default=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]))
+    expiration_time = models.DateTimeField(default=(datetime.now() + \
+        timedelta(minutes=5)), editable=False)
     STATUS_CHOICES = (
             ('K', 'ok'),
             ('N', 'not ok'),
@@ -117,7 +113,12 @@ class Verify(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="N", null=False, blank=False)
 
     def __unicode__(self):
-        return "{}-{}-{} {}-{}".format(self.id, self.sent.receptor, self.token1, self.token2, self.status)
+        return "{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
+            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status)
+
+    def __str__(self):
+        return "{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
+            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status)
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"

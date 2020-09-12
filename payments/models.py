@@ -17,8 +17,10 @@ class Product(models.Model):
     active = models.NullBooleanField(null=True, blank=False)
 
     def __unicode__(self):
-        return "{}-{}".format(self.name, self.amount, self.active)
+        return "{}-{} {} | active:{}".format(self.id ,self.name, self.price, self.active)
 
+    def __str__(self):
+        return "{}-{} {} | active:{}".format(self.id ,self.name, self.price, self.active)
     
     def is_active(self):
         if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
@@ -39,7 +41,12 @@ class Discount(models.Model):
     active = models.NullBooleanField(null=True, blank=False)
     
     def __unicode__(self):
-        return "{}-{}-{}-{}-{}".format(self.name, self.product, self.code, self.amount, self.active)
+        return "{}-{} {} | code:{} amount:{} active:{}".format(self.id ,self.name, \
+            self.product, self.code, self.amount, self.active)
+
+    def __str__(self):
+        return "{}-{} {} | code:{} amount:{} active:{}".format(self.id ,self.name, \
+            self.product, self.code, self.amount, self.active)
 
     def is_active(self):
         if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
@@ -66,6 +73,10 @@ class Teacher(models.Model):
     def __unicode__(self):
         return "{}-{}".format(self.name, self.family)
 
+    def __str__(self):
+        return "{} {}".format(self.name ,self.family)
+        
+
 class Course(Product):
     CLASS_TYPE_CHOICES = (
         ('R', 'regular'),
@@ -89,9 +100,11 @@ class Course(Product):
     show = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return "{}-{}-{}-{}".format(self.get_class_type_display(), self.get_time_display(),\
-             self.get_day_display(), self.teacher)
+        return "{}-{} | price:{} active:{}".format(self.id ,self.get_name(), self.price, self.active)
 
+    def __str__(self):
+        return "{}-{} | price:{} active:{}".format(self.id ,self.get_name(), self.price, self.active)
+        
     def get_name(self):
         string = "کلاس "
         if self.class_type == "I":
@@ -125,8 +138,25 @@ class Cart(models.Model):
     discount = models.ManyToManyField(Discount)
     verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True )
 
-    def __unicode__(self):
-        return "{}-{}-{}-{}".format(self.id, self.course, self.discount, self.verification)
+    def __str__(self):
+        return "{}- verification:{} <==> course:{} <==> discount:{}".format(self.id \
+            ,self.verification.id , self.course.all(), self.discount.all())
+
+    def __str__(self):
+        return "{}- verification:{} <==> course:{} <==> discount:{}".format(self.id \
+            ,self.verification.id , self.course.all(), self.discount.all())
+
+    def get_courses(self):
+        try:
+            return ", ".join([str(obj.id) for obj in self.course.all()])
+        except:
+            return None
+
+    def get_discounts(self):
+        try:
+            return ", ".join([str(obj.id) for obj in self.discount.all()])
+        except:
+            None
 
     def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
         client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -174,8 +204,10 @@ class PaymentInformation(models.Model):
          on_delete=models.SET_NULL)
     
     def __unicode__(self):
-        return "{}-{}-{}-{}".format(self.id, self.name, self.family, self.cart)
+        return "{}-{} {} | phone:{} cart:{}".format(self.id, self.name, self.family, self.phone_number, self.cart.id)
 
+    def __str__(self):
+        return "{}-{} {} | phone:{} cart:{}".format(self.id, self.name, self.family, self.phone_number, self.cart.id)
     
 class Payment(models.Model):
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False\
@@ -188,13 +220,19 @@ class Payment(models.Model):
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{}-{}-{}".format(self.id, self.ref_id, self.status)
-
+        return "{}| payment information:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
+        
+    def __str__(self):
+        return "{}| payment information:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
 
     def get_jalali_date(self):
-        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Tehran"))).strftime("%Y/%m/%d")
+        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
+            .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%Y/%m/%d")
     def get_tehran_time(self):
-        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc).astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
+        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
+            .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
 
     def send_receipt_course(self):
         sms = Sent.objects.create(receptor = self.payment_info.phone_number,\
