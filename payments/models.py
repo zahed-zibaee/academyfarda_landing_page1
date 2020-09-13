@@ -222,11 +222,13 @@ class Payment(models.Model):
             .format(self.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
 
     def get_jalali_date(self):
-        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
-            .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%Y/%m/%d")
+        return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
+        #return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
+        #    .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%Y/%m/%d")
     def get_tehran_time(self):
-        return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
-            .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
+        return self.created_date.strftime("%H:%M:%S")
+        #return JalaliDateTime(self.created_date.replace(tzinfo=pytz.utc)\
+        #    .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
 
     def send_receipt_course(self):
         sms = Sent.objects.create(receptor = self.payment_info.phone_number,\

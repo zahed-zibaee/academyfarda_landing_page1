@@ -37,12 +37,16 @@ def verify(request):
                 payment.save()
                 payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
+                if len(payment.payment_info.cart.discount.all()) > 0:
+                    data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
-                data = {'status':"OK",'payment':payment}
+                data = {'status':"OK",'payment':payment,}
+                if len(payment.payment_info.cart.discount.all()) > 0:
+                    data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
             else:
                 try:
@@ -50,6 +54,8 @@ def verify(request):
                 except:
                     error = "\"" + "نامشخص" + " " + str(result.Status) + "\""
                 data = {'status':"ERROR",'error':error,'payment':payment}
+                if len(payment.payment_info.cart.discount.all()) > 0:
+                    data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
         else:
             try:
@@ -57,6 +63,8 @@ def verify(request):
             except:
                 return HttpResponseNotFound("payment not found")
             data = {'status':"NOK",'payment':payment}
+            if len(payment.payment_info.cart.discount.all()) > 0:
+                    data.update( {'discount' : True} )
             return render(request,'receipt/index.html', data)
     else:
         return HttpResponseNotAllowed("bad request. request must be GET")
