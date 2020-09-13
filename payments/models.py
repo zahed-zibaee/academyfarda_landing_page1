@@ -136,7 +136,7 @@ class Course(Product):
 class Cart(models.Model):
     course = models.ManyToManyField(Course)
     discount = models.ManyToManyField(Discount)
-    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True )
+    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return "{}- verification:{} <==> course:{} <==> discount:{}".format(self.id \
@@ -160,11 +160,6 @@ class Cart(models.Model):
 
     def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
         client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-        print(MERCHANT)
-        print(amount)
-        print(description)
-        print(mobile)
-        print(callbackurl)
         result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL = callbackurl)
         if result.Status == 100:
             return [True, str(result.Authority)]
@@ -189,8 +184,7 @@ class PaymentInformation(models.Model):
         message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], \
         max_length=11, null=False, blank=False)
-    phone_number2 = models.CharField(validators=[phone_regex], \
-        max_length=11, null=True, blank=False)
+    phone_number2 = models.CharField(max_length=15, null=True, blank=False)
     origin_town = models.CharField(max_length=200, null=True, blank=False)
     birthday = models.DateField(blank=False, null=True)
     address = models.TextField(max_length=2000,blank=False, null=True)
