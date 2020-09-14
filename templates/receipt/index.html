@@ -49,13 +49,13 @@
                     اطلاعات پرداخت
                   </p>
                   <p class="card-text">
-                    <span class="statics">وضعیت:</span>
+                    <span class="statics ">وضعیت:</span>
                     {% if status == 'OK' %}
-                    <span class="text-success">پرداخت با موفقیت انجام شد.</span>
+                    <span class="text-success font-weight-bolder font-size-16">پرداخت با موفقیت انجام شد.</span>
                     {% elif status == 'NOK' %}
-                    <span class="text-danger">پرداخت ناموفق است و یا توسط مشتری کنسل شده.</span>
+                    <span class="text-danger font-weight-bolder font-size-16">پرداخت ناموفق است و یا توسط مشتری کنسل شده.</span>
                     {% elif status == "ERROR" %}
-                    <span class="text-danger">استعلام پرداخت با ارور {{error}} مواجه شد.</span>
+                    <span class="text-danger font-weight-bolder font-size-16">استعلام پرداخت با ارور {{error}} مواجه شد.</span>
                     {% endif %}
                   </p>
                   <p class="card-text">
@@ -115,18 +115,18 @@
                     <tbody>
                       <tr>
                         <th scope="row">1</th>
-                        {% for course in payment.payment_info.cart.course.all %}
+                        {% for course in payment.cart.course.all %}
                           <td>ثبت‌نام {{ course.get_name }}</td>
                         {% endfor %}
                         <td>1</td>
                         {% if discount%}
-                          {% for discount in payment.payment_info.cart.discount.all %}
+                          {% for discount in payment.cart.discount.all %}
                             <td><span>{{discount.amount|intcomma}}</span><span class="ml-1">تومان</span></td>
                           {% endfor %}
                         {% else %}
                           <td><span>0</span><span class="ml-1">تومان</span></td>
                         {% endif %}
-                        {% for course in payment.payment_info.cart.course.all %}
+                        {% for course in payment.cart.course.all %}
                           <td><span>{{course.price|intcomma}}</span><span class="ml-1">تومان</span></td>
                         {% endfor %}
                       </tr>
@@ -137,11 +137,11 @@
                       <p class="card-text text-right mx-5">
                         <span class="statics">قابل پرداخت:</span>
                         {% if discount %}
-                          {% for discount in payment.payment_info.cart.discount.all %}
+                          {% for discount in payment.cart.discount.all %}
                             <span>{{discount.get_total|intcomma}}</span><span class="ml-1">تومان</span>
                           {% endfor %}
                         {% else %}
-                          {% for course in payment.payment_info.cart.course.all %}
+                          {% for course in payment.cart.course.all %}
                             <span>{{course.price|intcomma}}</span><span class="ml-1">تومان</span>
                           {% endfor %}
                         {% endif %}

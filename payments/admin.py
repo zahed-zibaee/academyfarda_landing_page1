@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from django.contrib.admin import DateFieldListFilter
 from .models import *
+
 
 # Register your models here.
 @admin.register(Teacher)
@@ -11,20 +13,29 @@ class Teacher_admin(admin.ModelAdmin):
     list_display_links = ['name',"family"]
 @admin.register(PaymentInformation)
 class PaymentInformation_admin(admin.ModelAdmin):
-    list_display = ('id','name',"family","gender","father_name","code_meli","phone_number","cart_id")
+    list_display = ('id','name',"family","gender","father_name","code_meli","phone_number")
     list_display_links = ['name',"family"]
 @admin.register(Payment)
 class Payment_admin(admin.ModelAdmin):
-    list_display = ('id','payment_info_id',"total","created_date","status","ref_id","send_receipt")
+    list_display = ('id','payment_info_id',"cart_id","total","created_date","status","ref_id","send_receipt")
     list_display_links = ["payment_info_id"]
+    raw_id_fields = ("payment_info","cart")
+    list_filter = (
+        ('created_date', DateFieldListFilter,),
+        'status',
+        "send_receipt",
+    )
+    search_fields = ("id",'ref_id')
 @admin.register(Cart)
 class Cart_admin(admin.ModelAdmin):
     list_display = ('id',"verification_id","get_courses","get_discounts")
     list_display_links = ["verification_id"]
+    raw_id_fields = ("verification",)
 @admin.register(Discount)
 class Discount_admin(admin.ModelAdmin):
     list_display = ('id',"name","product_id","code","amount","expiration_time","active")
     list_display_links = ["name"]
+    raw_id_fields = ("product",)
 @admin.register(Course)
 class Course_admin(admin.ModelAdmin):
     list_display = ('id',"get_name","show","price","active")

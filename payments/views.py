@@ -37,7 +37,7 @@ def verify(request):
                 payment.save()
                 payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
-                if len(payment.payment_info.cart.discount.all()) > 0:
+                if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
@@ -45,7 +45,7 @@ def verify(request):
                 payment.ref_id = result.RefID
                 payment.save()
                 data = {'status':"OK",'payment':payment,}
-                if len(payment.payment_info.cart.discount.all()) > 0:
+                if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
             else:
@@ -54,7 +54,7 @@ def verify(request):
                 except:
                     error = "\"" + "نامشخص" + " " + str(result.Status) + "\""
                 data = {'status':"ERROR",'error':error,'payment':payment}
-                if len(payment.payment_info.cart.discount.all()) > 0:
+                if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
                 return render(request,'receipt/index.html', data)
         else:
@@ -63,7 +63,7 @@ def verify(request):
             except:
                 return HttpResponseNotFound("payment not found")
             data = {'status':"NOK",'payment':payment}
-            if len(payment.payment_info.cart.discount.all()) > 0:
+            if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
             return render(request,'receipt/index.html', data)
     else:
@@ -181,7 +181,7 @@ def cart_course_create(request):
         paymentinfo = PaymentInformation.objects.create(name = request.POST['name'],\
             family = request.POST['family'], gender = request.POST['gender'], \
             father_name = request.POST['father_name'], code_meli = code_meli_en\
-            , phone_number = verify.sent.receptor, address = request.POST['address'], cart = cart)
+            , phone_number = verify.sent.receptor, address = request.POST['address'])
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
         if 'discount' in locals():
@@ -197,7 +197,7 @@ def cart_course_create(request):
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
         payment = Payment.objects.create(payment_info = paymentinfo,total = amount\
-             , authority = authority[1], created_date = datetime.now())
+             , authority = authority[1], created_date = datetime.now(), cart = cart)
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})

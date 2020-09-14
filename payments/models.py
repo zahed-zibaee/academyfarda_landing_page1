@@ -67,7 +67,7 @@ class Teacher(models.Model):
     family= models.CharField(max_length=200, null=False, blank=False)
     meli_regex = RegexValidator(regex=r'^\d{10}$', \
         message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
-    meli = models.CharField(validators=[meli_regex], \
+    code_meli = models.CharField(validators=[meli_regex], \
         max_length=10, null=False, blank=False, unique=True)
 
     def __unicode__(self):
@@ -139,11 +139,11 @@ class Cart(models.Model):
     verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return "{}- verification:{} <==> course:{} <==> discount:{}".format(self.id \
+        return "{}- verification id:{} <==> course:{} <==> discount:{}".format(self.id \
             ,self.verification.id , self.course.all(), self.discount.all())
 
     def __str__(self):
-        return "{}- verification:{} <==> course:{} <==> discount:{}".format(self.id \
+        return "{}- verification id:{} <==> course:{} <==> discount:{}".format(self.id \
             ,self.verification.id , self.course.all(), self.discount.all())
 
     def get_courses(self):
@@ -194,18 +194,18 @@ class PaymentInformation(models.Model):
     )
     payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES,\
          null=False, blank=False, default="0")
-    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
-         on_delete=models.SET_NULL)
     
     def __unicode__(self):
-        return "{}-{} {} | phone:{} cart:{}".format(self.id, self.name, self.family, self.phone_number, self.cart.id)
+        return "{}-{} {} | phone:{}".format(self.id, self.name, self.family, self.phone_number)
 
     def __str__(self):
-        return "{}-{} {} | phone:{} cart:{}".format(self.id, self.name, self.family, self.phone_number, self.cart.id)
+        return "{}-{} {} | phone:{}".format(self.id, self.name, self.family, self.phone_number)
     
 class Payment(models.Model):
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False\
         , null=True, blank=False, on_delete=models.SET_NULL)
+    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
+         on_delete=models.SET_NULL)
     total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
@@ -214,12 +214,12 @@ class Payment(models.Model):
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{}| payment information:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
+        return "{}| cart id:{} payment information id:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.cart.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
         
     def __str__(self):
-        return "{}| payment information:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
+        return "{}| cart id:{} payment information id:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.cart.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
 
     def get_jalali_date(self):
         return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
