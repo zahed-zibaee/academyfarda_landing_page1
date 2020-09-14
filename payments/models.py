@@ -107,9 +107,9 @@ class Course(Product):
         
     def get_name(self):
         string = "کلاس "
-        if self.class_type == "I":
+        if self.class_type == "R":
             string += "عادی "
-        elif self.class_type == "R":
+        elif self.class_type == "I":
             string += "فشرده "
         string += "- "
         if self.time == "912":
