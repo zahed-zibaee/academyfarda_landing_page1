@@ -9,8 +9,8 @@ from .models import *
 # Register your models here.
 @admin.register(Teacher)
 class Teacher_admin(admin.ModelAdmin):
-    list_display = ('id','name',"family")
-    list_display_links = ['name',"family"]
+    list_display = ('id', "family", 'name')
+    list_display_links = ['family',]
 @admin.register(PaymentInformation)
 class PaymentInformation_admin(admin.ModelAdmin):
     list_display = ('id','name',"family","gender","father_name","code_meli","phone_number")
