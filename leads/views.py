@@ -33,7 +33,7 @@ def api_submit(request):
         mylead = Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
             question = request.POST.get('question', default=''), \
                 origin = Origin.objects.filter(token = request.POST['token']).first())
-        mylead.operator.add(User.objects.filter(username = "f.safari").first())
+        mylead.operator.add(User.objects.filter(username = "zo.zibaee").first())
         return JsonResponse({
         'status': 'submited',
         }, encoder=JSONEncoder)
