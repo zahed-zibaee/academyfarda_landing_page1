@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import redirect
 
 def error_404(request):
     #TODO: add other errors 
@@ -18,3 +19,6 @@ def hi(request):
         return JsonResponse({'ans':'hi'})
     else:
         return HttpResponseBadRequest("bad request")
+
+def landing_redirect(request):
+    return redirect('https://academymobileset.com/landing')

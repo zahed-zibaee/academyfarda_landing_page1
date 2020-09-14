@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include, handler404
+from django.views.generic import TemplateView
 from django.contrib import admin
 from . import views
 
@@ -27,6 +28,7 @@ urlpatterns = [
     url(r'^payments/', include('payments.urls')),
     url(r'^SMS/', include('SMS.urls')),
     url(r'^hi/?$', views.hi, name="hi"),
+    url(r'^/?$', views.landing_redirect , name="landing"),
 ]
 
 handler404 = views.error_404
