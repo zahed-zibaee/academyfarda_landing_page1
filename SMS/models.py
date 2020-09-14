@@ -54,7 +54,7 @@ class Sent(models.Model):
         response = get(api, params=data)
         if (response.json()['return']['status'] == 200):
             self.messageid = int(response.json()['entries'][0]['messageid']) 
-            self.text = str(response.json()['entries'][0]['message']) 
+            self.text = u' '.join(response.json()['entries'][0]['message']).encode('utf-8').strip()
             self.sent_time = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
             self.gone = True
             self.save()
@@ -88,7 +88,7 @@ class Sent(models.Model):
         response = get(api, params=data)
         if (response.json()['return']['status'] == 200):
             self.messageid = int(response.json()['entries'][0]['messageid']) 
-            self.text = str(response.json()['entries'][0]['message']) 
+            self.text = u' '.join(response.json()['entries'][0]['message']).encode('utf-8').strip()
             self.sent_time = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
             self.gone = True
             self.save()
@@ -131,7 +131,7 @@ class Verify(models.Model):
         response = get(api, params=data)
         if (response.json()['return']['status'] == 200):
             self.sent.messageid = int(response.json()['entries'][0]['messageid']) 
-            self.sent.text = str(response.json()['entries'][0]['message']) 
+            self.sent.text = u' '.join(response.json()['entries'][0]['message']).encode('utf-8').strip()
             self.sent.sent_time = datetime.now().fromtimestamp(int(response.json()['entries'][0]['date']))
             self.sent.gone = True
             self.sent.save()
