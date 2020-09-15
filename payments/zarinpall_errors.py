@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 error_code = {
     '-1':'اطلاعات ارسال شده ناقص است.',
     '-2':'و يا مرچنت كد پذيرنده صحيح نيست. IP',

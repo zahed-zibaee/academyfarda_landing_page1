@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 status_codes = {
     '200':'درخواست تایید شد',
     '400':'پارامترها ناقص هستند',
