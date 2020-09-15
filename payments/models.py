@@ -138,14 +138,14 @@ class Course(Product):
         return string
 
 class PaymentInformation(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=False)
-    family= models.CharField(max_length=200, null=True, blank=False)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    family= models.CharField(max_length=200, null=True, blank=True)
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
-    father_name = models.CharField(max_length=200, null=True, blank=False)
+    father_name = models.CharField(max_length=200, null=True, blank=True)
     meli_regex = RegexValidator(regex=r'^\d{10}$', \
         message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
     code_meli = models.CharField(validators=[meli_regex], \
