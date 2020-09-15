@@ -171,17 +171,17 @@ def cart_course_create(request):
                 discount = Discount.objects.filter(code = request.POST['discount_code']).first()
             else:
                 return HttpResponseForbidden("discount code is not valid")
-        ########## make a cart
-        cart = Cart.objects.create(verification = verify)
-        cart.course.add(course)
-        if 'discount' in locals():
-            cart.discount.add(discount)
-        cart.save()
         ########## make a payment_info
         paymentinfo = PaymentInformation.objects.create(name = request.POST['name'],\
             family = request.POST['family'], gender = request.POST['gender'], \
             father_name = request.POST['father_name'], code_meli = code_meli_en\
-            , phone_number = verify.sent.receptor, address = request.POST['address'])
+            , phone_number = verify.sent.receptor, address = request.POST['address'])        
+        ########## make a cart
+        cart = Cart.objects.create(payment_info = paymentinfo)
+        cart.course.add(course)
+        if 'discount' in locals():
+            cart.discount.add(discount)
+        cart.save()
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
         if 'discount' in locals():
@@ -196,7 +196,7 @@ def cart_course_create(request):
         if authority[0] == False:
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
-        payment = Payment.objects.create(payment_info = paymentinfo,total = amount\
+        payment = Payment.objects.create(verification = verify,total = amount\
              , authority = authority[1], created_date = datetime.now(), cart = cart)
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]

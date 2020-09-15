@@ -14,7 +14,7 @@ import pytz
 class Product(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
     price = models.BigIntegerField(null=False, blank=False)
-    active = models.NullBooleanField(null=True, blank=False)
+    active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "{}-{} {} | active:{}".format(self.id ,self.name, self.price, self.active)
@@ -38,7 +38,7 @@ class Discount(models.Model):
     product = models.ForeignKey(Product, null=False, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
     expiration_time = models.DateTimeField(null=False, blank=False, default=datetime.now() + timedelta(days=+36500))
-    active = models.NullBooleanField(null=True, blank=False)
+    active = models.BooleanField(default=False)
     
     def __unicode__(self):
         return "{}-{} {} | code:{} amount:{} active:{}".format(self.id ,self.name, \
@@ -109,20 +109,25 @@ class Course(Product):
         string = "کلاس "
         if self.class_type == "R":
             string += "عادی "
+            string += "- "
         elif self.class_type == "I":
             string += "فشرده "
-        string += "- "
+            string += "- "
         if self.time == "912":
             string += "۹ تا ۱۲ "
+            string += "- "
         elif self.time == "1316":
             string += "۱۳ تا ۱۶ "
+            string += "- "
         elif self.time == "1720":
             string += "۱۷ تا ۲۰ "
-        string += "- "
+            string += "- "
         if self.day=="STW":
             string += "شنبه تا چهار‌شنبه "
+            string += "- "
         elif self.day=="STT":
             string += "شنبه تا پنج‌شنبه "
+            string += "- "
         elif self.day=="O":
             string += "فرد "
         elif self.day=="E":
@@ -131,40 +136,6 @@ class Course(Product):
             string += "- "
             string += "استاد " + self.teacher.name + " " + self.teacher.family + " "
         return string
-
-
-class Cart(models.Model):
-    course = models.ManyToManyField(Course)
-    discount = models.ManyToManyField(Discount)
-    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return "{}- verification id:{} <==> course:{} <==> discount:{}".format(self.id \
-            ,self.verification.id , self.course.all(), self.discount.all())
-
-    def __str__(self):
-        return "{}- verification id:{} <==> course:{} <==> discount:{}".format(self.id \
-            ,self.verification.id , self.course.all(), self.discount.all())
-
-    def get_courses(self):
-        try:
-            return ", ".join([str(obj.id) for obj in self.course.all()])
-        except:
-            return None
-
-    def get_discounts(self):
-        try:
-            return ", ".join([str(obj.id) for obj in self.discount.all()])
-        except:
-            None
-
-    def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
-        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-        result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL = callbackurl)
-        if result.Status == 100:
-            return [True, str(result.Authority)]
-        else:
-            return [False, str(result.Status)]
 
 class PaymentInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=False)
@@ -201,11 +172,45 @@ class PaymentInformation(models.Model):
     def __str__(self):
         return "{}-{} {} | phone:{}".format(self.id, self.name, self.family, self.phone_number)
     
+
+class Cart(models.Model):
+    course = models.ManyToManyField(Course)
+    discount = models.ManyToManyField(Discount)
+    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',\
+        null=True, blank=False, on_delete=models.SET_NULL)
+
+    def __unicode__(self):
+        return "{}- payment information id:{} <==> course:{} <==> discount:{}".format(self.id \
+            ,self.payment_info.id , self.course.all(), self.discount.all())
+
+    def __str__(self):
+        return "{}- payment information id:{} <==> course:{} <==> discount:{}".format(self.id \
+            ,self.payment_info.id , self.course.all(), self.discount.all())
+
+    def get_courses(self):
+        try:
+            return ", ".join([str(obj.id) for obj in self.course.all()])
+        except:
+            return None
+
+    def get_discounts(self):
+        try:
+            return ", ".join([str(obj.id) for obj in self.discount.all()])
+        except:
+            None
+
+    def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
+        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+        result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL = callbackurl)
+        if result.Status == 100:
+            return [True, str(result.Authority)]
+        else:
+            return [False, str(result.Status)]
+
 class Payment(models.Model):
-    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',unique=False\
-        , null=True, blank=False, on_delete=models.SET_NULL)
     cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
          on_delete=models.SET_NULL)
+    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
     total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
@@ -214,12 +219,12 @@ class Payment(models.Model):
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "{}| cart id:{} payment information id:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.cart.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
+        return "{}| cart id:{} verification id:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.cart.id, self.verification.id, self.total, self.created_date, self.status, self.ref_id)
         
     def __str__(self):
-        return "{}| cart id:{} payment information id:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.cart.id, self.payment_info.id, self.total, self.created_date, self.status, self.ref_id)
+        return "{}| cart id:{} verification id:{} total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.id, self.cart.id, self.verification.id, self.total, self.created_date, self.status, self.ref_id)
 
     def get_jalali_date(self):
         return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
@@ -231,7 +236,7 @@ class Payment(models.Model):
         #    .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
 
     def send_receipt_course(self):
-        sms = Sent.objects.create(receptor = self.payment_info.phone_number,\
+        sms = Sent.objects.create(receptor = self.cart.payment_info.phone_number,\
              created_date = datetime.now())
         res_code = sms.send_receipt_course(self.ref_id)
         if res_code == 200:
