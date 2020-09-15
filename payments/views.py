@@ -197,7 +197,7 @@ def cart_course_create(request):
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
         payment = Payment.objects.create(verification = verify,total = amount\
-             , authority = authority[1], created_date = datetime.now(), cart = cart)
+             , authority = u' '.join(authority[1]).encode('utf-8').strip(), created_date = datetime.now(), cart = cart)
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})
@@ -211,7 +211,8 @@ def get_courses(request):
         dic = {}
         dic["course"] = []
         for course in Course.objects.filter(show=True):
-            dic["course"].append({"id":course.id,"name":course.get_name(),"active":course.active,"day":course.day,"time":course.time,"type":course.class_type})
+            dic["course"].append({"id":course.id,"name":course.get_name()\
+                ,"active":course.active,"day":course.day,"time":course.time,"type":course.class_type})
         return JsonResponse(dic)
     else:
         return HttpResponseBadRequest("bad request")
