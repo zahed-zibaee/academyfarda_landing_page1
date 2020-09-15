@@ -149,16 +149,16 @@ class PaymentInformation(models.Model):
     meli_regex = RegexValidator(regex=r'^\d{10}$', \
         message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
     code_meli = models.CharField(validators=[meli_regex], \
-        max_length=10, null=True, blank=False)
+        max_length=10, null=True, blank=True)
     code_shenasname = models.CharField(max_length=10, null=True, blank=True)
     phone_regex = RegexValidator(regex=r'^09\d{9}$', \
         message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], \
         max_length=11, null=False, blank=False)
-    phone_number2 = models.CharField(max_length=15, null=True, blank=False)
-    origin_town = models.CharField(max_length=200, null=True, blank=False)
-    birthday = models.DateField(blank=False, null=True)
-    address = models.TextField(max_length=2000,blank=False, null=True)
+    phone_number2 = models.CharField(max_length=15, null=True, blank=True)
+    origin_town = models.CharField(max_length=200, null=True, blank=True)
+    birthday = models.DateField(blank=True, null=True)
+    address = models.TextField(max_length=2000,blank=True, null=True)
     PAYMENT_TYPE_CHOICES = (
         ('0', 'نقدی'),
         ('1', 'اقساط'),
