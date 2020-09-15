@@ -124,10 +124,8 @@ class Course(Product):
             string += "- "
         if self.day=="STW":
             string += "شنبه تا چهار‌شنبه "
-            string += "- "
         elif self.day=="STT":
             string += "شنبه تا پنج‌شنبه "
-            string += "- "
         elif self.day=="O":
             string += "فرد "
         elif self.day=="E":
