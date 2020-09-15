@@ -19,7 +19,10 @@ class TextSave(models.Model):
     text = models.TextField(max_length=2000,blank=True, null=False)
 
     def __unicode__(self):
-        return "{}-{}".format(self.id, self.name)
+        return u"{}-{}".format(self.id, self.name).encode('utf8')
+    
+    def __str__(self):
+        return u"{}-{}".format(self.id, self.name).encode('utf8')
 
 class Sent(models.Model):
     phone_regex = RegexValidator(regex=r'^09\d{9}$', \
@@ -36,12 +39,12 @@ class Sent(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
 
     def __unicode__(self):
-        return "{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
-             self.text[0:20]+"...", self.user ,self.gone, self.status)
+        return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+             self.text[0:20]+"...", self.user ,self.gone, self.status).encode('utf8')
 
     def __str__(self):
-        return "{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
-             self.text[0:20]+"...", self.user ,self.gone, self.status)
+        return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+             self.text[0:20]+"...", self.user ,self.gone, self.status).encode('utf8')
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/sms/send.json"
@@ -113,12 +116,12 @@ class Verify(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="N", null=False, blank=False)
 
     def __unicode__(self):
-        return "{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
-            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status)
+        return u"{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
+            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status).encode('utf8')
 
     def __str__(self):
-        return "{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
-            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status)
+        return u"{}-{} {} | token1:{} token2:{} status:{}".format(self.id \
+            ,self.sent.receptor, self.sent.text[0:20]+"...", self.token1, self.token2, self.status).encode('utf8')
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"

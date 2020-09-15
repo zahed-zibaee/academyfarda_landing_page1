@@ -33,7 +33,7 @@ def verify(request):
                 return HttpResponseServerError("can not connect to zarinpal server")
             if result.Status == 100:
                 payment.status = True
-                payment.ref_id = result.RefID
+                payment.ref_id = result.RefID.decode("utf-8")
                 payment.save()
                 payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
@@ -42,7 +42,7 @@ def verify(request):
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
                 payment.status = True
-                payment.ref_id = result.RefID
+                payment.ref_id = result.RefID.decode("utf-8")
                 payment.save()
                 data = {'status':"OK",'payment':payment,}
                 if len(payment.cart.discount.all()) > 0:
