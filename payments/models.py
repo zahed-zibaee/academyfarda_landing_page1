@@ -172,8 +172,8 @@ class PaymentInformation(models.Model):
     
 
 class Cart(models.Model):
-    course = models.ManyToManyField(Course)
-    discount = models.ManyToManyField(Discount)
+    course = models.ManyToManyField(Course, blank=True)
+    discount = models.ManyToManyField(Discount, blank=True)
     payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',\
         null=True, blank=False, on_delete=models.SET_NULL)
 
