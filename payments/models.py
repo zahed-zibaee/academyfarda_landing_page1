@@ -41,12 +41,12 @@ class Discount(models.Model):
     active = models.BooleanField(default=False)
     
     def __unicode__(self):
-        return "{}-{} {} | code:{} amount:{} active:{}".format(self.id ,self.name, \
-            self.product, self.code, self.amount, self.active)
+        return "{}-{} | code:{} amount:{} active:{}".format(self.id ,self.name, \
+            self.code, self.amount, self.active)
 
     def __str__(self):
-        return "{}-{} {} | code:{} amount:{} active:{}".format(self.id ,self.name, \
-            self.product, self.code, self.amount, self.active)
+        return "{}-{} | code:{} amount:{} active:{}".format(self.id ,self.name, \
+            self.code, self.amount, self.active)
 
     def is_active(self):
         if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
@@ -180,11 +180,11 @@ class Cart(models.Model):
         null=True, blank=False, on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        return "{}- payment information id:{} <==> course:{} <==> discount:{}".format(self.id \
+        return "{}- payment information id:{} course:{} discount:{}".format(self.id \
             ,self.payment_info.id , self.course.all(), self.discount.all())
 
     def __str__(self):
-        return "{}- payment information id:{} <==> course:{} <==> discount:{}".format(self.id \
+        return "{}- payment information id:{} course:{} discount:{}".format(self.id \
             ,self.payment_info.id , self.course.all(), self.discount.all())
 
     def get_courses(self):
