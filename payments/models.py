@@ -178,12 +178,36 @@ class Cart(models.Model):
         null=True, blank=False, on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        return u"{}- payment information id:{} course:{} discount:{}".format(self.id \
-            ,self.payment_info.id , self.course.all(), self.discount.all()).encode('utf-8')
+        string = u"{}- ".format(self.id).encode('utf-8') 
+        try:
+            string += u"payment information id:{} ".format(self.payment_info.id).encode('utf-8')
+        except:
+            string += u"payment_info id:None "
+        try:
+            string += u"courses:{} ".format(self.course.all()).encode('utf-8')
+        except:
+            string += u"courses:None "
+        try:
+            string += u"discounts:{} ".format(self.discount.all()).encode('utf-8')
+        except:
+            string += u"discounts:None "   
+        return string
 
     def __str__(self):
-        return u"{}- payment information id:{} course:{} discount:{}".format(self.id \
-            ,self.payment_info.id , self.course.all(), self.discount.all()).encode('utf-8')
+        string = u"{}- ".format(self.id).encode('utf-8') 
+        try:
+            string += u"payment information id:{} ".format(self.payment_info.id).encode('utf-8')
+        except:
+            string += u"payment_info id:None "
+        try:
+            string += u"courses:{} ".format(self.course.all()).encode('utf-8')
+        except:
+            string += u"courses:None "
+        try:
+            string += u"discounts:{} ".format(self.discount.all()).encode('utf-8')
+        except:
+            string += u"discounts:None "   
+        return string
 
     def get_courses(self):
         try:
@@ -217,14 +241,34 @@ class Payment(models.Model):
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return u"{}| cart id:{} verification id:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.cart.id, self.verification.id, self.total, \
-                JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"), self.status, self.ref_id).encode('utf-8')
+        string = u"{}| ".format(self.id).encode('utf-8') 
+        try:
+            string += u"cart id:{} ".format(self.cart.id).encode('utf-8')
+        except:
+            string += u"cart id:None "
+        try:
+            string += u"verification id:{} ".format(self.verification.id).encode('utf-8')
+        except:
+            string += u"verification id:None "
+        string += u"total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.total, JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"),\
+            self.status, self.ref_id).encode('utf-8')
+        return string
         
     def __str__(self):
-        return u"{}| cart id:{} verification id:{} total:{} created date:{} status:{} refrence id:{} "\
-            .format(self.id, self.cart.id, self.verification.id, self.total, \
-                JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"), self.status, self.ref_id).encode('utf-8')
+        string = u"{}| ".format(self.id).encode('utf-8') 
+        try:
+            string += u"cart id:{} ".format(self.cart.id).encode('utf-8')
+        except:
+            string += u"cart id:None "
+        try:
+            string += u"verification id:{} ".format(self.verification.id).encode('utf-8')
+        except:
+            string += u"verification id:None "
+        string += u"total:{} created date:{} status:{} refrence id:{} "\
+            .format(self.total, JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"),\
+            self.status, self.ref_id).encode('utf-8')
+        return string
 
     def get_jalali_date(self):
         return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
