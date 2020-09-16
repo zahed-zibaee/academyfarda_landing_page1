@@ -33,7 +33,7 @@ def verify(request):
                 return HttpResponseServerError("can not connect to zarinpal server")
             if result.Status == 100:
                 payment.status = True
-                payment.ref_id = result.RefID.decode("utf-8")
+                payment.ref_id = result.RefID
                 payment.save()
                 payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
@@ -42,7 +42,7 @@ def verify(request):
                 return render(request,'receipt/index.html', data)
             elif result.Status == 101:
                 payment.status = True
-                payment.ref_id = result.RefID.decode("utf-8")
+                payment.ref_id = result.RefID
                 payment.save()
                 data = {'status':"OK",'payment':payment,}
                 if len(payment.cart.discount.all()) > 0:
@@ -197,7 +197,7 @@ def cart_course_create(request):
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
         payment = Payment.objects.create(verification = verify,total = amount\
-             , authority = u' '.join(authority[1]).encode('utf-8').strip(), created_date = datetime.now(), cart = cart)
+             , authority = authority[1].encode('utf-8'), created_date = datetime.now(), cart = cart)
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})

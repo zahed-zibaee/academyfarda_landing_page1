@@ -207,7 +207,7 @@ class Payment(models.Model):
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     status = models.BooleanField(default=False)
-    ref_id = models.CharField(max_length=50, null=True, blank=False)
+    ref_id = models.BigIntegerField(max_length=50, null=True, blank=False)
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):
