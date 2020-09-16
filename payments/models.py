@@ -15,12 +15,6 @@ class Product(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
     price = models.BigIntegerField(null=False, blank=False)
     active = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return u"{}-{} {} | active:{}".format(self.id ,self.name, self.price, self.active).encode('utf-8')
-
-    def __str__(self):
-        return u"{}-{} {} | active:{}".format(self.id ,self.name, self.price, self.active).encode('utf-8')
     
     def is_active(self):
         if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
@@ -71,10 +65,10 @@ class Teacher(models.Model):
         max_length=10, null=False, blank=False, unique=True)
 
     def __unicode__(self):
-        return u"{}-{}".format(self.name, self.family).encode('utf-8')
+        return u"{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{} {}".format(self.name ,self.family).encode('utf-8')
+        return u"{}".format(self.id).encode('utf-8')
         
 
 class Course(Product):

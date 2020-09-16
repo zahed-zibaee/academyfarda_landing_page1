@@ -40,11 +40,11 @@ class Sent(models.Model):
 
     def __unicode__(self):
         return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
-             self.text[0:20]+"...", self.user ,self.gone, self.status).encode('utf8')
+            self.user ,self.gone, self.status).encode('utf8')
 
     def __str__(self):
         return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
-             self.text[0:20]+"...", self.user ,self.gone, self.status).encode('utf8')
+            self.user ,self.gone, self.status).encode('utf8')
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/sms/send.json"
