@@ -24,10 +24,10 @@ class Product(models.Model):
             return False
     
     def __unicode__(self):
-        return u"{}-{} | active:{}".format(self.id ,self.name, self.active).encode('utf-8')
+        return u"{}| active:{}".format(self.id ,self.active).encode('utf-8')
 
     def __str__(self):
-        return u"{}-{} | active:{}".format(self.id ,self.name, self.active).encode('utf-8')
+        return u"{}| active:{}".format(self.id ,self.active).encode('utf-8')
 
     class meta:
         abstract = True
