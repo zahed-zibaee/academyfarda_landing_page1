@@ -35,7 +35,8 @@ def verify(request):
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
-                payment.send_receipt_course()
+                if payment.send_receipt == False:
+                    payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment}
                 if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
@@ -44,6 +45,8 @@ def verify(request):
                 payment.status = True
                 payment.ref_id = result.RefID
                 payment.save()
+                if payment.send_receipt == False:
+                    payment.send_receipt_course()
                 data = {'status':"OK",'payment':payment,}
                 if len(payment.cart.discount.all()) > 0:
                     data.update( {'discount' : True} )
