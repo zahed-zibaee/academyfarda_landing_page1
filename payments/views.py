@@ -23,7 +23,8 @@ def verify(request):
     if request.method == 'GET':
         if request.GET.get('Status') == 'OK':
             try:
-                payment = Payment.objects.filter(authority = request.GET['Authority']).order_by("-created_date").first()
+                payment_id = Payment.objects.filter(authority = request.GET['Authority']).order_by("-created_date").first().id
+                payment = Payment.objects.get(id=payment_id)
             except:
                 return HttpResponseNotFound("payment not found")
             client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -62,7 +63,8 @@ def verify(request):
                 return render(request,'receipt/index.html', data)
         else:
             try:
-                payment = Payment.objects.filter(authority = request.GET['Authority']).first()
+                payment_id = Payment.objects.filter(authority = request.GET['Authority']).order_by("-created_date").first().id
+                payment = Payment.objects.get(id=payment_id)
             except:
                 return HttpResponseNotFound("payment not found")
             data = {'status':"NOK",'payment':payment}
@@ -88,12 +90,10 @@ def get_course_total(request):
         if 'discount_code' in request.POST.keys():
             discount_code_fa = digits.ar_to_fa(request.POST['discount_code'])
             discount_code_fa_en = digits.fa_to_en(discount_code_fa)
-            if Discount.objects.filter(code = discount_code_fa_en, product =\
-                Product.objects.get(id = course.id)).exists() and\
-                Discount.objects.filter(code = discount_code_fa_en,
-                product = course.id).first().is_active():
+            if Discount.objects.filter(code = discount_code_fa_en).exists() and\
+                Discount.objects.filter(code = discount_code_fa_en).first().is_active(course.id):
                 discount = Discount.objects.filter(code = discount_code_fa_en).first()
-                total = discount.get_total()
+                total = discount.get_total(course.id)
                 return JsonResponse({'total':total})
             else:
                 return HttpResponseNotFound("code not found")
@@ -166,12 +166,12 @@ def cart_course_create(request):
             return HttpResponseForbidden("sms code is not valid")
         ########### if discount code is posted 
         if 'discount_code' in request.POST.keys():
+            discount_code_fa = digits.ar_to_fa(request.POST['discount_code'])
+            discount_code_fa_en = digits.fa_to_en(discount_code_fa)
             #check for validating discount code
-            if Discount.objects.filter(code = request.POST['discount_code'], product = \
-                Product.objects.get(id = course.id)).exists() \
-                and Discount.objects.filter(code = request.POST['discount_code'], \
-                product = course.id).first().is_active():
-                discount = Discount.objects.filter(code = request.POST['discount_code']).first()
+            if Discount.objects.filter(code = discount_code_fa_en).exists() and\
+                Discount.objects.filter(code = discount_code_fa_en).first().is_active(course.id):
+                discount = Discount.objects.filter(code = discount_code_fa_en).first()
             else:
                 return HttpResponseForbidden("discount code is not valid")
         ########## make a payment_info
@@ -188,7 +188,7 @@ def cart_course_create(request):
         ########## cart get_href
         description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"
         if 'discount' in locals():
-            amount = int(discount.get_total())
+            amount = int(discount.get_total(course.id))
         else:
             amount = 0
             for course in cart.course.all():

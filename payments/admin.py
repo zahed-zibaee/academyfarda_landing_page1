@@ -33,9 +33,8 @@ class Cart_admin(admin.ModelAdmin):
     raw_id_fields = ("payment_info",)
 @admin.register(Discount)
 class Discount_admin(admin.ModelAdmin):
-    list_display = ('id', "name", "product_id", "code", "amount", "expiration_time", "active")
+    list_display = ('id', "name", "code", "amount", "expiration_time", "active")
     list_display_links = ["name"]
 @admin.register(Course)
 class Course_admin(admin.ModelAdmin):
     list_display = ('id',"get_name","show","price","active")
-    list_display_links = ["get_name"]

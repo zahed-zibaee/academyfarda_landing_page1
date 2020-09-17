@@ -35,29 +35,37 @@ class Product(models.Model):
 class Discount(models.Model):
     name = models.CharField(max_length=500, null=False, blank=False)
     code = models.CharField(max_length=100, null=False, blank=False, unique=True)
-    product = models.ForeignKey(Product, null=False, blank=False)
+    product = models.ManyToManyField(Product, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
     expiration_time = models.DateTimeField(null=False, blank=False, default=datetime.now() + timedelta(days=+36500))
     active = models.BooleanField(default=False)
     
     def __unicode__(self):
-        return u"{}-{} | code:{} amount:{} active:{}".format(self.id ,self.name, \
-            self.code, self.amount, self.active).encode('utf-8')
+        return u"{}-{} | products:{} code:{} amount:{} active:{}".format(self.id ,self.name, \
+            ", ".join([str(obj.id) for obj in self.product.all()]) ,self.code, self.amount, self.active).encode('utf-8')
 
     def __str__(self):
-        return u"{}-{} | code:{} amount:{} active:{}".format(self.id ,self.name, \
-            self.code, self.amount, self.active).encode('utf-8')
+        return u"{}-{} | products:{} code:{} amount:{} active:{}".format(self.id ,self.name, \
+            ", ".join([str(obj.id) for obj in self.product.all()]) ,self.code, self.amount, self.active).encode('utf-8')
 
-    def is_active(self):
-        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
-             and self.product.active == True:
-            return True
+    def is_active(self ,product):
+        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True:
+            try:
+                if self.product.get(id=product).active == True:
+                    return True
+                else:
+                    return False
+            except:
+                return False
         else:
             return False
 
-    def get_total(self):
-        if self.is_active():
-            return (self.product.price - self.amount)
+    def get_total(self, product):
+        if self.is_active(product):
+            try:
+                return (self.product.get(id=product).price - self.amount)
+            except:
+                return False
         else:
             return False
 
@@ -213,7 +221,7 @@ class Payment(models.Model):
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     status = models.BooleanField(default=False)
-    ref_id = models.BigIntegerField(max_length=50, null=True, blank=False)
+    ref_id = models.BigIntegerField(null=True, blank=False)
     send_receipt = models.BooleanField(default=False)
 
     def __unicode__(self):

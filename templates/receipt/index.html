@@ -136,15 +136,7 @@
                     <div class="col-12">
                       <p class="card-text text-right mx-5">
                         <span class="statics">قابل پرداخت:</span>
-                        {% if discount %}
-                          {% for discount in payment.cart.discount.all %}
-                            <span>{{discount.get_total|intcomma}}</span><span class="ml-1">تومان</span>
-                          {% endfor %}
-                        {% else %}
-                          {% for course in payment.cart.course.all %}
-                            <span>{{course.price|intcomma}}</span><span class="ml-1">تومان</span>
-                          {% endfor %}
-                        {% endif %}
+                        <span>{{payment.total|intcomma}}</span><span class="ml-1">تومان</span>
                       </p>
                     </div>
                   </div>
