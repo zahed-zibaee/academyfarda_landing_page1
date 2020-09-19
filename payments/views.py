@@ -113,9 +113,9 @@ def check_course(request):
         else:
             return HttpResponseNotFound("course not found")
         if course.active == True:
-            return JsonResponse({'avtive':'true'})
+            return JsonResponse({'avtive':'true','name':course.get_name()})
         else:
-            return JsonResponse({'active':'false'})
+            return JsonResponse({'active':'false','name':course.get_name()})
     else:
         return HttpResponseBadRequest("bad request")
 
