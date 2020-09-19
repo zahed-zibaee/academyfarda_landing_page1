@@ -38,3 +38,4 @@ class Discount_admin(admin.ModelAdmin):
 @admin.register(Course)
 class Course_admin(admin.ModelAdmin):
     list_display = ('id',"get_name","show","price","active")
+    list_display_links = ["get_name"]
