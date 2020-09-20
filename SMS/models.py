@@ -39,11 +39,11 @@ class Sent(models.Model):
     user = models.ForeignKey(User, null=True, blank=True)
 
     def __unicode__(self):
-        return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+        return u"{}-{}| user:{} gone:{} status:{}".format(self.id ,self.receptor,\
             self.user ,self.gone, self.status).encode('utf8')
 
     def __str__(self):
-        return u"{}-{} {} | user:{} gone:{} status:{}".format(self.id ,self.receptor,\
+        return u"{}-{}| user:{} gone:{} status:{}".format(self.id ,self.receptor,\
             self.user ,self.gone, self.status).encode('utf8')
 
     def send(self):
