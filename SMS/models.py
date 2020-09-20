@@ -116,12 +116,22 @@ class Verify(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="N", null=False, blank=False)
 
     def __unicode__(self):
-        return u"{}-{} | token1:{} token2:{} status:{}".format(self.id \
-            ,self.sent.receptor, self.token1, self.token2, self.status).encode('utf8')
+        string = u"{}-"
+        try:
+            u"{} | ".format(self.sent.receptor)
+        except:
+            u"None | "
+        string += u"token1:{} token2:{} status:{}".format(self.token1, self.token2, self.status)
+        return string.encode('utf8')
 
     def __str__(self):
-        return u"{}-{} | token1:{} token2:{} status:{}".format(self.id \
-            ,self.sent.receptor, self.token1, self.token2, self.status).encode('utf8')
+        string = u"{}-"
+        try:
+            u"{} | ".format(self.sent.receptor)
+        except:
+            u"None | "
+        string += u"token1:{} token2:{} status:{}".format(self.token1, self.token2, self.status)
+        return string.encode('utf8')
 
     def send(self):
         api = "https://api.kavenegar.com/v1/" + apikey + "/verify/lookup.json"
