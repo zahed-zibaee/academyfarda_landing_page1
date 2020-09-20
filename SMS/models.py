@@ -116,7 +116,7 @@ class Verify(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default="N", null=False, blank=False)
 
     def __unicode__(self):
-        string = u"{}-"
+        string = u"{}-".format(self.id)
         try:
             u"{} | ".format(self.sent.receptor)
         except:
@@ -125,7 +125,7 @@ class Verify(models.Model):
         return string.encode('utf8')
 
     def __str__(self):
-        string = u"{}-"
+        string = u"{}-".format(self.id)
         try:
             u"{} | ".format(self.sent.receptor)
         except:
