@@ -69,7 +69,7 @@
                         <select class="custom-select"  id="validationCustom08" name='status'>
                             <option {% if status %} {% else %} selected {% endif %} value="">-----</option>
                             {% for value, key in REGISTRATION_STATUS.items %}
-                            <option value="{{ key }}" {% if key == status %} selected {% endif %}>{{ value }}</option>
+                            <option value="{{ key }}" {% if key == status %} selected {% endif %}>{{ value }}</option>a
                             {% endfor %} {# REGISTRATION_STATUS #}
                         </select>
                     </div>
