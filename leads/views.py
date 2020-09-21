@@ -185,8 +185,8 @@ def comment_add(request):
         author = request.user
         text = request.POST['text']
         comment = Comment(post = post, author = author, text = text, created_date = datetime.now(), \
-        created_date_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
-            "%Y-%m-%d %H:%M:%S"), created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
+        created_date_jalali = JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
+            created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
         comment.save()
         messages.success(request, "You'r comment has been save")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -293,8 +293,8 @@ def label_add(request):
             post = Lead.objects.filter(id=int(request.POST["lead_id"])).first()
             label1 = LabelDefinition.objects.filter(id=int(request.POST["label"])).first()
             label = Label(post = post, label = label1, owner = request.user , created_date = datetime.now(), \
-                created_date_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
-                    "%Y-%m-%d %H:%M:%S"), created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
+                created_date_jalali = JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"), \
+                    created_date_jalali_str = JalaliDateTime.now().strftime("%c"))
             label.save()
             messages.success(request, "You'r label has been changed")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -320,9 +320,9 @@ def lead_add(request):
         if len(name_and_family) > 2 and len(phone_en) > 5 and len(phone_en) < 16 and\
                 phone_en.isdigit() and len(Lead.objects.filter(phone_number=phone_en)) == 0:
             lead = Lead(origin = origin, name_and_family = name_and_family.encode("utf-8"), gender = gender,\
-                 phone_number = phone_en, register_status = register_status,\
-                    led_time = datetime.now(),led_time_jalali = datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"),\
-                        "%Y-%m-%d %H:%M:%S"), led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
+                phone_number = phone_en, register_status = register_status,\
+                led_time = datetime.now(),led_time_jalali = JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S"),\
+                led_time_jalali_str = JalaliDateTime.now().strftime("%c"))
             #if lead is registered save operator
             if register_status == "K":
                 lead.registered_by = request.user

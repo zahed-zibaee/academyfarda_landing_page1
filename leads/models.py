@@ -35,8 +35,8 @@ class Lead(models.Model):
     )
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
     led_time = models.DateTimeField(default=datetime.now(), editable=False)
-    led_time_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    led_time_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        , editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     question = models.TextField(blank=True, default="")
@@ -51,8 +51,8 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     text = models.TextField(blank=True, null=True)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
-    created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    created_date_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        , editable=False, null=False, blank=False)
     created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     approved_comment = models.BooleanField(default=True)
@@ -90,8 +90,8 @@ class Label(models.Model):
     label = models.ForeignKey(LabelDefinition, on_delete=models.SET_NULL, null=True)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, editable=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
-    created_date_jalali = models.DateTimeField(default=datetime.strptime(JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
-        ,"%Y-%m-%d %H:%M:%S"), editable=False, null=False, blank=False)
+    created_date_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
+        , editable=False, null=False, blank=False)
     created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     class Meta:
