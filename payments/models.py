@@ -123,6 +123,9 @@ class Course(Product):
         elif self.class_type == "I":
             string += "فشرده "
             string += "- "
+        elif self.class_type == "S":
+            string += "خاص "
+            string += "- "
         if self.time == "912":
             string += "۹ تا ۱۲ "
             string += "- "
