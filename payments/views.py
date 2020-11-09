@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseBadRequest\
      HttpResponseServerError, HttpResponseRedirect,\
      HttpResponseNotAllowed
 from django.shortcuts import redirect, render
+from django.contrib.auth.models import User
 from zeep import Client
 from .config import zarinpal_MERCHANT as MERCHANT
 from .zarinpall_errors import error_code as ERRORCODE
@@ -124,7 +125,7 @@ def cart_course_create(request):
     """this method will create a course cart that has a href for payments
     this method needs course id and you can have discount_code for discount 
     and sms validation id and token1 and token2
-    and course sumbit form data: name, family, gender, father_name, code_meli, address, payment_type
+    and course sumbit form data: name, family, gender, father_name, code_meli, address, payment_type, operator
     """
     if request.method == 'POST' and 'course_id' in request.POST.keys() and \
         'token1' in request.POST.keys() and 'token2' in request.POST.keys()\
@@ -175,12 +176,12 @@ def cart_course_create(request):
             else:
                 return HttpResponseForbidden("discount code is not valid")
         ########## make a payment_info
-        paymentinfo = PaymentInformation.objects.create(name = request.POST['name'],\
+        personalinfo = PersonalInformation.objects.create(name = request.POST['name'],\
             family = request.POST['family'], gender = request.POST['gender'], \
             father_name = request.POST['father_name'], code_meli = code_meli_en\
             , phone_number = verify.sent.receptor, address = request.POST['address'])        
         ########## make a cart
-        cart = Cart.objects.create(payment_info = paymentinfo)
+        cart = Cart.objects.create()
         cart.course.add(course)
         if 'discount' in locals():
             cart.discount.add(discount)
@@ -200,7 +201,14 @@ def cart_course_create(request):
             return HttpResponseServerError("payment can not be done with status code:" + authority[1])
         ########## make a payment 
         payment = Payment.objects.create(verification = verify,total = amount\
-             , authority = authority[1].encode('utf-8'), created_date = datetime.now(), cart = cart)
+                 , authority = authority[1].encode('utf-8'), created_date = datetime.now()\
+                 , cart = cart, personal_info = personalinfo)
+        try:
+            op = User.objects.get(id=int(request.POST["operator"]))
+            payment.operator = op
+            payment.save()
+        except:
+            pass
         ########## return status 0 as OK and href
         url = 'https://www.zarinpal.com/pg/StartPay/' + authority[1]
         return JsonResponse({'url':url})

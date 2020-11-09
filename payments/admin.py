@@ -5,21 +5,52 @@ from django.contrib import admin
 from django.contrib.admin import DateFieldListFilter
 from .models import *
 
+from persiantools.jdatetime import JalaliDateTime
 
 # Register your models here.
 @admin.register(Teacher)
 class Teacher_admin(admin.ModelAdmin):
     list_display = ('id', "family", 'name')
     list_display_links = ['family',]
-@admin.register(PaymentInformation)
-class PaymentInformation_admin(admin.ModelAdmin):
-    list_display = ('id', 'name', "family", "gender", "father_name", "code_meli", "phone_number")
+@admin.register(PersonalInformation)
+class PersonalInformation_admin(admin.ModelAdmin):
+    list_display = ('id', 'name', "family", "gender", "father_name",\
+                    "code_meli", "phone_number")
     list_display_links = ['name',"family"]
 @admin.register(Payment)
 class Payment_admin(admin.ModelAdmin):
-    list_display = ('id', "verification_id", "cart_id", "total", "created_date", "status", "ref_id", "send_receipt")
+    def personal_info_get_name(self, obj):
+        if obj.personal_info:
+            return u"" + obj.personal_info.name + " " + obj.personal_info.family 
+        else:
+            return ""
+
+    def personal_info_get_phone(self, obj):
+        if obj.personal_info:
+            return u"" + obj.personal_info.phone_number
+        else:
+            return ""
+            
+        personal_info_get_phone.short_description = 'This is the Column Name'
+
+    def operator_get_name(self, obj):
+        if obj.operator:
+            return u"" + obj.operator.first_name + " "  + obj.operator.last_name
+        else:
+            return ""
+
+    def get_date(self, obj):
+        return u"" + JalaliDateTime(obj.created_date).strftime("%c")
+
+    personal_info_get_name.short_description = 'Name'
+    personal_info_get_phone.short_description = 'Phone'
+    operator_get_name.short_description = "Operator"
+    get_date.short_description = "Date"
+    list_display = ('id', "personal_info_get_name", "personal_info_get_phone",\
+                    "cart_id", "operator_get_name", "total", "get_date",\
+                    "status", "ref_id", "send_receipt")
     list_display_links = ["id"]
-    raw_id_fields = ("verification","cart")
+    raw_id_fields = ("verification","cart","personal_info",)
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'status',
@@ -28,9 +59,9 @@ class Payment_admin(admin.ModelAdmin):
     search_fields = ("id",'ref_id')
 @admin.register(Cart)
 class Cart_admin(admin.ModelAdmin):
-    list_display = ('id', 'payment_info_id', "get_courses", "get_discounts")
+    list_display = ('id', "get_courses", "get_discounts")
     list_display_links = ["id"]
-    raw_id_fields = ("payment_info",)
+    raw_id_fields = ("personal_info_old",)
 @admin.register(Discount)
 class Discount_admin(admin.ModelAdmin):
     list_display = ('id', "name", "code", "amount", "expiration_time", "active")

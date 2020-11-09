@@ -5,6 +5,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from datetime import datetime,timedelta
 from persiantools.jdatetime import JalaliDateTime
+from django.contrib.auth.models import User
 from SMS.models import Verify, Sent
 from zeep import Client
 import pytz
@@ -24,10 +25,10 @@ class Product(models.Model):
             return False
     
     def __unicode__(self):
-        return u"{}| active:{}".format(self.id ,self.active).encode('utf-8')
+        return u"Product:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{}| active:{}".format(self.id ,self.active).encode('utf-8')
+        return u"Product:{}".format(self.id).encode('utf-8')
 
     class meta:
         abstract = True
@@ -41,12 +42,10 @@ class Discount(models.Model):
     active = models.BooleanField(default=False)
     
     def __unicode__(self):
-        return u"{}-{} | products:{} code:{} amount:{} active:{}".format(self.id ,self.name, \
-            ", ".join([str(obj.id) for obj in self.product.all()]) ,self.code, self.amount, self.active).encode('utf-8')
+        return u"Discount:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{}-{} | products:{} code:{} amount:{} active:{}".format(self.id ,self.name, \
-            ", ".join([str(obj.id) for obj in self.product.all()]) ,self.code, self.amount, self.active).encode('utf-8')
+        return u"Discount:{}".format(self.id).encode('utf-8')
 
     def is_active(self ,product):
         if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True:
@@ -79,10 +78,10 @@ class Teacher(models.Model):
         max_length=10, null=False, blank=False, unique=True)
 
     def __unicode__(self):
-        return u"{}".format(self.id).encode('utf-8')
+        return u"Teacher:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{}".format(self.id).encode('utf-8')
+        return u"Teacher:{}".format(self.id).encode('utf-8')
         
 
 class Course(Product):
@@ -111,10 +110,10 @@ class Course(Product):
     show = models.BooleanField(default=True)
 
     def __unicode__(self):
-        return u"{}-{} | price:{} active:{}".format(self.id ,self.name, self.price, self.active).encode('utf-8')
+        return u"Course:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{}-{} | price:{} active:{}".format(self.id ,self.name, self.price, self.active).encode('utf-8')
+        return u"Course:{}".format(self.id).encode('utf-8')
         
     def get_name(self):
         string = "کلاس "
@@ -154,7 +153,7 @@ class Course(Product):
             string += "استاد " + self.teacher.name + " " + self.teacher.family + " "
         return string
 
-class PaymentInformation(models.Model):
+class PersonalInformation(models.Model):
     name = models.CharField(max_length=200, null=True, blank=True)
     family= models.CharField(max_length=200, null=True, blank=True)
     GENDER_CHOICES = (
@@ -182,43 +181,25 @@ class PaymentInformation(models.Model):
     )
     payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES,\
          null=False, blank=False, default="0")
-    
+
     def __unicode__(self):
-        return u"{}| meli code:{} phone:{}".format(self.id, self.code_meli, self.phone_number).encode('utf-8')
+        return u"PersonalInformation:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        return u"{}| meli code:{} phone:{}".format(self.id, self.code_meli, self.phone_number).encode('utf-8')
+        return u"PersonalInformation:{}".format(self.id).encode('utf-8')
     
 
 class Cart(models.Model):
     course = models.ManyToManyField(Course, blank=True)
     discount = models.ManyToManyField(Discount, blank=True)
-    payment_info = models.ForeignKey(PaymentInformation, related_name='payment_info',\
-        null=True, blank=False, on_delete=models.SET_NULL)
+    personal_info_old = models.ForeignKey(PersonalInformation, related_name='payment_info',\
+        null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
-        string = u"{}- ".format(self.id)
-        try:
-            string += u"payment information id:{} ".format(self.payment_info.id)
-        except:
-            string += u"payment information id:None "
-        try:
-            string += u"course:{} discount:{} ".format(self.course.all(), self.discount.all())
-        except:
-            string += u"course:None discount:None "
-        return string.encode('utf-8')
+        return u"Cart:{}".format(self.id).encode('utf-8')
 
     def __str__(self):
-        string = u"{}- ".format(self.id)
-        try:
-            string += u"payment information id:{} ".format(self.payment_info.id)
-        except:
-            string += u"payment information id:None "
-        try:
-            string += u"course:{} discount:{} ".format(self.course.all(), self.discount.all())
-        except:
-            string += u"course:None discount:None "
-        return string.encode('utf-8')
+        return u"Cart:{}".format(self.id).encode('utf-8')
 
     def get_courses(self):
         try:
@@ -244,40 +225,26 @@ class Payment(models.Model):
     cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
          on_delete=models.SET_NULL)
     verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
+    personal_info = models.ForeignKey(PersonalInformation, related_name='personal_info',\
+        null=True, blank=True, on_delete=models.SET_NULL)
+    operator = models.ForeignKey(User, related_name='register_operator',\
+        null=True, blank=True, on_delete=models.SET_NULL)
     total = models.BigIntegerField(null=True, blank=True)
     authority = models.CharField(max_length=100, null=True, blank=False)
     created_date = models.DateTimeField(default=datetime.now(), editable=False)
     status = models.BooleanField(default=False)
-    ref_id = models.BigIntegerField(null=True, blank=False)
-    send_receipt = models.BooleanField(default=False)
+    ref_id = models.CharField(max_length=20, null=True, blank=False)
+    send_receipt = models.BooleanField(default=False) 
 
+    class Meta:
+        permissions = (
+            ('CAN_VIEW_Payment', 'Can View Payment'),
+        )
     def __unicode__(self):
-        string = u"{}| ".format(self.id)
-        try:
-            string += u"cart id:{} ".format(self.cart.id)
-        except:
-            string += u"cart id:None "
-        try:
-            string += u"verification id:{} ".format(self.verification.id)
-        except:
-            string += u"verification id:None "
-        string += u"total:{} created date:{} status:{} refrence code:{} ".format(self.total, \
-            JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"), self.status, self.ref_id)
-        return string.encode('utf-8') 
+        return u"Payment:{}".format(self.id).encode('utf-8')
         
     def __str__(self):
-        string = u"{}| ".format(self.id)
-        try:
-            string += u"cart id:{} ".format(self.cart.id)
-        except:
-            string += u"cart id:None "
-        try:
-            string += u"verification id:{} ".format(self.verification.id)
-        except:
-            string += u"verification id:None "
-        string += u"total:{} created date:{} status:{} refrence code:{} ".format(self.total, \
-            JalaliDateTime(self.created_date).strftime("%Y/%m/%d %H:%M:%S"), self.status, self.ref_id)
-        return string.encode('utf-8') 
+        return u"Payment:{}".format(self.id).encode('utf-8')
 
     def get_jalali_date(self):
         return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
@@ -298,3 +265,4 @@ class Payment(models.Model):
             return res_code
         else:
             return res_code
+
