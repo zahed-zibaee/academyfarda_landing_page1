@@ -50,7 +50,7 @@ class Payment_admin(admin.ModelAdmin):
                     "cart_id", "operator_get_name", "total", "get_date",\
                     "status", "ref_id", "send_receipt")
     list_display_links = ["id"]
-    raw_id_fields = ("verification","cart","personal_info",)
+    raw_id_fields = ("verification","cart","personal_info","operator")
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'status',
