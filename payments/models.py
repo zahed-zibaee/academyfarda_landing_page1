@@ -89,6 +89,7 @@ class Course(Product):
     CLASS_TYPE_CHOICES = (
         ('R', 'regular'),
         ('I', 'intensive'),
+        ('S', 'special'),
     )
     class_type = models.CharField(max_length=1, choices=CLASS_TYPE_CHOICES, null=False, blank=False)
     TIME_CHOICES = (
