@@ -95,6 +95,7 @@ class Course(Product):
         ('912', '9-12'),
         ('1316', '13-16'),
         ('1720', '17-20'),
+        ('1420','14-20'),
     )
     time = models.CharField(max_length=4, choices=TIME_CHOICES, null=False, blank=False)
     DAY_CHOICES = (
@@ -102,6 +103,7 @@ class Course(Product):
         ('STT', 'SA-TH'),
         ('E', 'even'),
         ('O', 'odd'),
+        ('TH', 'TH'),
     )
     day = models.CharField(max_length=4, choices=DAY_CHOICES, null=False, blank=False)
     teacher = models.ForeignKey(Teacher, related_name='teacher', null=True, blank=True)
@@ -130,6 +132,9 @@ class Course(Product):
         elif self.time == "1720":
             string += "۱۷ تا ۲۰ "
             string += "- "
+        elif self.time == "1420":
+            string += "۱۴ تا ۲۰ "
+            string += "- "
         if self.day=="STW":
             string += "شنبه تا چهار‌شنبه "
         elif self.day=="STT":
@@ -138,6 +143,8 @@ class Course(Product):
             string += "فرد "
         elif self.day=="E":
             string += "زوج "
+        elif self.day=="TH":
+            string += "فقط پنج‌شنبه "
         if self.teacher != None:
             string += "- "
             string += "استاد " + self.teacher.name + " " + self.teacher.family + " "
