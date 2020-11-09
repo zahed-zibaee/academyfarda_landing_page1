@@ -5,3 +5,4 @@ pytz
 persiantools
 zeep
 requests
+django-admin-view-permission
