@@ -40,21 +40,41 @@ class Payment_admin(admin.ModelAdmin):
             return ""
 
     def get_date(self, obj):
-        return u"" + JalaliDateTime(obj.created_date).strftime("%c")
+        return u"" + JalaliDateTime(obj.created_date).strftime("%Y/%m/%d")
+
+    def get_time(self, obj):
+        return u"" + JalaliDateTime(obj.created_date).strftime("%H:%M:%S")
+    
+    def get_cart_course_get_name(self, obj):
+        if len(obj.cart.course.all()) == 1:
+            return u"" + obj.cart.course.all().first().get_name()
+        else:
+            return ""
+
+    def get_cart_discount_name(self, obj):
+        if len(obj.cart.discount.all()) == 1:
+            return u"" + obj.cart.discount.all().first().name
+        else:
+            return ""
 
     personal_info_get_name.short_description = 'Name'
     personal_info_get_phone.short_description = 'Phone'
     operator_get_name.short_description = "Operator"
     get_date.short_description = "Date"
+    get_time.short_description = "Time"
+    get_cart_course_get_name.short_description = "Course"
+    get_cart_discount_name.short_description = "Discount"
     list_display = ('id', "personal_info_get_name", "personal_info_get_phone",\
-                    "cart_id", "operator_get_name", "total", "get_date",\
-                    "status", "ref_id", "send_receipt")
-    list_display_links = ["id"]
+                    "get_cart_course_get_name", "get_cart_discount_name",\
+                    "operator_get_name", "total", "get_date",\
+                    "get_time", "status", "ref_id", "send_receipt")
+    list_display_links = ["personal_info_get_name"]
     raw_id_fields = ("verification","cart","personal_info","operator")
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'status',
         "send_receipt",
+
     )
     search_fields = ("id",'ref_id')
 @admin.register(Cart)
