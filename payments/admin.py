@@ -22,7 +22,7 @@ class Payment_admin(admin.ModelAdmin):
     def personal_info_get_name(self, obj):
         if obj.personal_info:
             return u"" + obj.personal_info.name + " " + obj.personal_info.family 
-        elif obj.cart.personal_info_old:
+        elif obj.cart and obj.cart.personal_info_old:
             return u"" + obj.cart.personal_info_old.name + " "\
                    + obj.cart.personal_info_old.family 
         else:
@@ -31,12 +31,12 @@ class Payment_admin(admin.ModelAdmin):
     def personal_info_get_phone(self, obj):
         if obj.personal_info:
             return u"" + obj.personal_info.phone_number
-        elif obj.cart.personal_info_old:
+        elif obj.cart and  obj.cart.personal_info_old:
             return u"" + obj.cart.personal_info_old.phone_number
         else:
             return ""
             
-        personal_info_get_phone.short_description = 'This is the Column Name'
+
 
     def operator_get_name(self, obj):
         if obj.operator:
@@ -51,13 +51,13 @@ class Payment_admin(admin.ModelAdmin):
         return u"" + JalaliDateTime(obj.created_date).strftime("%H:%M:%S")
     
     def get_cart_course_get_name(self, obj):
-        if len(obj.cart.course.all()) == 1:
+        if obj.cart and len(obj.cart.course.all()) == 1:
             return u"" + obj.cart.course.all().first().get_name()
         else:
             return ""
 
     def get_cart_discount_code(self, obj):
-        if len(obj.cart.discount.all()) == 1:
+        if obj.cart and len(obj.cart.discount.all()) == 1:
             return u"" + obj.cart.discount.all().first().code
         else:
             return ""
