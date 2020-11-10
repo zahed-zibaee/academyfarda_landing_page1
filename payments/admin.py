@@ -22,12 +22,17 @@ class Payment_admin(admin.ModelAdmin):
     def personal_info_get_name(self, obj):
         if obj.personal_info:
             return u"" + obj.personal_info.name + " " + obj.personal_info.family 
+        elif obj.cart.personal_info_old:
+            return u"" + obj.cart.personal_info_old.name + " "\
+                   + obj.cart.personal_info_old.family 
         else:
             return ""
 
     def personal_info_get_phone(self, obj):
         if obj.personal_info:
             return u"" + obj.personal_info.phone_number
+        elif obj.cart.personal_info_old:
+            return u"" + obj.cart.personal_info_old.phone_number
         else:
             return ""
             
