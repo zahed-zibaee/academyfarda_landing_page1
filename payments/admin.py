@@ -56,9 +56,9 @@ class Payment_admin(admin.ModelAdmin):
         else:
             return ""
 
-    def get_cart_discount_name(self, obj):
+    def get_cart_discount_code(self, obj):
         if len(obj.cart.discount.all()) == 1:
-            return u"" + obj.cart.discount.all().first().name
+            return u"" + obj.cart.discount.all().first().code
         else:
             return ""
 
@@ -68,9 +68,9 @@ class Payment_admin(admin.ModelAdmin):
     get_date.short_description = "Date"
     get_time.short_description = "Time"
     get_cart_course_get_name.short_description = "Course"
-    get_cart_discount_name.short_description = "Discount"
+    get_cart_discount_code.short_description = "Discount"
     list_display = ('id', "personal_info_get_name", "personal_info_get_phone",\
-                    "get_cart_course_get_name", "get_cart_discount_name",\
+                    "get_cart_course_get_name", "get_cart_discount_code",\
                     "operator_get_name", "total", "get_date",\
                     "get_time", "status", "ref_id", "send_receipt")
     list_display_links = ["personal_info_get_name"]
