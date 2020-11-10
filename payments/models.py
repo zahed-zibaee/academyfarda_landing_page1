@@ -192,7 +192,7 @@ class PersonalInformation(models.Model):
 class Cart(models.Model):
     course = models.ManyToManyField(Course, blank=True)
     discount = models.ManyToManyField(Discount, blank=True)
-    personal_info_old = models.ForeignKey(PersonalInformation, related_name='payment_info',\
+    personal_info_old = models.ForeignKey(PersonalInformation, related_name='personal_info_old',\
         null=True, blank=True, on_delete=models.SET_NULL)
 
     def __unicode__(self):
