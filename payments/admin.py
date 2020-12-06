@@ -27,8 +27,10 @@ def resend_receipt(self, request, queryset):
             sleep(0.5)
             item.send_receipt_course()
             rows_updated += 1
-    if rows_updated == 1 or rows_updated == 0:
+    if rows_updated == 1:
         message_bit = "1 receipt"
+    elif rows_updated == 0:
+        message_bit = "0 receipt"
     else:
         message_bit = "%s receipts" % rows_updated
     self.message_user(request, "%s sent." % message_bit)
