@@ -14,7 +14,7 @@ class TextSave_admin(admin.ModelAdmin):
 def check_sms_status(self, request, queryset):
     rows_updated = 0
     for item in queryset:
-        if item.gone == True:
+        if item.gone == True and item.status != None:
             try:
                 status = int(item.status)
             except:
