@@ -175,7 +175,7 @@ def cart_course_create(request):
                 discount = Discount.objects.filter(code = discount_code_fa_en).first()
             else:
                 return HttpResponseForbidden("discount code is not valid")
-        ########## make a payment_info
+        ########## make a personalinfo
         personalinfo = PersonalInformation.objects.create(name = request.POST['name'],\
             family = request.POST['family'], gender = request.POST['gender'], \
             father_name = request.POST['father_name'], code_meli = code_meli_en\
