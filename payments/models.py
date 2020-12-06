@@ -256,7 +256,7 @@ class Payment(models.Model):
         #    .astimezone(pytz.timezone("Asia/Tehran"))).strftime("%H:%M:%S")
 
     def send_receipt_course(self):
-        sms = Sent.objects.create(receptor = self.cart.payment_info.phone_number,\
+        sms = Sent.objects.create(receptor = self.personal_info.phone_number,\
              created_date = datetime.now())
         res_code = sms.send_receipt_course(self.ref_id)
         if res_code == 200:
