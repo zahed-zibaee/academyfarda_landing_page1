@@ -6,19 +6,38 @@ from django.contrib.admin import DateFieldListFilter
 from .models import *
 
 from persiantools.jdatetime import JalaliDateTime
+from time import sleep
 
 # Register your models here.
 @admin.register(Teacher)
 class Teacher_admin(admin.ModelAdmin):
     list_display = ('id', "family", 'name')
     list_display_links = ['family',]
+
 @admin.register(PersonalInformation)
 class PersonalInformation_admin(admin.ModelAdmin):
     list_display = ('id', 'name', "family", "gender", "father_name",\
                     "code_meli", "phone_number")
     list_display_links = ['name',"family"]
+
+def resend_receipt(self, request, queryset):
+    rows_updated = 0
+    for item in queryset:
+        if item.status == True:
+            sleep(0.5)
+            item.send_receipt_course()
+            rows_updated += 1
+    if rows_updated == 1:
+        message_bit = "1 receipt"
+    else:
+        message_bit = "%s receipts" % rows_updated
+    self.message_user(request, "%s sent." % message_bit)
+    
+resend_receipt.short_description = "Resend receipt"
+
 @admin.register(Payment)
 class Payment_admin(admin.ModelAdmin):
+    
     def personal_info_get_name(self, obj):
         if obj.personal_info:
             return u"" + obj.personal_info.name + " " + obj.personal_info.family 
@@ -82,6 +101,7 @@ class Payment_admin(admin.ModelAdmin):
 
     )
     search_fields = ("id",'ref_id')
+    actions = [resend_receipt]
 @admin.register(Cart)
 class Cart_admin(admin.ModelAdmin):
     list_display = ('id', "get_courses", "get_discounts")
