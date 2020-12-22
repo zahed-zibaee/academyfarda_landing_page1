@@ -86,8 +86,8 @@ __pycache__/
 local_settings.py
 academyfarda_landing_page1/settings.py
 */settings.py
-*/migrations/00*
+#*/migrations/00*
 
 .env
-db.sqlite3
+*.sqlite3
 config.py
