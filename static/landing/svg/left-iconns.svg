@@ -1,0 +1,76 @@
+<svg
+class="left-iconns"
+xmlns="http://www.w3.org/2000/svg"
+width="70.939"
+height="19.089"
+viewBox="0 0 70.939 19.089"
+>
+<g
+    id="Group_5744"
+    data-name="Group 5744"
+    transform="translate(0 1.157)"
+>
+    <g
+    id="Group_5589"
+    data-name="Group 5589"
+    transform="translate(0)"
+    >
+    <ellipse
+        id="Ellipse_14"
+        data-name="Ellipse 14"
+        cx="8.387"
+        cy="8.387"
+        rx="8.387"
+        ry="8.387"
+        transform="translate(3.84)"
+        fill="none"
+        stroke="#ff1b25"
+        stroke-miterlimit="10"
+        stroke-width="2.314"
+    />
+    <ellipse
+        id="Ellipse_30"
+        data-name="Ellipse 30"
+        cx="7.972"
+        cy="7.972"
+        rx="7.972"
+        ry="7.972"
+        transform="translate(0 1.039)"
+        fill="#ff1b25"
+        opacity="0.22"
+    />
+    </g>
+    <g
+    id="Group_5590"
+    data-name="Group 5590"
+    transform="translate(35.985 3.451)"
+    >
+    <g
+        id="Group_609"
+        data-name="Group 609"
+        transform="translate(0 0)"
+    >
+        <path
+        id="Path_1799"
+        data-name="Path 1799"
+        d="M295.968,94.978c-4.368,0-4.368-4.474-8.738-4.474s-4.369,4.474-8.739,4.474-4.369-4.474-8.739-4.474-4.37,4.474-8.739,4.474"
+        transform="translate(-261.014 -84.45)"
+        fill="none"
+        stroke="#ff1b25"
+        stroke-miterlimit="10"
+        stroke-width="2"
+        />
+        <path
+        id="Path_1800"
+        data-name="Path 1800"
+        d="M295.968,87.17c-4.368,0-4.368-4.475-8.738-4.475s-4.369,4.475-8.739,4.475-4.369-4.475-8.739-4.475-4.37,4.475-8.739,4.475"
+        transform="translate(-261.014 -82.695)"
+        fill="none"
+        stroke="#ff1b25"
+        stroke-miterlimit="10"
+        stroke-width="2"
+        />
+    </g>
+    </g>
+</g>
+</svg>

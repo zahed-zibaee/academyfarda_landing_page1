@@ -1,63 +1,69 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponseRedirect,\
+    HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotAllowed
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
 from .models import Origin, Lead, Comment, Label, LabelDefinition
 from datetime import datetime, timedelta
-from django.contrib import messages ,auth
+from django.contrib import messages
 from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime, JalaliDate
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.paginator import Paginator
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.models import User
-from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES, ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY,\
-        LABELDEFINITION_TAG
-import pytz
+from django.contrib.auth import get_user_model
+from random import choice
+from ratelimit.decorators import ratelimit
+from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES,\
+    ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY, LABELDEFINITION_TAG
+from .marketing import OPERATORS
+
+User = get_user_model()
 
 #TODO: add comment to all project
-@csrf_exempt
-def api_submit(request):
-    #TODO: frontend make lead page input pup red when error, calasify this if
-    post_keys = request.POST.keys() 
-    #check if there is a token and token is valid and phone is not exist and not repetitive than is phone digits and name exits and not too short
-    if 'token' in post_keys and Origin.objects.filter(token = request.POST['token'], token_activation = True).exists()\
-            and 'phone' in post_keys and Lead.objects.filter(phone_number = request.POST['phone']).exists() is False \
-                and request.POST['phone'].isdigit() and 'name' in post_keys and len(request.POST['phone']) > 5 \
-                    and len(request.POST['name']) > 2 :
-        #change arabic numbers to persian and than to english
-        phone_fa = digits.ar_to_fa(request.POST['phone'])
-        phone_en = digits.fa_to_en(phone_fa)
-        mylead = Lead.objects.create(name_and_family = request.POST['name'], phone_number = phone_en, \
-            question = request.POST.get('question', default=''), \
-                origin = Origin.objects.filter(token = request.POST['token']).first())
-        mylead.operator.add(User.objects.filter(username = "zo.zibaee").first())
-        return JsonResponse({
-        'status': 'submited',
-        }, encoder=JSONEncoder)
-    elif 'token' not in post_keys or Origin.objects.filter(token = request.POST['token'], token_activation = True).exists() is False:
-        return JsonResponse({
-        'status': 'registeration_error',
-        }, encoder=JSONEncoder)
-    elif 'name' not in post_keys or len(request.POST['name']) < 3 :
-        return JsonResponse({
-        'status': 'name_needed',
-        }, encoder=JSONEncoder)
-    elif 'phone' not in post_keys or len(request.POST['phone']) < 6 or request.POST['phone'].isdigit() is False:
-        return JsonResponse({
-        'status': 'phone_number_needed',
-        }, encoder=JSONEncoder)
-    elif Lead.objects.filter(phone_number = request.POST['phone']).exists() is True:
-        return JsonResponse({
-        'status': 'repetitive_ phone_number',
-        }, encoder=JSONEncoder)
+def normalize(data):
+    """this methode will check for arabic charecter and will convert them
+    to persian and than change persian numerics to english one"""
+    string = str(data)
+    not_arabic = digits.ar_to_fa(string)
+    res = digits.fa_to_en(not_arabic)
+    return res
 
-    else:
+
+@csrf_exempt
+@ratelimit(key='ip', rate='10/d')
+def api_submit(request):
+    if request.method == "POST":
+        post_keys = request.POST.keys() 
+        if 'token' not in post_keys or Origin.objects.filter(token = request.POST['token'], token_activation = True).exists() is False:
+            return HttpResponseForbidden("bad authentication")
+        elif 'name' not in post_keys or not 2 < (request.POST['name']) < 100 :
+            return HttpResponseBadRequest("bad name field")
+        elif 'phone' not in post_keys or not 5 < len(request.POST['phone']) < 16 or request.POST['phone'].isdigit() is False:
+            return HttpResponseBadRequest("bad phone number field")
+        elif Lead.objects.filter(phone_number = request.POST['phone']).exists() is True:
+            return HttpResponseNotAllowed("repetitive phone number")
+        else:
+            token = normalize(request.POST['token'])
+            phone = normalize(request.POST['phone'])
+            my_lead = Lead.objects.create(
+                name_and_family = request.POST['name'],
+                phone_number = phone,
+                question = request.POST.get('question', default=''),
+                origin = Origin.objects.filter(token = token).first()
+            )
+        try:
+            my_operator = choice(OPERATORS)
+            my_lead.operator.add(User.objects.filter(username = my_operator).first())
+        except:
+            pass
         return JsonResponse({
-        'status': 'unknown_error',
+        'status': 'submitted',
         }, encoder=JSONEncoder)
+    else:
+        return HttpResponseBadRequest("bad request")
     
 @staff_member_required
 def export(request):

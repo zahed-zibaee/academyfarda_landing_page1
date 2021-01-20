@@ -3,52 +3,83 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.core.validators import RegexValidator
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta, date
+from django.utils import encoding
 from persiantools.jdatetime import JalaliDateTime
 from django.contrib.auth.models import User
-from SMS.models import Verify, Sent
+from django.utils.encoding import smart_unicode
 from zeep import Client
-import pytz
 
-# Create your models here.
+from SMS.models import Verify, Sent
 
+
+#TODO: relate name for all
+#TODO: timezone awareness
 class Product(models.Model):
-    name = models.CharField(max_length=500, null=False, blank=False)
+    """what we want to sell
+    its abstract so u need to make a class for every product type
+    """
+    name = models.CharField(max_length=100, blank=False)
+    description = models.TextField(blank=True)
     price = models.BigIntegerField(null=False, blank=False)
+    stock = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User)
+
+    class meta:
+        abstract = True
+
+    def have_stock(self):
+        """stock check"""
+        if self.stock > 0:
+            return True
+        elif self.stock == 0:
+            return False
+        else:
+            raise Exception("stock can not be less than zero")
     
+    def sell(self):
+        """stock -1"""
+        self.stock -= 1
+
     def is_active(self):
-        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True\
-             and self.product.active == True:
+        """check for is it able to be sold"""
+        if self.active == True:
             return True
         else:
             return False
     
     def __unicode__(self):
-        return u"Product:{}".format(self.id).encode('utf-8')
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name),
+            encoding='utf-8',
+        )
 
     def __str__(self):
-        return u"Product:{}".format(self.id).encode('utf-8')
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name),
+            encoding='utf-8',
+        )
 
-    class meta:
-        abstract = True
 
 class Discount(models.Model):
-    name = models.CharField(max_length=500, null=False, blank=False)
-    code = models.CharField(max_length=100, null=False, blank=False, unique=True)
+    """discount for bunch of products"""
+    name = models.CharField(max_length=100, null=False, blank=False)
+    code = models.CharField(max_length=50, null=False, blank=False, unique=True)
     product = models.ManyToManyField(Product, blank=False)
     amount = models.BigIntegerField(null=False, blank=False)
-    expiration_time = models.DateTimeField(null=False, blank=False, default=datetime.now() + timedelta(days=+36500))
+    expiration_time = models.DateTimeField(
+        null=False, 
+        blank=False, 
+        default=datetime.now() + timedelta(days=+36500)
+    )
     active = models.BooleanField(default=False)
     
-    def __unicode__(self):
-        return u"Discount:{}".format(self.id).encode('utf-8')
-
-    def __str__(self):
-        return u"Discount:{}".format(self.id).encode('utf-8')
-
     def is_active(self ,product):
-        if self.expiration_time.replace(tzinfo=None) > datetime.now() and self.active == True:
+        """check if discount and produuct is active and not discount expired"""
+        if self.expiration_time.replace(tzinfo=None) > datetime.now()\
+            and self.active == True:
             try:
                 if self.product.get(id=product).active == True:
                     return True
@@ -60,6 +91,7 @@ class Discount(models.Model):
             return False
 
     def get_total(self, product):
+        """get total amount for this product with this discount"""
         if self.is_active(product):
             try:
                 return (self.product.get(id=product).price - self.amount)
@@ -68,183 +100,347 @@ class Discount(models.Model):
         else:
             return False
 
-
-class Teacher(models.Model):
-    name = models.CharField(max_length=200, null=False, blank=False)
-    family= models.CharField(max_length=200, null=False, blank=False)
-    meli_regex = RegexValidator(regex=r'^\d{10}$', \
-        message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
-    code_meli = models.CharField(validators=[meli_regex], \
-        max_length=10, null=False, blank=False, unique=True)
-
     def __unicode__(self):
-        return u"Teacher:{}".format(self.id).encode('utf-8')
+        return smart_unicode(
+            "ID: {} - name: {} - code: {}"\
+            .format(self.id, self.name, self.code),
+            encoding='utf-8',
+        )
 
     def __str__(self):
-        return u"Teacher:{}".format(self.id).encode('utf-8')
-        
+        return smart_unicode(
+            "ID: {} - name: {} - code: {}"\
+            .format(self.id, self.name, self.code),
+            encoding='utf-8',
+        )
 
-class Course(Product):
-    CLASS_TYPE_CHOICES = (
-        ('R', 'regular'),
-        ('I', 'intensive'),
-        ('S', 'special'),
-    )
-    class_type = models.CharField(max_length=1, choices=CLASS_TYPE_CHOICES, null=False, blank=False)
-    TIME_CHOICES = (
-        ('912', '9-12'),
-        ('1316', '13-16'),
-        ('1720', '17-20'),
-        ('1420','14-20'),
-    )
-    time = models.CharField(max_length=4, choices=TIME_CHOICES, null=False, blank=False)
-    DAY_CHOICES = (
-        ('STW', 'SA-WE'),
-        ('STT', 'SA-TH'),
-        ('E', 'even'),
-        ('O', 'odd'),
-        ('TH', 'TH'),
-    )
-    day = models.CharField(max_length=4, choices=DAY_CHOICES, null=False, blank=False)
-    teacher = models.ForeignKey(Teacher, related_name='teacher', null=True, blank=True)
-    show = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        return u"Course:{}".format(self.id).encode('utf-8')
-
-    def __str__(self):
-        return u"Course:{}".format(self.id).encode('utf-8')
-        
-    def get_name(self):
-        string = "کلاس "
-        if self.class_type == "R":
-            string += "عادی "
-            string += "- "
-        elif self.class_type == "I":
-            string += "فشرده "
-            string += "- "
-        elif self.class_type == "S":
-            string += "خاص "
-            string += "- "
-        if self.time == "912":
-            string += "۹ تا ۱۲ "
-            string += "- "
-        elif self.time == "1316":
-            string += "۱۳ تا ۱۶ "
-            string += "- "
-        elif self.time == "1720":
-            string += "۱۷ تا ۲۰ "
-            string += "- "
-        elif self.time == "1420":
-            string += "۱۴ تا ۲۰ "
-            string += "- "
-        if self.day=="STW":
-            string += "شنبه تا چهار‌شنبه "
-        elif self.day=="STT":
-            string += "شنبه تا پنج‌شنبه "
-        elif self.day=="O":
-            string += "فرد "
-        elif self.day=="E":
-            string += "زوج "
-        elif self.day=="TH":
-            string += "فقط پنج‌شنبه "
-        if self.teacher != None:
-            string += "- "
-            string += "استاد " + self.teacher.name + " " + self.teacher.family + " "
-        return string
 
 class PersonalInformation(models.Model):
-    name = models.CharField(max_length=200, null=True, blank=True)
-    family= models.CharField(max_length=200, null=True, blank=True)
+    """this method will generate personal information for buyers and teachers"""
+    name = models.CharField(max_length=50, blank=False, null=False)
+    family= models.CharField(max_length=50, blank=False, null=False)
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
     )
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True)
-    father_name = models.CharField(max_length=200, null=True, blank=True)
-    meli_regex = RegexValidator(regex=r'^\d{10}$', \
-        message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed.")
-    code_meli = models.CharField(validators=[meli_regex], \
-        max_length=10, null=True, blank=True)
-    code_shenasname = models.CharField(max_length=10, null=True, blank=True)
-    phone_regex = RegexValidator(regex=r'^09\d{9}$', \
-        message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed.")
-    phone_number = models.CharField(validators=[phone_regex], \
-        max_length=11, null=False, blank=False)
-    phone_number2 = models.CharField(max_length=15, null=True, blank=True)
-    origin_town = models.CharField(max_length=200, null=True, blank=True)
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="M")
+    father_name = models.CharField(max_length=50, blank=True)
+    meli_regex = RegexValidator(
+        regex=r'^\d{10}$',
+        message="Meli code must be entered in the format: 'XXXXXXXXXX'. only 10 digits allowed."
+    )
+    code_meli = models.CharField(
+        validators=[meli_regex],
+        max_length=10, 
+        blank=False,
+        null=False,
+    )
+    shenasname_regex = RegexValidator(
+        regex=r'^\d+$',
+        message="Shenasname code must be entered in the format: 'XXXXXXXXXX'. 1 to 14 digits allowed."
+    )
+    code_shenasname = models.CharField(
+        validators=[meli_regex], 
+        max_length=14, 
+        blank=True,
+    )
+    phone_regex = RegexValidator(
+        regex=r'^09\d{9}$',
+        message="Phone number must be entered in the format: '09XXXXXXXXX'. \"09\" than 9 digit digits allowed."
+    )
+    phone_number = models.CharField(
+        validators=[phone_regex],
+        max_length=11, 
+        null=False, 
+        blank=False
+    )
+    phone_number2 = models.CharField(max_length=15, blank=True)
+    phone_number3 = models.CharField(max_length=15, blank=True)
+    origin_town = models.CharField(max_length=200, blank=True)
     birthday = models.DateField(blank=True, null=True)
-    address = models.TextField(max_length=2000,blank=True, null=True)
+    address = models.TextField(max_length=1000, blank=True)
+    photo = models.URLField(max_length=200, blank=True)
+    photo_shenasname = models.URLField(max_length=200, blank=True)
+    photo_meli = models.URLField(max_length=200, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {} - phone: {}"\
+            .format(
+            self.id, 
+            self.name + " " + self.family, 
+            self.phone_number
+            ),
+            encoding='utf-8',
+        )
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {} - phone: {}"\
+            .format(
+            self.id, 
+            self.name + " " + self.family, 
+            self.phone_number
+            ),
+            encoding='utf-8',
+        )
+    
+
+class CourseTeacher(models.Model):
+    personal_info = models.ForeignKey(
+        PersonalInformation,
+        related_name='course_teacher_personal_information',
+        on_delete=models.CASCADE,
+        blank=False,
+        null=False,
+    )
+            
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(
+            self.id,
+            self.personal_info.name + " " + self.personal_info.family,
+            ), 
+            encoding='utf-8',
+        )
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(
+            self.id,
+            self.personal_info.name + " " + self.personal_info.family,
+            ), 
+            encoding='utf-8',
+        )
+
+
+class CourseType(models.Model):
+    name = models.CharField(max_length=20, blank=False, null=False)
+    duration = models.CharField(max_length=20, blank=False, null=False)
+    duration_hours = models.IntegerField(default=78)
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+
+class CourseTime(models.Model):
+    name = models.CharField(max_length=20, blank=False, null=False)
+    start = models.TimeField()
+    end = models.TimeField()
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+
+class CourseDay(models.Model):
+    name = models.CharField(max_length=20, blank=False, null=False)
+    shanbe = models.BooleanField(default=False)
+    yek_shanbe = models.BooleanField(default=False)
+    do_shanbe = models.BooleanField(default=False)
+    se_shanbe = models.BooleanField(default=False)
+    chahar_shanbe = models.BooleanField(default=False)
+    panj_shanbe = models.BooleanField(default=False)
+    jome = models.BooleanField(default=False)
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+
+class Course(Product):
+    """this method will manage courses witch can be bought from online shop"""
+    intensive = models.BooleanField(default=False)
+    course_type = models.ForeignKey(
+        CourseType,
+        related_name='course_type', 
+        null=False, 
+        blank=False,
+    )
+    course_time = models.ForeignKey(
+        CourseTime, 
+        related_name='course_time', 
+        null=False, 
+        blank=False,
+    )
+    course_day = models.ForeignKey(
+        CourseDay, 
+        related_name='course_day', 
+        null=False, 
+        blank=False
+    )
+    start = models.DateField()
+    LOCATION_CHOICES = (
+        ('valiasr', 'Valiasr'),
+        ('enghelab', 'Enghelab'),
+    )
+    location = models.CharField(
+        max_length=10, 
+        choices=LOCATION_CHOICES, 
+        null=False, 
+        blank=False,
+    )
+    teacher = models.ForeignKey(
+        CourseTeacher, 
+        related_name='course_teacher', 
+        null=True, 
+        blank=True
+    )
+    site_name = models.CharField(max_length=100, blank=False)
+    site_total_price = models.BigIntegerField(null=False, blank=False, default=2500000)
+    site_total_price_discounted = models.BigIntegerField(null=False, blank=False, default=2000000)
+    site_special_discount = models.BooleanField(default=False)
+    site_show = models.BooleanField(default=True)
+    site_order = models.IntegerField(default=100)
+    
+    def week_to_start(self):
+        today = date.today()
+        return (self.start - today).days // 7
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+    def __unicode__(self):
+        return smart_unicode(
+            "ID: {} - name: {}".format(self.id, self.name), 
+            encoding='utf-8',
+        )
+
+
+class Cart(models.Model):
+    """this class will manage carts so every product and its discount need to add to this 
+    model and than need to add to total so total can be calculated"""
+    courses = models.ManyToManyField(Course, blank=True)
+    courses_with_discount = models.ManyToManyField(Discount, blank=True)
+    
+    def total(self):
+        """calculate the cart total price
+        you need to change this if for new products"""
+        res = 0 
+        for course in self.courses:
+            res += course.get_total()
+        for course in self.courses_with_discount:
+            res += course.get_total()
+        return res
+
+    def get_courses(self):
+        try:
+            return smart_unicode(
+                ", ".join([str(obj.id) for obj in self.courses.all()]),
+                encoding='utf-8',
+                )
+        except:
+            return None
+
+    def get_courses_with_discount(self):
+        try:
+            return smart_unicode(
+                ", ".join([str(obj.id) for obj in self.courses_with_discount.all()]),
+                encoding='utf-8',
+                )
+        except:
+            return None
+    
+    def __unicode__(self):
+       return smart_unicode(
+            "ID: {} - course ids: {} - course with discount ids: {}".format(
+                self.id, 
+                self.get_courses(), 
+                self.get_courses_with_discount()
+            ), 
+            encoding='utf-8',
+        )
+
+    def __str__(self):
+        return smart_unicode(
+            "ID: {} - course ids: {} - course with discount ids: {}".format(
+                self.id, 
+                self.get_courses(), 
+                self.get_courses_with_discount()
+            ), 
+            encoding='utf-8',
+        )
+
+class Payment(models.Model):
+    cart = models.ForeignKey(
+        Cart, 
+        related_name='cart', 
+        null=False,
+        blank=False,
+        on_delete=models.PROTECT,
+    )
+    verification = models.ForeignKey(
+        Verify, 
+        on_delete=models.SET_NULL, 
+        null=True,
+    )
+    personal_info = models.ForeignKey(
+        PersonalInformation, 
+        related_name='buyer_personal_info',
+        null=False, 
+        blank=False, 
+        on_delete=models.PROTECT,
+    )
+    operator = models.ForeignKey(
+        User, 
+        related_name='register_operator',
+        null=True, 
+        blank=True, 
+        on_delete=models.SET_NULL
+    )
+    total = models.BigIntegerField(null=False, blank=False)
+    authority = models.CharField(max_length=100, null=False, blank=False)
+    created_date = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False)
+    ref_id = models.CharField(max_length=20, blank=True)
+    send_receipt = models.BooleanField(default=False) 
     PAYMENT_TYPE_CHOICES = (
         ('0', 'نقدی'),
         ('1', 'اقساط'),
     )
-    payment_type = models.CharField(max_length=1, choices=PAYMENT_TYPE_CHOICES,\
-         null=False, blank=False, default="0")
+    payment_type = models.CharField(
+        max_length=1, 
+        choices=PAYMENT_TYPE_CHOICES,
+        null=False, 
+        blank=False,
+        default="0"
+    )
 
-    def __unicode__(self):
-        return u"PersonalInformation:{}".format(self.id).encode('utf-8')
-
-    def __str__(self):
-        return u"PersonalInformation:{}".format(self.id).encode('utf-8')
-    
-
-class Cart(models.Model):
-    course = models.ManyToManyField(Course, blank=True)
-    discount = models.ManyToManyField(Discount, blank=True)
-    personal_info_old = models.ForeignKey(PersonalInformation, related_name='personal_info_old',\
-        null=True, blank=True, on_delete=models.SET_NULL)
-
-    def __unicode__(self):
-        return u"Cart:{}".format(self.id).encode('utf-8')
-
-    def __str__(self):
-        return u"Cart:{}".format(self.id).encode('utf-8')
-
-    def get_courses(self):
-        try:
-            return ", ".join([str(obj.id) for obj in self.course.all()])
-        except:
-            return None
-
-    def get_discounts(self):
-        try:
-            return ", ".join([str(obj.id) for obj in self.discount.all()])
-        except:
-            return None
-
-    def get_href(self, MERCHANT, description, amount, mobile, callbackurl):
-        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-        result = client.service.PaymentRequest(MERCHANT, amount, description, mobile, CallbackURL = callbackurl)
-        if result.Status == 100:
-            return [True, str(result.Authority)]
+    def check_total(self):
+        """check if total if not less than payment api low limit"""
+        if total <= 5000:
+            return True
         else:
-            return [False, str(result.Status)]
-
-class Payment(models.Model):
-    cart = models.ForeignKey(Cart, related_name='cart', null=True, blank=False,\
-         on_delete=models.SET_NULL)
-    verification = models.ForeignKey(Verify, on_delete=models.SET_NULL, null=True)
-    personal_info = models.ForeignKey(PersonalInformation, related_name='personal_info',\
-        null=True, blank=True, on_delete=models.SET_NULL)
-    operator = models.ForeignKey(User, related_name='register_operator',\
-        null=True, blank=True, on_delete=models.SET_NULL)
-    total = models.BigIntegerField(null=True, blank=True)
-    authority = models.CharField(max_length=100, null=True, blank=False)
-    created_date = models.DateTimeField(default=datetime.now(), editable=False)
-    status = models.BooleanField(default=False)
-    ref_id = models.CharField(max_length=20, null=True, blank=False)
-    send_receipt = models.BooleanField(default=False) 
-
-    class Meta:
-        permissions = (
-            ('CAN_VIEW_Payment', 'Can View Payment'),
-        )
-    def __unicode__(self):
-        return u"Payment:{}".format(self.id).encode('utf-8')
-        
-    def __str__(self):
-        return u"Payment:{}".format(self.id).encode('utf-8')
+            return False
 
     def get_jalali_date(self):
         return JalaliDateTime(self.created_date).strftime("%Y/%m/%d")
@@ -253,8 +449,10 @@ class Payment(models.Model):
         return self.created_date.strftime("%H:%M:%S")
 
     def send_receipt_course(self):
-        sms = Sent.objects.create(receptor = self.personal_info.phone_number,\
-             created_date = datetime.now())
+        sms = Sent.objects.create(
+            receptor = self.personal_info.phone_number,
+            created_date = datetime.now()
+        )
         res_code = sms.send_receipt_course(self.ref_id)
         if res_code == 200:
             self.send_receipt = True
@@ -263,3 +461,34 @@ class Payment(models.Model):
         else:
             return res_code
 
+    def __unicode__(self):
+        res = "ID: {}".format(self.id)
+        if self.personal_info:
+            res +=  "- name: {}".format(
+            self.personal_info.name + " " + self.personal_info.family
+            )
+        if self.cart:
+            if len(self.cart.get_courses_with_discount()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_courses_with_discount())
+            elif len(self.cart.get_courses()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_courses())
+            else:
+                res +=  "- cart id: {}".format(self.cart.id)
+        res += "- status: {}".format(self.status)
+        return smart_unicode(res)
+        
+    def __str__(self):
+        res = "ID: {}".format(self.id)
+        if self.personal_info:
+            res +=  "- name: {}".format(
+            self.personal_info.name + " " + self.personal_info.family
+            )
+        if self.cart:
+            if len(self.cart.get_courses_with_discount()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_courses_with_discount())
+            elif len(self.cart.get_courses()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_courses())
+            else:
+                res +=  "- cart id: {}".format(self.cart.id)
+        res += "- status: {}".format(self.status)
+        return smart_unicode(res)

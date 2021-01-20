@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
 
@@ -21,4 +21,4 @@ def hi(request):
         return HttpResponseBadRequest("bad request")
 
 def landing_redirect(request):
-    return redirect('https://academymobileset.com/landing')
+    return redirect('common_landing')

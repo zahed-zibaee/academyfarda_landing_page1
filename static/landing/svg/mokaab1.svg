@@ -1,0 +1,81 @@
+<svg
+    id="Group_5741"
+    data-name="Group 5741"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="102.33"
+    height="132.176"
+    viewBox="0 0 102.33 132.176"
+>
+    <defs>
+        <filter
+        id="Path_11"
+        x="37.184"
+        y="0"
+        width="300px"
+        height="250px"
+        filterUnits="userSpaceOnUse"
+        >
+        <feOffset dx="20" dy="48" input="SourceAlpha" />
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feFlood flood-opacity="0.11" />
+        <feComposite operator="in" in2="blur" />
+        <feComposite in="SourceGraphic" />
+        </filter>
+        <filter
+        id="Path_12"
+        x="0"
+        y="0"
+        width="71.682"
+        height="109.573"
+        filterUnits="userSpaceOnUse"
+        >
+        <feOffset dx="20" dy="48" input="SourceAlpha" />
+        <feGaussianBlur stdDeviation="3" result="blur-2" />
+        <feFlood flood-opacity="0.11" />
+        <feComposite operator="in" in2="blur-2" />
+        <feComposite in="SourceGraphic" />
+        </filter>
+        <filter
+        id="Path_13"
+        x="0"
+        y="37.869"
+        width="97.287"
+        height="94.308"
+        filterUnits="userSpaceOnUse"
+        >
+        <feOffset dx="20" dy="48" input="SourceAlpha" />
+        <feGaussianBlur stdDeviation="3" result="blur-3" />
+        <feFlood flood-opacity="0.11" />
+        <feComposite operator="in" in2="blur-3" />
+        <feComposite in="SourceGraphic" />
+        </filter>
+    </defs>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_11)">
+        <path
+        id="Path_11-2"
+        data-name="Path 11"
+        d="M54.99,301.094l5.5-37.869,30.648,27.34-5.043,35.345Z"
+        transform="translate(-17.81 -263.23)"
+        fill="#ffdd3e"
+        />
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_12)">
+        <path
+        id="Path_12-2"
+        data-name="Path 12"
+        d="M23.29,315.8,30.417,281l35.555-17.773-5.5,37.869Z"
+        transform="translate(-23.29 -263.23)"
+        fill="#ffd200"
+        />
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 0, 0)" filter="url(#Path_13)">
+        <path
+        id="Path_13-2"
+        data-name="Path 13"
+        d="M60.474,295.509l31.1,24.817-33,12.491-35.292-22.6Z"
+        transform="translate(-23.29 -257.64)"
+        fill="#d5af00"
+        />
+    </g>
+</svg>

@@ -16,9 +16,9 @@ class Origin(models.Model):
         return "{}".format(self.description)
 
 class Lead(models.Model):
-    #TODO 
+    #TODO: chane to a better lead by django CRM 
     origin = models.ForeignKey(Origin, on_delete=models.SET_NULL, unique=False, null=True, editable=False,)
-    name_and_family = models.CharField(max_length=500, null=False, default='No Name', blank=False)
+    name_and_family = models.CharField(max_length=100, null=False, default='بدون نام', blank=False)
     GENDER_CHOICES = (
         ('M', 'Male'),
         ('F', 'Female'),
@@ -34,7 +34,7 @@ class Lead(models.Model):
         ('D', 'Default'),
     )
     register_status = models.CharField(max_length=1, choices=R_STAT, default='D')
-    led_time = models.DateTimeField(default=datetime.now(), editable=False)
+    led_time = models.DateTimeField(auto_now_add=True, editable=False)
     led_time_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
         , editable=False, null=False, blank=False)
     led_time_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
@@ -42,6 +42,7 @@ class Lead(models.Model):
     question = models.TextField(blank=True, default="")
     operator = models.ManyToManyField(User, related_name='operator', unique=False, editable=False)
     registered_by = models.ForeignKey(User, related_name='registered_by',unique=False, null=True, editable=False)
+    
     def __unicode__(self):
         return "{} ----- {}".format(self.phone_number, self.name_and_family)
 
@@ -50,12 +51,13 @@ class Comment(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author')
     text = models.TextField(blank=True, null=True)
-    created_date = models.DateTimeField(default=datetime.now(), editable=False)
+    created_date = models.DateTimeField(auto_now_add=True, editable=False)
     created_date_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
         , editable=False, null=False, blank=False)
     created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
     approved_comment = models.BooleanField(default=True)
+
     def __unicode__(self):
         return str(self.id) + " :" + str(self.author)
 
@@ -76,12 +78,14 @@ class LabelDefinition(models.Model):
     ('808080', 'Gray'),
     )
     color_code = models.CharField(max_length=10, choices=COLOR_CHOICES, default="000000", unique=True)
+
     def colored_name(self):
         return format_html(
             '<span style="color: white; background-color: #{};">{}</span>',
             self.color_code,
             self.tag,
         )
+
     def __unicode__(self):
         return "{}".format(self.tag)
 
@@ -89,19 +93,22 @@ class Label(models.Model):
     post = models.ForeignKey(Lead, on_delete=models.CASCADE)
     label = models.ForeignKey(LabelDefinition, on_delete=models.SET_NULL, null=True)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, editable=False)
-    created_date = models.DateTimeField(default=datetime.now(), editable=False)
+    created_date = models.DateTimeField(auto_now_add=True, editable=False)
     created_date_jalali = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%Y-%m-%d %H:%M:%S")\
         , editable=False, null=False, blank=False)
     created_date_jalali_str = models.CharField(max_length=50, default=JalaliDateTime.now().strftime("%c"),\
         editable=False, null=False, blank=False)
+
     class Meta:
         unique_together = ('post', 'label',)
+
     def colored_name(self):
         return format_html(
             '<span style="color: white; background-color: #{};">{}</span>',
             self.label.color_code,
             self.label.tag,
         )
+
     def export_show(self):
         return format_html(
             '<button type="button" class="btn btn-light btn-sm" style="color: white; background-color: #{};">{}</button>',

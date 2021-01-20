@@ -1,5 +1,5 @@
 """
-WSGI config for academyfarda_landing_page1 project.
+WSGI config for academyfarda_backend project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "academyfarda_landing_page1.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "academyfarda_backend.settings")
 
 application = get_wsgi_application()

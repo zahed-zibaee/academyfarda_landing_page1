@@ -1,4 +1,4 @@
-"""academyfarda_landing_page1 URL Configuration
+"""academyfarda_backend URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -13,8 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include, handler404
-from django.views.generic import TemplateView
+from django.conf.urls import url, include
 from django.contrib import admin
 from . import views
 
@@ -27,8 +26,9 @@ urlpatterns = [
     url(r'^crm/', include('CRM.urls')),
     url(r'^payments/', include('payments.urls')),
     url(r'^SMS/', include('SMS.urls')),
+    url(r'^landing/', include('landing.urls')),
     url(r'^hi/?$', views.hi, name="hi"),
-    url(r'^/?$', views.landing_redirect , name="landing"),
+    url(r'^/?$', views.landing_redirect , name="landing_redirect"),
 ]
 
 handler404 = views.error_404

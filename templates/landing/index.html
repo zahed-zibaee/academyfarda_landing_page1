@@ -1,0 +1,2409 @@
+{% load static %}
+{% load persian_tags %}
+<!DOCTYPE html>
+<html lang="fa-IR" dir="rtl">
+
+<head>
+  <title>آموزشگاه تعمیرات موبایل متخصصان فردا</title>
+  <meta name="description"
+    content="آموزش صفر تا صد تعمیرات موبایل به صورت تخصصی در قدیمی ترین و تنها آموزشگاه رتبه یک در کشور با استفاده از جدید ترین متد‌ها و مبتنی بر بازار کار">
+  <meta name="keywords"
+    content="آموزش تعمیرات موبایل، بهترین آموزشگاه تعمیرات موبایل، آموزش صفر تا صد تعمیرات موبایل، آموزش تعمیرات موبایل در تهران، اموزش تعمیرات موبایل">
+  <meta charset="UTF-8" />
+  <meta name="theme-color" content="#301faa" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no" />
+  <meta name="Designer" content="Made with love by dornaweb, UI design by ivahid.com and Academyfarda" />
+  <!-- End Loading Script -->
+  <link rel="shortcut icon" href="{% static 'landing/images/50X50.png' %}" />
+  <link rel="stylesheet" href="{% static 'landing/css/loading.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@6.3.5/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap-grid.min.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="{% static 'landing/css/style.css' %}" />
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-178459743-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+    gtag('config', 'UA-178459743-1');
+  </script>
+  <!-- raychat -->
+  <script type="text/javascript">
+    ! function () {
+      function t() {
+        var t = document.createElement("script");
+        t.type = "text/javascript", t.async = !0, localStorage.getItem("rayToken") ? t.src =
+          "https://app.raychat.io/scripts/js/" + o + "?rid=" + localStorage.getItem("rayToken") + "&href=" + window
+          .location.href : t.src = "https://app.raychat.io/scripts/js/" + o + "?href=" + window.location.href;
+        var e = document.getElementsByTagName("script")[0];
+        e.parentNode.insertBefore(t, e)
+      }
+      var e = document,
+        a = window,
+        o = "3e1ef52a-3e85-42c8-aed3-357303e59b2b";
+      "complete" == e.readyState ? t() : a.attachEvent ? a.attachEvent("onload", t) : a.addEventListener("load", t, !1)
+    }();
+  </script>
+
+</head>
+<body onload="removeLoading();" class="body-on-loading">
+  <!-- Start Loading -->
+  <div id="loading">
+    <img src="{% static 'landing/svg/ball-triangle.svg' %}" width="200" alt="loading..." />
+  </div>
+  <!-- End Loading -->
+  <svg width="0" height="0" style="position: absolute">
+    <defs>
+      <clipPath id="header_background" clipPathUnits="objectBoundingBox"
+        transform="scale(5.205622071837585e-4  0.0012870012870013 )">
+        <path fill="#1042c9"
+          d="M1919.913 481.499c-196.925-110.36-422.057-23.486-550.878 105.745-128.821 129.232-452.516 316.31-759.39 65.642C302.771 402.217 0 727.963 0 727.963V.895l1920.176.186z" />
+      </clipPath>
+    </defs>
+    <defs>
+      <clipPath id="header_background2" clipPathUnits="objectBoundingBox"
+        transform="scale(5.205622071837585e-4  0.0012870012870013 )">
+        <path fill="#1042c9"
+          d="M 1921 486 c -242 -133 -426 -19 -559 111 c -194 189 -659 221 -926 64 C 238 542 114 552 2 629 V 0.895 l 1920.176 0.186 z" />
+      </clipPath>
+    </defs>
+    <defs>
+      <clipPath id="header_background3" clipPathUnits="objectBoundingBox"
+        transform="scale(5.205622071837585e-4  0.0012870012870013 )">
+        <path fill="#1042c9"
+          d="M 1932 660 c -236 -61 -331 -19 -599 39 c -277 59 -448 49 -715 -27 C 357 599 177 641 -3 690 V 0 l 1920.176 0.186 z" />
+      </clipPath>
+    </defs>
+  </svg>
+  <!------------------------------- End SVG Load ----------------------------------->
+  <div id="serverconnectionerror" class="alert alert-danger text-center fade hide" role="alert">
+    <span>ارتباط با سرور ممکن نیست....</span>
+  </div>
+  <div id="serverconnectionreconnect" class="alert alert-success text-center fade hide" role="alert">
+    <span>ارتباط برقرار شد</span>
+  </div>
+  <!------------------------------- End Connection error ----------------------------------->
+  <!-------------------------------start-header----------------------------------->
+  <header class="site-header">
+    <div class="head-item container d-flex justify-content-center justify-content-sm-between">
+      <a class="col-12 col-sm-9 px-0" href="https://academymobileset.com/home-en">
+        <div class="site-logo d-flex align-items-center justify-content-center justify-content-sm-start pt-2">
+          <div class="row">
+            <div class="row pt-2 mb-0">
+              <div class="col-4 px-0">
+                <img src="{% static 'landing/images/500X500.png' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <div class="col-8 pt-2 my-auto px-0">
+                <div class="col-12 col-sm-12 px-0">
+                  <h1 class="h6 mb-0">آموزش تعمیرات موبایل</h1>
+                </div>
+                <div class="col-12 col-sm-12 px-0">
+                  <h1 class="h2 text-nowarp mb-0">متخصصان فردا</h1>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      <div class="col-3 left-top-header justify-content-end align-items-center d-none d-sm-flex px-0">
+        <div class="phone-number d-flex">
+          <a href="tel:+982188937172">
+            <h4 class="mb-0">
+              <span>۰۲۱-۸۸۹۳۷۱۷۲</span>
+            </h4>
+          </a>
+          <i class="fa fa-2x fa-phone fa-white" aria-hidden="true"></i>
+        </div>
+        <!--phone-number-->
+      </div>
+      <!--left-top-header-->
+    </div>
+    <!--head-item-->
+    <div class="header-body container d-flex">
+      <div class="right-head-body col-lg-4 d-none d-md-block">
+        <img src="{% static 'landing/images/onenumber.png' %}" alt="آموزش تعمیرات موبایل در تهران" />
+      </div>
+      <!--right-head-body-->
+      <div class="left-head-body">
+        <span class="top-txt text-nowarp"> تنها </span>
+        <h2 class="pt-2 yellow"> آموزشگاه تعمیرات موبایل </h2>
+        <span class="bottom-txt text-nowarp"> رتبه ۱ در کشور </span>
+        <span class="mokaab1 d-none d-lg-block">
+          <img src="{% static 'landing/svg/mokaab1.svg' %}" alt="mokaab">
+        </span>
+      </div>
+      <!--left-head-body-->
+    </div>
+    <!--header-body-->
+    <div class="bg-header"></div>
+  </header>
+
+  <!-------------------------------end(header)------------------------->
+  <main class="container">
+    <div class="row">
+      <nav class="col-3 col-lg-4 col-xl-3 d-none d-lg-block">
+        <div class="card" id="main-list">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <a class="d-flex align-content-center justify-content-center pb-1 access-link-hover"
+                href="https://academymobileset.com/home-en">
+                <i class="fa fa-home fa-2x link-home d-flex align-items-center" aria-hidden="true"></i>
+                <h6 class="pt-3 pr-2 d-flex align-items-center">خانه</h6>
+              </a>
+              <a class="d-flex align-content-center justify-content-center border-top pt-1" href="tel:+982188937172">
+                <h6 class="pt-1 pl-2 d-flex align-items-center">
+                  ۰۲۱-۸۸۹۳۷۱۷۲
+                </h6>
+                <i class="fa fa-phone fa-2x" aria-hidden="true"></i>
+              </a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#intro">چرا ما؟</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#courseinfo">معرفی دوره</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#topics">سر‌فصل‌ها</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#payment">شرایط و هزینه</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#license-course">گواهی نامه</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#class-location">تماس با ما</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#teachers">اساتید</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#albums">پشتیبانی پس از دوره</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#CQs">سوالات متداول</a>
+            </li>
+            <li class="list-group-item">
+              <a class="stretched-link" href="#dorms">خوابگاه</a>
+            </li>
+            <li class="list-group-item">
+              <div class="row">
+                <div class="col-12 col-lg-6 col-xl-12 pl-1 pr-1">
+                  <a href="#nothing" class="btn btn-red text-center py-3 my-2" data-toggle="modal"
+                    data-target="#exampleModal002">ثبت‌نام</a>
+                </div>
+                <div class="col-12 col-lg-6 col-xl-12 pl-1 pr-1">
+                  <a href="#nothing" class="btn btn-orange text-center py-3 my-2 go-to-consult-form" data-toggle="modal"
+                    data-target="#exampleModal003">مشاوره رایگان</a>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-------------end navbar ---------------->
+      <article class="col-9 col-lg-8 col-xl-9 col-12">
+        <!--left-icons-->
+        <section class="main-product" id="intro">
+          <div class="row">
+            <div class="title-experts">
+              <h3>چرا ما؟</h3>
+              <span>
+                آموزشگاه تعمیرات موبایل متخصصان فردا را می توان به جرات یکی از قدیمی‌ترین
+                آموزشگاه‌های تعمیرات موبایل سطح تهران دانست.
+                آموزشگاه ما مفتخر است که کلاس های تعمیرات موبایل را به صورت
+                ،
+                <b>تخصصی</b>
+                ،
+                <b>صفر تا صد</b>
+                ،
+                <b>با استفاده از جدید ترین متد‌ها</b>
+                و
+                <b>مبتنی بر نیاز بازار کار</b>
+                ارائه می‌کند.
+              </span>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4">
+              <div class="col mb-4">
+                <div class="card card-hover card-hover2 h-100 px-2">
+                  <img class="card-img-top pb-0 pt-5 px-5" src="{% static 'landing/svg/job-icon1.svg' %}"
+                    alt="job-icon1">
+                  <div class="card-body">
+                    <h2 class="card-title about-job-header text-center h5">بازار کار</h2>
+                    <p class="card-text about-job-body text-center">
+                      بیش از ۲ برابر جذب به بازار کار پر درآمد نسبت به آموزشگاه ها و
+                      تعمیر‌گاه های سراسر ایران
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col mb-4">
+                <div class="card card-hover card-hover2 h-100 px-2">
+                  <img class="card-img-top pb-0 pt-5 px-5" src="{% static 'landing/svg/job-icon2.svg' %}"
+                    alt="job-icon2">
+                  <div class="card-body">
+                    <h2 class="card-title about-job-header text-center h5">مقرون به صرفه</h2>
+                    <p class="card-text about-job-body text-center">
+                      مقرون به صرفه برای دوره‌های جامع ۰ تا ۱۰۰ تمامی گوشی‌های
+                      اندرویدی و IOS
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col mb-4">
+                <div class="card card-hover card-hover2 h-100 px-2">
+                  <img class="card-img-top pb-0 pt-5 px-5" src="{% static 'landing/svg/job-icon3.svg' %}"
+                    alt="job-icon3">
+                  <div class="card-body">
+                    <h2 class="card-title about-job-header text-center h5">مهاجرت آسان</h2>
+                    <p class="card-text about-job-body text-center">
+                      اعطا مدرک بین‌المللی به جهت مهاجرت آسان و دریافت جواز
+                      کسب
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col mb-4">
+                <div class="card card-hover card-hover2 h-100 px-2">
+                  <img class="card-img-top pb-0 pt-5 px-5" src="{% static 'landing/svg/job-icon4.svg' %}"
+                    alt="job-icon4">
+                  <div class="card-body">
+                    <h2 class="card-title about-job-header text-center h5">معرفی به کار</h2>
+                    <p class="card-text about-job-body text-center">
+                      معرفی به کار پس از دریافت مدرک بدون هیچگونه هزینه
+                      جانبی
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--job-condition-wrap-->
+          </div>
+        </section>
+        <!---------------------------end(intro)------------------------------------------>
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section class="global-organization container">
+          <!--  <span class="job-global-organ"> مدرک قابل ترجمه و معتبر در سازمان جهانی کار</span>-->
+          <h3 class="about-organ spacer-001">
+            شما می‌توانید یک جلسه به صورت مهمان در کلاس شرکت کنید و در صورتی
+            که رضایت داشتید برای ثبت نام آموزش تعمیرات موبایل اقدام کنید.
+          </h3>
+          <a href="#nothing" class="go-to-consult-form-1fs" data-toggle="modal" data-target="#exampleModal003">
+            <div class="free-session-svg"></div>
+          </a>
+        </section>
+        <!---------------------------end(banner)------------------------------------------>
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section class="main-product" id="courseinfo">
+          <div class="title-experts">
+            <h3>معرفی دوره</h3>
+            <span>
+              کلاس‌ها به دو صورت
+              <b>عادی</b>
+              و
+              <b>فشرده</b>
+              تشکیل می‌شود.
+            </span>
+          </div>
+          <div class="product-wrap">
+            <div class="title-product d-flex">
+              <h2>دوره تخصصی</h2>
+              <div class="d-flex towork">
+                <h3 class="px-2">+</h3>
+                <h2>معرفی به کار</h2>
+              </div>
+            </div>
+            <p class="pb-5">
+              آموزش مبتدی تا تخصصی تعمیرات موبایل شامل ۲۶ جلسه ۳ ساعت
+              برگزار می‌شود که در مجموع ۷۸ ساعت آموزش کاربردی ویژه بازار کار
+              می‌باشد.<br>
+              این دوره آموزش ۰ تا ۱۰۰ تعمیرات موبایل برای ورود با بازار پر درآمد تعمیرات موبایل است که از
+              پایه تا تخصصی آموزش داده می‌شود، و کارآموزان در انتهای دوره
+              قابلیت ورود به بازار پردرآمد تعمیرات موبایل
+              را خواهند داشت.<br>
+              توجه داشته باشید آموزش تعمیرات موبایل در تهران برگزار خواهد شد و متخصصان فردا در شهر های دیگر شعبه ای
+              ندارد.
+            </p>
+            <h3 class="title-product h2">دوره های در حال ثبت نام</h3>
+            <p class="pb-1">
+              دوره مبتدی تا تخصصی تعمیرات موبایل هر ماه در سه بازه زمانی در روز و معمولا به دو صورت برگزار می‌گردد:
+            </p>
+            <p class="pb-5">
+              <span class="bullet">
+                دوره های فشرده ما از شنبه تا چهار شنبه از ساعت
+                <span class="border-bottom">۹ تا ۱۲</span>
+                و یا
+                <span class="border-bottom">۱۳ تا ۱۶</span>
+                می‌باشد و
+                <b>یک ماه و یک هفته طول می‌کشد</b>.<br>
+              </span>
+              <span class="bullet">
+                دوره های عادی ما روز های زوج و یا روز های فرد ار ساعت
+                <span class="border-bottom">۱۸ تا ۲۰</span>
+                می‌باشد و
+                <b>دو ماه طول می‌کشد</b>.
+              </span>
+            </p>
+            <div id="courses" class="row row-cols-1 row-cols-md-2 row-cols-lg-1 row-cols-xl-2">
+              {% for course in courses %}
+              <div class="col mb-4">
+                <div class="card card-shadow card-hover2 card-border h-100">
+                  <div class="discounted">
+                    <div class="text-center {% if course.site_special_discount == True %} hidden {% endif %}">
+                      <span>تخفیف ویژه</span>
+                    </div>
+                  </div>
+                  <div class="card-img-overlay">
+                    <img
+                      src="{% if course.course_time.start|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.course_time.start|time:"H:i" == "13:00" %} {% elif course.course_time.start|time:"H:i" == "17:00" %} {% else %} {% endif %}"
+                      alt="">
+                    <div class="row m-0">
+                      <div class="col d-flex justify-content-between align-items-center text-nowrap text-muted">
+                        <div>
+                          <i class="fa fa-clock-o px-1 pb-1" aria-hidden="true"></i>
+                          <span class="mb-0">شروع دوره: </span>
+                          <span class="px-1">
+                            {{course.start|date:"Y-m-d"|weeks_date_to_string}}
+                          </span>
+                        </div>
+                        <div>
+                          <span>کد: </span>
+                          <span>{{course.id|four_digit_id}}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-header px-2 pt-3">
+                    <h3 class="card-title weight-800 px-2 m-0">{{course.site_name}}</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="card-text">
+                      <div class="row py-2">
+                        <div class="col-1 text-center d-flex align-items-center justify-content-center px-0">
+                          <i class="fa fa-lg fa-map-marker" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-11 px-0 d-flex align-items-center">
+                          <h6 class="mb-0 pl-2">محل برگزاری:</h6>
+                          <span>{% if course.location == "valiasr" %} شعبه ولیعصر
+                            {% elif course.location == "enghelab" %} شعبه انقلاب {% else %} نا‌مشخص {% endif %}</span>
+                        </div>
+                      </div>
+                      <div class="row py-2">
+                        <div class="col-1 col-sm-1 text-center d-flex align-items-center justify-content-center px-0">
+                          <i class="fa fa-lg fa-calendar" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-11 px-0 d-flex align-items-center">
+                          <h6 class="mb-0 pl-2">روز های کلاس:</h6>
+                          <span>{{course.course_day.name}}</span>
+                        </div>
+                      </div>
+                      <div class="row py-2">
+                        <div class="col-1 text-center d-flex align-items-center justify-content-center px-0">
+                          <i class="fa fa-lg fa-hourglass-half" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-11 px-0 d-flex align-items-center">
+                          <h6 class="mb-0 pl-2">طول دوره:</h6>
+                          <span>{{course.course_type.duration}} ({{course.course_type.duration_hours|persian_numbers}}
+                            ساعت)</span>
+                        </div>
+                      </div>
+                      <div class="row py-2">
+                        <div class="col-1 text-center d-flex align-items-center justify-content-center px-0">
+                          <i class="fa fa-lg fa-credit-card" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-11 px-0 d-flex align-items-center">
+                          <h6 class="mb-0 pl-2">پیش پرداخت:</h6>
+                          <span>{{course.price|toman_to_hezartoman|persian_numbers}} هزار تومان</span>
+                        </div>
+                      </div>
+                      <div class="row py-2">
+                        <div class="col-1 text-center d-flex align-items-center justify-content-center px-0">
+                          <i class="fa fa-lg fa-user pb-1" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-11 px-0 d-flex align-items-center">
+                          <h6 class="mb-0 pl-2">استاد:</h6>
+                          <span>{{course.teacher.personal_info.name }} {{course.teacher.personal_info.family }}</span>
+                        </div>
+                      </div>
+                      <div class="row py-2">
+                        <div class="col-2 text-center px-0 d-flex align-items-center justify-content-center">
+                          <i class="fa fa-3x fa-money" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-10 px-0 d-flex align-items-center">
+                          <h6 class="h4 mb-0 pl-2 pr-1">شهریه:</h6>
+                          <span
+                            class="text-muted linethrough">{{course.site_total_price|money_comma|persian_numbers}}</span>
+                          <b class="px-2">{{course.site_total_price_discounted|money_comma|persian_numbers}} تومان</b>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row d-flex justify-content-end align-items-center pt-3">
+                      <button class="btn btn-red h4 register-me stretched-link py-2 mb-0" data-id="{{course.id}}"
+                        data-toggle="modal" data-target="#exampleModal002">
+                        <span class="h4 mb-0 px-2">ثبت نام</span>
+                        <i class="fa fa-lg fa-arrow-left py-1" aria-hidden="true"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <!--product-wrap-->
+        </section>
+        <!--main-product-->
+        <!---------------------------end(course-info)------------------------------------------>
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section id="topics">
+          <div class="title-experts">
+            <h3>سر فصل های دوره</h3>
+            <span>
+              دوره تخصصی تعمیرات موبایل شامل آموزش صفر تا صد
+              <b>نرم افزار</b>
+              ،
+              <b>سخت افزار</b>
+              ،
+              <b>الکترونیک</b>
+              و ... می‌باشد که تمامی سرفصل ها آموزشی بر اساس سیستم عامل های
+              <b>IOS</b>
+              ،
+              <b>اندروید</b>
+              از پایه آموزش داده می‌شود.
+            </span>
+          </div>
+          <!--title-experts-->
+          <div class="accordion" id="accordionExample2">
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading100">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse100" aria-expanded="false"
+                  aria-controls="collapse100">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/intro.png' %}" alt="آموزش رایگان تعمیرات موبایل" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">معارفه</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse100" aria-labelledby="heading100">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>شناخت کامل گوشی و بخش های آن</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>آشنایی با سیستم عامل‌های اندروید و IOS</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>
+                            اقدامات پیشگیری حوادث و ایجاد امنیت در کارگاه
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading101">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse101" aria-expanded="false"
+                  aria-controls="collapse101">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/tools.png' %}" alt="ابزار آموزش تعمیرات موبایل" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">شناخت ابزار</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse101" aria-labelledby="heading101">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>آشنایی با ابزار تعمیرات</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>
+                            شناخت کامل لوازم کارگاه و روش استفاده صحیح آنها
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading110">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse110" aria-expanded="false"
+                  aria-controls="collapse110">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/assem.png' %}" alt="آموزش باز و بسته کردن گوشی" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">باز و بسته کردن</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse110" aria-labelledby="heading110">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>
+                            آموزش باز و بسته کردن گوشی ها با خار باز کن و
+                            پیچ‌گوشتی
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>
+                            باز و بسته کردن گوشی های چسبی به وسیله hot plate
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>ردیابی پیچ ها در آیفون</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۴</span>
+                        <div class="txt-experts">
+                          <h3>باز و بسته کردن گوشی های جدید</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading102">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse102" aria-expanded="false"
+                  aria-controls="collapse102">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/electronics.png' %}"
+                            alt="آموزش تعمیرات موبایل الکترونیک" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">الکترونیک</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse102" aria-labelledby="heading102">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>آموزش اصول مبانی الکترونیک عمومی</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>شناخت قطعات برد‌های SMD</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>تست قطعات برد‌های SMD</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۴</span>
+                        <div class="txt-experts">
+                          <h3>مبانی IC ها</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۵</span>
+                        <div class="txt-experts">
+                          <h3>شناخت IC ها روی برد</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۶</span>
+                        <div class="txt-experts">
+                          <h3>اصول و مبانی آنتن دهی و سیمکارت</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading103">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse103" aria-expanded="false"
+                  aria-controls="collapse103">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/hardware.png' %}" alt="آموزش تعمیرات موبایل سخت افزار" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">سخت‌افزار</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse103" aria-labelledby="heading103">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>
+                            تعویض انواع قطعات سوکتی مثل LCD، برد‌ها، ویبراتور،
+                            دوربین، و...
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>تعویض انواع قطعات الکترونیکی</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>تعویض انواع قطعات پلاستیکی و سوکت شارژ</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۴</span>
+                        <div class="txt-experts">
+                          <h3>شوک باتری</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۵</span>
+                        <div class="txt-experts">
+                          <h3>
+                            برداشتن، شابلون زدن ، تعویض و ریبال کردن IC ها
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۶</span>
+                        <div class="txt-experts">
+                          <h3>سیم کشی روی برد، روی فلت و زیر IC</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading104">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse104" aria-expanded="false"
+                  aria-controls="collapse104">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/diag.png' %}" alt="آموزش تعمیرات موبایل عیب یابی" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">عیب یابی</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse104" aria-labelledby="heading104">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>عیب یابی (اصول و مبانی) ایرادات متداول</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>
+                            آموزش کامل عیب یابی و تست قطعات الکترونیک از روی
+                            نقشه و سلوشن
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>تحلیل و عیب یابی گوشی های خاموش</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۴</span>
+                        <div class="txt-experts">
+                          <h3>تحلیل و عیب یابی گوشی های آب خورده</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۵</span>
+                        <div class="txt-experts">
+                          <h3>
+                            تحلیل و عیب یابی گوشی های بر اساسی جریان کشی
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۶</span>
+                        <div class="txt-experts">
+                          <h3>شناخت، عیب یابی انواع باتری ها</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۷</span>
+                        <div class="txt-experts">
+                          <h3>
+                            مفاهیم و اصطلاحات کاربردی مهم در عیب یابی نرم
+                            افزاری
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading105">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse105" aria-expanded="false"
+                  aria-controls="collapse105">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/sche.png' %}" alt="آموزش تعمیرات موبایل نقشه خوانی" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">نقشه خوانی</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse105" aria-labelledby="heading105">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>
+                            بررسی تخصصی مدارات موبایل و نقشه خوانی انواع گوشی
+                            های اندروید و ios
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>نحوه پیدا کردن و استفاده از سلوشن ها</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>معرفی باکس ZXW</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading106">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse106" aria-expanded="false"
+                  aria-controls="collapse106">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex align-items-center">
+                      <div class="experts-content">
+                        <div class="topic-icons">
+                          <img src="{% static 'landing/images/software.png' %}" alt="آموزش تعمیرات موبایل نرم افزار" />
+                        </div>
+                      </div>
+                      <span class="card-text pt-2">نرم‌ا‌افزار</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse106" aria-labelledby="heading006">
+                <div class="card-body">
+                  <div class="experts-wrapper">
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱</span>
+                        <div class="txt-experts">
+                          <h3>
+                            آشنایی با نرم افزارهای مرتبط با فلش، بک آپ ،
+                            ریستور و...
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۲</span>
+                        <div class="txt-experts">
+                          <h3>آشنایی کامل با گوگل اکانت و FRP</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۳</span>
+                        <div class="txt-experts">
+                          <h3>
+                            آموزش فرآیند ریکاوری رام رسمی و کاستوم و نحوه فرمت
+                            کردن گوشی از طریق آن بکاپ گیری
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۴</span>
+                        <div class="txt-experts">
+                          <h3>آموزش فرآیند آپدیت و ریستور دیوایس های اپل</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۵</span>
+                        <div class="txt-experts">
+                          <h3>آموزش ساخت اپل آی دی</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۶</span>
+                        <div class="txt-experts">
+                          <h3>
+                            نصب رام(فلش کردن) گوشی های اندرویدی MTK بدون باکس
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۷</span>
+                        <div class="txt-experts">
+                          <h3>
+                            نصب رام(فلش کردن) گوشی های سامسونگ، هواوی و...
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۸</span>
+                        <div class="txt-experts">
+                          <h3>آموزش کار با باکس Z3X یا Octopus</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۹</span>
+                        <div class="txt-experts">
+                          <h3>
+                            مفاهیم آشنایی با مفاهیم قانونی در تعمیر IMEI و
+                            برداشتن قفل
+                          </h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱۰</span>
+                        <div class="txt-experts">
+                          <h3>آموزش کار با باکس Sigma</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                    <div class="experts-items">
+                      <div class="experts-content">
+                        <span>۱۱</span>
+                        <div class="txt-experts">
+                          <h3>آموزش روت کردن گوشی ها</h3>
+                        </div>
+                      </div>
+                      <!--experts-content-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--experts-wrap-->
+        </section>
+        <!--why-experts-->
+        <!-------------------------------------end(topics)------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section class="main-product" id="payment">
+          <div class="title-experts">
+            <h3>شرایط و هزینه</h3>
+            <span>شما تنها با پرداخت ۱۵۰ هزار تومان کلاس را رزرو و مابقی شهریه را
+              می‌توانید به صورت
+              <b>اقساطی</b>
+              و یا
+              <b>نقدی</b>
+              پرداخت نمایید.
+            </span>
+          </div>
+          <!--title-experts-->
+          <div class="spacer-005 mb-5">
+            <div class="row spacer-005">
+              <div class="col-12 d-flex align-items-center justify-content-center pb-0">
+                <h3 class="payment-big">۲,۵۰۰,۰۰۰</h3>
+              </div>
+              <div class="col-12 d-flex align-items-start justify-content-center pt-0">
+                <span class="payment-mosavab">نرخ مصوبه فنی و حرفه ای</span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 d-flex align-items-center justify-content-center pb-0">
+                <h3 class="payment-bigblack">۲,۰۰۰,۰۰۰</h3>
+                <h3 class="px-3 payment-toman">تومان</h3>
+              </div>
+            </div>
+          </div>
+          <div class="product-wrap">
+            <h2 class="title-product d-flex">پرداخت اقساطی و نقدی</h2>
+            <div id="accordion002" class="my-5">
+              <div class="card card card-shadow card-border">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-6 pl-1 pr-0">
+                      <h4 class="btn2 btn2-first btn-blue text-center pt-1" data-toggle="collapse"
+                        data-target="#collapse301" aria-expanded="true" aria-controls="collapse301">نقدی</h4>
+                    </div>
+                    <div class="col-6 pr-1 pl-0">
+                      <h4 class="btn2 btn2-last btn-blue text-center pt-1 collapsed" data-toggle="collapse"
+                        data-target="#collapse302" aria-expanded="false" aria-controls="#collapse302">اقساطی</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body h-100 pt-3">
+                  <div class="collapse show" id="collapse301" aria-labelledby="heading301" data-parent="#accordion002">
+                    <p class="bullet mb-2">
+                      <b>شرایط پرداخت نقدی:</b>
+                      <span>در ابتدا با ۱۵۰ هزار تومان ثبت‌نام و جلسه اول دوره با
+                        پرداخت یک میلیون و هفت صد و پنجاه هزار تومان پرداخت خود را
+                        کامل می‌نمایید و از ما صد هزار تومان تخفیف دریافت
+                        می‌کنید.</span>
+                    </p>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                          ثبت‌نام:
+                        </h6>
+                        <span>۱۵۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                          جلسه اول:
+                        </h6>
+                        <span>۱,۷۵۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="text-green mb-0">
+                          تخفیف پرداخت نقدی:
+                        </h6>
+                        <div>
+                          <span class="text-green">۱۰۰,۰۰۰- تومان</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-2 mt-4">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="blue-total mb-0">
+                          شهریه کل:
+                        </h6>
+                        <div>
+                          <span class="blue-total">۱,۹۰۰,۰۰۰ تومان</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="collapse" id="collapse302" aria-labelledby="heading302" data-parent="#accordion002">
+                    <p class="bullet mb-2">
+                      <b>شرایط پرداخت اقساطی:</b>
+                      <span>در ابتدا با ۱۵۰ هزار تومان ثبت‌نام و جلسه اول دوره با
+                        پرداخت هشت صد و پنجاه هزار تومان شهریه را به نصف و در اواسط
+                        دوره(جلسه 13ام) یک میلیون تومان باقی مانده از شهریه را تسویه
+                        می‌نمایید.</span>
+                    </p>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                          ثبت‌نام:
+                        </h6>
+                        <span>۱۵۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0">
+                          جلسه اول:
+                        </h6>
+                        <span>۸,۵۰۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-1">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="d-flex mb-0">
+                          <span>جلسه سیزده‌ام:</span>
+                        </h6>
+                        <span>۱,۰۰۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                    <div class="row bg-gray my-2 mt-4">
+                      <div class="col-12 d-flex justify-content-between align-items-center">
+                        <h6 class="blue-total mb-0">
+                          شهریه کل:
+                        </h6>
+                        <span class="blue-total">۲,۰۰۰,۰۰۰ تومان</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h2 class="title-product d-flex">لیست تخفیف ‌ها</h2>
+            <p>
+              توجه داشته باشید تنها می‌توانید از یکی از سه تخفیف
+              <b class="px-1">" کمیته امداد و بهزیستی "</b>
+              و
+              <b class="px-1">" خانه کارگر "</b>
+              و
+              <b class="px-1">" فرهنگیان و ایثارگران "</b>
+              و
+              <b class="px-1">" کادر درمان "</b>
+              استفاده نمایید.
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> تخفیف پرداخت نقدی </span>
+              <span class="pr-2">۱۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> کمیته امداد و بهزیستی </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> خانه کارگر </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> فرهنگیان و ایثارگران </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> کادر درمان </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+          </div>
+          <!--product-wrap-->
+        </section>
+        <!-------------------------------------end(payment)------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section class="license-course" id="license-course">
+          <div class="title-experts">
+            <h3>گواهی‌نامه پایان دوره‌ها</h3>
+            <span></span>
+          </div>
+          <!--title-experts-->
+
+          <div class="license-wrap">
+            <div class="license-items d-flex">
+              <div class="right-license-slide">
+                <div class="swiper-container" id="license_slide">
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide license-slide-item">
+                      <img src="{% static 'landing/images/Image_1.jpg' %}" alt="آموزش تعمیرات موبایل با مدرک معتبر" />
+                    </div>
+
+                    <!--license-slide-item-->
+                  </div>
+                  <!-- .swiper-wrapper -->
+                </div>
+                <!-- #license-sliders-->
+                <div class="license-slide-pagination"></div>
+              </div>
+              <!--right-license-slide-->
+
+              <div class="left-license">
+                <p>
+                  کار آموزان پس از گذراندن دوره آموزش تعمیرات موبایل گواهینامه مهارت
+                  از سازمان آموزش فنی و حرفه ای و وزارت کار را در انتهای دوره
+                  دریافت می‌کنند که این گواهینامه
+                  <b>جواز کسب</b>
+                  محسوب می‌شود و با این گواهینامه می‌توانند وارد بازار کار
+                  شوند، علاوه بر این مدرک
+                  <b>قابل ترجمه و استفاده در 168 کشور</b>
+                  عضو ULO سازمان جهانی کار جهت دریافت
+                  <b>ویزا کاری</b>
+                  می‌باشد. همچنین کارآموزان می‌توانند با استفاده از این مدرک
+                  به جهت دریافت
+                  <b>وام خود اشتغالی</b>
+                  اقدام نمایند.
+                </p>
+              </div>
+              <!--left-license-slide-->
+            </div>
+            <!--license-items-->
+          </div>
+          <!--license-wrap-->
+          <span class="mokaab1 mokaab4 d-none d-xl-block">
+            <img src="{% static 'landing/svg/mokaab1.svg' %}" alt="mokaab">
+          </span>
+        </section>
+        <!--license-course-->
+        <!--------------------------------------end(license-course)------------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section id="class-location">
+          <div class="title-experts">
+            <h3>تماس با ما</h3>
+            <span>
+              تمامی‌دوره های آموزشی تعمیرات موبایل در دو آموزشگاه
+              <b>میدان ولیعصر</b>
+              و
+              <b>میدان انقلاب</b>
+              برگزار می‌شود
+            </span>
+          </div>
+          <div id="accordion001">
+            <div class="card text-center">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-6 pl-1 pr-0">
+                    <h3 class="btn2 btn2-first btn-blue" data-toggle="collapse" data-target="#collapse201"
+                      aria-expanded="true" aria-controls="collapse201">میدان ولیعصر</h3>
+                  </div>
+                  <div class="col-6 pr-1 pl-0">
+                    <h3 class="btn2 btn2-last btn-blue" data-toggle="collapse" data-target="#collapse202"
+                      aria-expanded="false" aria-controls="collapse202">میدان انقلاب</h3>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body h-100">
+                <div class="collapse show" id="collapse201" aria-labelledby="heading201" data-parent="#accordion001">
+                  <h4 class="py-4">اطلاعات تماس با آموزشگاه میدان ولیعصر</h4>
+                  <div class="row line-hight-4em px-3 pb-3">
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-map-marker fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">آدرس:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span>میدان ولیعصر، بالاتر از سینما استقلال، پلاک ۱۷۰۶
+                            طبقه سوم</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-phone fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">تلفن:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span> ۰۲۱-۸۸۸۹۴۳۵۸ ----- ۰۲۱-۸۸۹۰۲۴۳۲ </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">ایمیل:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span>academymobileset@gmail.com</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row px-3 pb-3 p-xs-0">
+                    <iframe title="map" class="pt-0"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d681.0247007247775!2d51.406802220143184!3d35.713484998500824!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e016502c439c3%3A0xb3f9374055e0bf25!2smotekhasesan%20Farda!5e0!3m2!1sen!2sus!4v1592216804861!5m2!1sen!2sus"
+                      width="2000" height="450" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                  </div>
+                </div>
+                <div class="collapse" id="collapse202" aria-labelledby="heading202" data-parent="#accordion001">
+                  <h4 class="py-4">اطلاعات تماس با آموزشگاه میدان انقلاب</h4>
+                  <div class="row line-hight-4em px-3 pb-3">
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-map-marker fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">آدرس:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span>خیابان انقلاب، رو به روی درب اصلی دانشگاه تهران،
+                            ابتدای خیابان فخر رازی، پلاک ۸۵، طبقه چهارم، واحد
+                            ۱۰</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-phone fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">تلفن:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span> ۰۲۱-۶۶۴۱۷۰۷۳ ----- ۰۲۱-۶۶۴۶۸۱۸۱ </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <i class="fa fa-envelope fa-3x" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">ایمیل:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <span>academymobileset@gmail.com</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row px-3 pb-3 p-xs-0">
+                    <iframe title="map" class="pt-0"
+                      src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d202.50230995215682!2d51.3962267!3d35.7007081!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e0151a1889c4f%3A0xfff501eafd3b64e8!2z2YXYqtiu2LXYtdin2YYg2YHYsdiv2Kc!5e0!3m2!1sen!2snl!4v1592215288733!5m2!1sen!2snl"
+                      width="2000" height="450" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--------------------------------------end(class-location)------------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+
+        <section id="teachers">
+          <div class="title-experts">
+            <h3>اساتید</h3>
+            <span>
+              تمامی اساتید ما سال ها
+              <b>سابقه کار</b>
+              و
+              <b>تدریس</b>
+              در زمینه آموزش تعمیرات موبایل دارند که می‌توانید رزومه بعضی از آنها
+              را به صورت خلاصه مطالعه کنید.
+            </span>
+          </div>
+          <div class="row">
+            <div class="media pb-4 pt-0">
+              <img src="{% static 'landing/images/bahram_asvadi.jpg' %}" class="masters-pic"
+                alt="آموزش تعمیرات موبایل اساتید" />
+              <div class="media-body media-body-right">
+                <h4 class="media-head mt-0">استاد بهرام اسودی</h4>
+                <span class="text-justify">
+                  8 سال سابقه تدریس سخت افزار و نرم افزار موبایل و تبلت به صورت کاملا تخصصی در آموزشگاه های عالی کشور
+                  ،5 سال سابقه آموزش در محل کار به صورت عملی و همچنین تعمیرات موبایل را به صورت حرفه ایی انجام می‌دهم.
+                  تعداد قابل توجهی از شاگردان‌ام وارد بازار کار شده و همچنین من پشتیبان و راهنمای آنها به صورت تلفنی
+                  هستم.
+                </span>
+              </div>
+            </div>
+            <div class="media pb-4">
+              <img src="{% static 'landing/images/mohammad_rezaii.jpg' %}" class="masters-pic d-block d-md-none"
+                alt="آموزش تعمیرات موبایل اساتید" />
+              <div class="media-body media-body-left">
+                <h4 class="media-head mt-0">استاد محمد رضایی</h4>
+                <span class="text-justify">
+                  9 سال سابقه در زمینه آموزش سخت افزار و نرم افزار موبایل و بیش از یک دهه تجربه در زمینه تعمیرات حرفه
+                  ایی موبایل .سرپرست خدمات پس از فروش شرکتهای پارس‌کامتل، مدیا پردازش، ال‌جی، مادیران ‌و یاس. تدریس در
+                  آموزشگاه های متخصصان‌فردا، موبایل‌آباد، پارس ‌نیکاتل، همراه‌تل و برگزاری دوره‌های خصوصی تدریس به صورت
+                  حرفه ایی برای گوشی های ios و اندروید.
+                </span>
+              </div>
+              <img src="{% static 'landing/images/mohammad_rezaii.jpg' %}" class="masters-pic d-none d-md-block"
+                alt="آموزش تعمیرات موبایل اساتید" />
+            </div>
+            <div class="media pb-4">
+              <img src="{% static 'landing/images/mohamad_hosein_zeidi.jpg' %}" class="masters-pic"
+                alt="آموزش تعمیرات موبایل اساتید" />
+              <div class="media-body media-body-right">
+                <h4 class="media-head mt-0">استاد محمد حسین زیدی نظری </h4>
+                <span class="text-justify">
+                  9 سال سابقه در زمینه آموزش سخت افزار و نرم افزار موبایل و بیش از یک دهه تجربه در زمینه تعمیرات حرفه
+                  ایی موبایل .سرپرست خدمات پس از فروش شرکتهای پارس‌کامتل، مدیا پردازش، ال‌جی، مادیران ‌و یاس. تدریس در
+                  آموزشگاه های متخصصان‌فردا، موبایل‌آباد، پارس‌نیکاتل، همراه‌تل و برگزاری دوره‌های خصوصی تدریس به صورت
+                  حرفه ایی برای گوشی های ios و اندروید.
+                </span>
+              </div>
+            </div>
+            <div class="media pb-4">
+              <img src="{% static 'landing/images/zahed_zibaee.jpg' %}" class="masters-pic d-block d-md-none"
+                alt="آموزش تعمیرات موبایل اساتید" />
+              <div class="media-body media-body-left">
+                <h4 class="media-head mt-0">استاد زاهد زیبایی</h4>
+                <span class="text-justify">
+                  5 سال سابقه کار حرفه ایی در زمینه تعمیرات نرم افزار موبایل ، تدریس حرفه ایی سخت افزار و نرم افزار
+                  تمامی گوشی های ios و اندروید به صورت پاره وقت ، تدریس نرم افزار موبایل های روز دنیا به صورت خصوصی در
+                  آموزشگاه های متخصصان فردا
+                </span>
+              </div>
+              <img src="{% static 'landing/images/zahed_zibaee.jpg' %}" class="masters-pic d-none d-md-block"
+                alt="آموزش تعمیرات موبایل اساتید" />
+            </div>
+          </div>
+        </section>
+        <!--------------------------------------end(teachers)------------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section class="picture-sliders2" id="albums">
+          <div class="title-experts">
+            <h3>پشتیبانی پس از دوره</h3>
+            <span>کارآموزان عزیز می‌توانند
+              <b>مادام العمر </b>
+              بعد از اتمام دوره جهت دریافت پاسخ سوالات خود به صورت
+              <b>تلفنی</b>
+              و
+              <b>حضوری</b>
+              با آموزشگاه و استاد مربوطه در تماس باشند. همچنین می‌توانند در
+              طول دوره و یا پس از پایان دوره از
+              <b>کارگاه</b>
+              های ما به صورت
+              <b>رایگان</b>
+              استفاده کنند.
+            </span>
+          </div>
+          <!--title-experts-->
+          <!--left-icons-->
+          <div class="swiper-container picture-sliders2" id="picture_slide2">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_001.jpeg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_002.jpeg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_003.jpg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_004.jpg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_005.jpeg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_006.jpeg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+              <div class="swiper-slide pic-slide-item radius20px">
+                <img src="{% static 'landing/images/Image_007.jpg' %}" alt="آموزش تعمیرات موبایل" />
+              </div>
+              <!--pic-slide-item-->
+            </div>
+            <div id="swiper-buttons-next2" class="swiper-buttons swiper-buttons-next">
+              <span class="d-flex justify-content-center align-items-center">
+                <i class="fa fa-2x fa-arrow-left fa-white" aria-hidden="true"></i>
+              </span>
+            </div>
+            <!--swiper-button-next-->
+            <div id="swiper-buttons-prev2" class="swiper-buttons swiper-buttons-prev">
+              <span class="d-flex justify-content-center align-items-center">
+                <i class="fa fa-2x fa-arrow-right fa-white" aria-hidden="true"></i>
+              </span>
+            </div>
+            <!--swiper-button-prev-->
+          </div>
+          <!--picture-sliders-->
+          <div class="pic-slide-pagination2"></div>
+        </section>
+        <!--------------------------- End album ------------------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section id="CQs">
+          <div class="title-experts">
+            <h3>سوالات متداول</h3>
+          </div>
+          <div class="accordion" id="accordionExample">
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading001">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse001" aria-expanded="false"
+                  aria-controls="collapse001">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">کلاس ها به چه صورت برگزار می‌شود؟ شهریه و ساعت کلاس ها
+                        به چه صورت است؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse001" aria-labelledby="heading001">
+                <div class="card-body">
+                  می‌توانید نحوه برگزاری کلاس های در حال ثبت نام را از
+                  <a href="#courseinfo">اینجا</a>
+                  و همچنین شهریه و شرایط ثبت‌نام را از
+                  <a href="#payment">اینجا</a>
+                  مطالعه فرمایید.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading002">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse002" aria-expanded="false"
+                  aria-controls="collapse002">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">دوره های شما کامل است؟ یعنی بعد از دوره می‌توانیم
+                        تعمیرات انجام دهیم؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse002" aria-labelledby="heading002">
+                <div class="card-body">
+                  ما از ابتدای آموزش تعمیرات موبایل تا ورود به بازار کار همراه
+                  شما هستیم. تضمین ما صدها متخصص فعال در زمینه تعمیرات موبایل
+                  در داخل و خارج از کشور است که زمانی کارآموز متخصصان بوده
+                  اند.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading003">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse003" aria-expanded="false"
+                  aria-controls="collapse003">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">من در رابطه با تعمیرات موبایل هیچ چیز نمی‌دانم! آیا
+                        این دوره برای من مناسب است؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse003" aria-labelledby="heading003">
+                <div class="card-body">
+                  اکثر افرادی که در کلاس های ما شرکت می‌کنند هم مثل شما کاملا
+                  مبتدی هستند.<br />
+                  کلاس های ما علاوه بر تخصصی بودن از مباحث کاملا مبتدی تا
+                  پیشرفته و فوق پیشرفته را شامل می‌شود.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading004">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse004" aria-expanded="false"
+                  aria-controls="collapse004">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">بعد از اتمام دوره، معرفی به کار به چه صورت می
+                        باشد؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse004" aria-labelledby="heading004  ">
+                <div class="card-body">
+                  بعد از اتمام دوره تعدادی از کارآموزان با توجه به نمره کلاسی
+                  و تائید استاد مربوطه جهت معرفی به کار به تعمیرگاه هاو شرکت
+                  ها معرفی می‌شوند.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading005">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse005" aria-expanded="false"
+                  aria-controls="collapse005">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">برای حضور در دوره شرایط سنی وجود دارد؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse005" aria-labelledby="heading005">
+                <div class="card-body">
+                  خیر، تمامی افراد از 13 سال تا 60 سال می‌توانند در این دوره
+                  شرکت کنند، زیرا تمامی مباحث از پایه آموزش داده می‌شود.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading006">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse006" aria-expanded="false"
+                  aria-controls="collapse006">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">آزمون و دریافت مدرک در انتها دوره به چه صورت می
+                        باشد؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse006" aria-labelledby="heading006">
+                <div class="card-body">
+                  بعد از اتمام دوره تمام کارآموزان به فنی و حرفه ای معرفی می
+                  شوند و بعد از برگزاری آزمون کتبی و عملی گواهینامه مربوطه را
+                  دریافت می‌کنید.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading007">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse007" aria-expanded="false"
+                  aria-controls="collapse007">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">این دوره برای چه افرادی مناسب هست؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse007" aria-labelledby="heading007">
+                <div class="card-body">
+                  این دوره برای علاقه مندان به تعمیرات موبایل و همچنین افرادی
+                  که تمایل به شغل پردرآمد دارند مناسب می‌باشد.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading008">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse008" aria-expanded="false"
+                  aria-controls="collapse008">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">آیا شما خوابگاه هم دارید؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse008" aria-labelledby="heading008">
+                <div class="card-body">
+                  ما لیستی از خوابگاه های مورد تائید اماکن را در منطقه واحد
+                  آموزشی به شما معرفی می‌کنیم که شما می‌توانید با توجه به بودجه
+                  در نظر گرفته شده خوابگاه خود را انتخاب کنید.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading009">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse009" aria-expanded="false"
+                  aria-controls="collapse009">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">اساتید شما فقط آموزش می‌دهند یا خودشان مغازه دار نیز
+                        می‌باشند؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse009" aria-labelledby="heading009">
+                <div class="card-body">
+                  تمامی اساتید متخصصان ، سابقه تخصصی تعمیرات موبایل و آموزش
+                  تعمیرات موبایل را در رزومه خود به صورت تخصصی دارا می‌باشند
+                  که می‌توانید رزومه بعضی از آنها را در
+                  <a href="#teachers">اینجا</a>
+                  مطالعه کنید.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading010">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse010" aria-expanded="false"
+                  aria-controls="collapse010">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">کلاس ها تئوری است یا به صورت عملی برگزار
+                        می‌شود؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse010" aria-labelledby="heading010">
+                <div class="card-body">
+                  کلاس ها روزانه سه ساعت می‌باشد، که یک ساعت و نیم به صورت
+                  تئوری و یک ساعت و نیم به صورت عملی در کارگاه های مجهز برگزار
+                  می‌شود.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading011">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse011" aria-expanded="false"
+                  aria-controls="collapse011">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">آیا تضمینی برای یادگیری وجود دارد؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse011" aria-labelledby="heading011">
+                <div class="card-body">
+                  این سوال از ما زیاد پرسیده می‌شود و جواب ما همیشه این است که
+                  اگر دیگران توانسته اند از طریق آموزشگاه ما تعمیرکار شوند شما
+                  هم می‌توانید.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--------------------------- End Common Questions ------------------------------->
+        <div class="spacer-004"></div>
+        <!---------------------------Spacer------------------------------------------>
+        <section id="dorms">
+          <div class="title-experts">
+            <h3>خوابگاه</h3>
+            <span>
+              برای کارآموزان خارج از تهران خوابگاه های
+              <b>مورد تائید اماکن</b>
+              در نظر گرفته شده است، که می‌توانند بسته به بودجه در نظر گرفته
+              شده خوابگاه خود را انتخاب کنند.
+            </span>
+          </div>
+          <div class="d-flex justify-content-center pb-5 mb-5">
+            <a rel="noreferrer" href="{% static 'landing/files/dorms.pdf' %}" target="_blank"
+              class="btn btn-blue active btn-lg">
+              دریافت لیست خوابگاه ها</a>
+          </div>
+          <!--picture-sliders-->
+          <div class="picture-sliders">
+            <!--left-icons-->
+            <div class="swiper-container picture-sliders" id="picture_slide">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide pic-slide-item">
+                  <img src="{% static 'landing/images/Image_10.png' %}" alt="آموزش تعمیرات موبایل خوابگاه" />
+                </div>
+                <!--pic-slide-item-->
+                <div class="swiper-slide pic-slide-item">
+                  <img src="{% static 'landing/images/Image_9.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                </div>
+                <!--pic-slide-item-->
+                <div class="swiper-slide pic-slide-item">
+                  <img src="{% static 'landing/images/Image_12.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                </div>
+                <!--pic-slide-item-->
+                <div class="swiper-slide pic-slide-item">
+                  <img src="{% static 'landing/images/Image_11.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                </div>
+                <!--pic-slide-item-->
+                <div class="swiper-slide pic-slide-item">
+                  <img src="{% static 'landing/images/Image_6.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                </div>
+                <!--pic-slide-item-->
+              </div>
+              <div id="swiper-buttons-next" class="swiper-buttons swiper-buttons-next">
+                <span class="d-flex justify-content-center align-items-center">
+                  <i class="fa fa-2x fa-arrow-left fa-white" aria-hidden="true"></i>
+                </span>
+              </div>
+              <!--swiper-button-next-->
+              <div id="swiper-buttons-prev" class="swiper-buttons swiper-buttons-prev">
+                <span class="d-flex justify-content-center align-items-center">
+                  <i class="fa fa-2x fa-arrow-right fa-white" aria-hidden="true"></i>
+                </span>
+              </div>
+              <!--swiper-button-prev-->
+            </div>
+            <!--picture-sliders-->
+            <div class="pic-slide-pagination"></div>
+          </div>
+        </section>
+      </article>
+      <!--------------------------- End dorms ------------------------------->
+      <div class="container">
+        <div class="spacer-004 d-block d-md-none"></div>
+        <div class="spacer-002 d-block d-none d-lg-block"></div>
+        <!---------------------------Spacer------------------------------------------>
+      </div>
+    </div>
+  </main>
+  <!--------------------------start(footer)--------------------------------->
+  <footer id="footer" class="container-fluid paddingx-footer fixed-footer d-lg-none">
+    <div class="row pb-1">
+      <div class="col-2 col-sm-4 px-1">
+        <a href="#nothing" class="btn btn-secondary text-center py-footer-btn my-2" data-toggle="modal"
+          data-target="#exampleModal001">
+          <span class="d-none d-sm-block"> دسترسی سریع</span>
+          <i class="fa fa-list pb--1 d-sm-none" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="col-5 col-sm-4 px-1">
+        <a href="#nothing" class="btn btn-red text-center py-footer-btn my-2" data-toggle="modal"
+          data-target="#exampleModal002">ثبت‌نام</a>
+      </div>
+      <div class="col-5 col-sm-4 px-1">
+        <a href="#nothing" class="btn btn-orange text-center py-footer-btn my-2 go-to-consult-form" data-toggle="modal"
+          data-target="#exampleModal003">مشاوره رایگان</a>
+      </div>
+    </div>
+  </footer>
+  <!-- start footer Area -->
+  {% include 'landing/partials/_footer.html' %}
+  <!-- End footer Area -->
+  <!--------------------------- Toasts Start ------------------------------>
+  <!-- Flexbox container for aligning the toasts -->
+  <div class="toasts" aria-live="alert" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+    <!-- Then put toasts within -->
+    <div id="toast" class="col-12 px-0 toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="15000">
+      <div class="toast-header">
+        <strong id="toast-header" class="ml-auto">خطا</strong>
+        <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="toast-body" class="toast-body">
+        توضیحات خطا توضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطا
+      </div>
+    </div>
+  </div>
+  <!--------------------------- Toasts end ------------------------------>
+  <!--------------------------- Modals Start ------------------------------>
+  <div class="modal fade" id="exampleModal001" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel002"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel002">دسترسی سریع</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card">
+            <ul class="list-group">
+              <li class="list-group-item">
+                <a class="d-flex align-content-center justify-content-center access-link-hover"
+                  href="https://academymobileset.com/home-en">
+                  <i class="fa fa-home fa-2x link-home d-flex align-items-center" aria-hidden="true"></i>
+                  <h6 class="pt-3 pr-2 d-flex align-items-center">خانه</h6>
+                </a>
+                <a class="d-flex align-content-center justify-content-center border-top pt-1"
+                  href="https://api.whatsapp.com/send?phone=+989228482428">
+                  <i class="fa fa-whatsapp fa-2x link-home" aria-hidden="true"></i>
+                  <h6 class="pt-1 pr-2 d-flex align-items-center">
+                    مشاوره واتس‌اپ
+                  </h6>
+                </a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#intro">
+                  چرا ما؟</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#courseinfo">معرفی دوره</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#topics">سر‌فصل‌ها</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#payment">شرایط و هزینه</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#license-course">گواهی نامه</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#class-location">تماس با ما</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#teachers">اساتید</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#albums">پشتیبانی پس از دوره</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#CQs">سوالات متداول</a>
+              </li>
+              <li class="list-group-item">
+                <a class="stretched-link close-modal" href="#dorms">خوابگاه</a>
+              </li>
+              <li class="list-group-item"></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------- Modal fast access End ------------------------------>
+  <div class="modal fade" id="exampleModal002" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">ثبت‌نام</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="register-form-wrap">
+            <div class="left-form">
+              <h3 class="title-form">فرم ثبت‌نام</h3>
+              <form id="register_form" class="form-wrapper" method="post">
+                {% csrf_token %}
+                <input name="operator_username" type="hidden" value="{{operator_username}}">
+                <div class="form-row">
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> نام </span>
+                      <label>
+                        <input name="name" type="text" pattern="^.{3,50}$"
+                          oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                          onchange="try{setCustomValidity('')}catch(e){}" placeholder="علی" autocomplete="off"
+                          required />
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> نام خانوادگی </span>
+                      <label>
+                        <input name="family" type="text" pattern="^.{3,50}$"
+                          oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                          onchange="try{setCustomValidity('')}catch(e){}" placeholder="محمدی" autocomplete="off"
+                          required />
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> جنسیت </span>
+                      <label>
+                        <select name="gender" class="form-control" required>
+                          <option value="" disabled selected>...</option>
+                          <option value="M">مرد</option>
+                          <option value="F">زن</option>
+                        </select>
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> نام پدر </span>
+                      <label>
+                        <input name="father_name" type="text" pattern="^.{3,50}$"
+                          oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                          onchange="try{setCustomValidity('')}catch(e){}" placeholder="محمد" autocomplete="off"
+                          required />
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> شماره ملی </span>
+                      <label>
+                        <input name="code_meli" type="text"
+                          pattern="^[0-9]{10}$|^[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{10}$|^[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{10}$"
+                          oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                          onchange="try{setCustomValidity('')}catch(e){}" autocomplete="off" placeholder="XXXXXXXXXX"
+                          required />
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                  <div class="col-lg-6 p-1">
+                    <div>
+                      <span class="required-star"> شماره تماس </span>
+                      <label>
+                        <input name="phone" type="text"
+                          pattern="^09[0-9]{9}$|^٠٩[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}$|^۰۹[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}$|^\+989[0-9]{9}$|^\+٩٨٩[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}$|^\+۹۸۹[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}$"
+                          oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                          onchange="try{setCustomValidity('')}catch(e){}" placeholder="شماره موبایل ۰۹XXXXXXXXX"
+                          autocomplete="off" required />
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                </div>
+                <div>
+                  <span class="required-star"> آدرس </span>
+                  <label>
+                    <textarea name="address" pattern="^.{10,1000}$"
+                      oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                      onchange="try{setCustomValidity('')}catch(e){}" autocomplete="off"
+                      placeholder="تهران، خیابان انقلاب، رو به روی درب اصلی دانشگاه تهران، ابتدای خیابان فخر رازی، پلاک ۸۵، طبقه چهارم، واحد ۱۰"
+                      required></textarea>
+                  </label>
+                </div>
+                <div class="form-row">
+                  <div class="col-lg-8 p-1 pl-3">
+                    <div>
+                      <span class="required-star"> زمان کلاس </span>
+                      <label>
+                        <select id="class_select" name="course" class="form-control" required>
+                          <option value="" disabled selected>...</option>
+                          {% for course in courses %}
+                          <option value="{{course.id}}">کد: {{course.id|four_digit_id}} - {{course.site_name}} -
+                            {% if course.location == "valiasr" %} شعبه ولیعصر {% elif course.location == "enghelab" %}
+                            شعبه انقلاب {% else %} نامشخص {% endif %} {% if course.teacher %} - استاد
+                            {{course.teacher.personal_info.name}} {{course.teacher.personal_info.family}} {% endif %}
+                          </option>
+                          {% endfor %}
+                        </select>
+                      </label>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                  <div class="col-lg-4 p-1">
+                    <div>
+                      <span class="required-star pb-3"> نوع پرداخت </span>
+                      <div class="form-check form-check-inline mb-2">
+                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio02"
+                          value="1" />
+                        <label class="form-check-label" for="inlineRadio02">اقساطی</label>
+                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio03"
+                          value="0" required />
+                        <label class="form-check-label" for="inlineRadio03">نقدی</label>
+                      </div>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                </div>
+                <div class="form-row mt-3">
+                  <div class="col-lg-12 p-1">
+                    <div class="btn-checkbox">
+                      <h3>
+                        کلیک بر روی «ثبت‌نام» به منزلهٔ این است که
+                        <a rel="noreferrer" target="_blank"
+                          href="{% static 'landing/files/ghavaninesiteacademymobileset.com990620.pdf' %}">
+                          قوانین و مقررات
+                        </a>
+                        را مطالعه نموده‌اید‌ و تایید می‌کنید.
+                      </h3>
+                    </div>
+                    <!--form-item-->
+                  </div>
+                </div>
+                <button type="submit" class="send-form red mt-2">ثبت نام</button>
+              </form>
+              <!--left-form-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------- Modal register End ------------------------------>
+  <div class="modal fade" id="exampleModal003" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel001"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel001">مشاوره رایگان</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="register-form-wrap">
+            <div class="left-form">
+              <h3 class="title-form">فرم مشاوره رایگان</h3>
+              <form id="consult-form" class="form-wrapper">
+                <div>
+                  <span class="required-star"> نام و نام خانوادگی </span>
+                  <label>
+                    <input name="name" type="text" pattern=".{3,100}"
+                      oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                      onchange="try{setCustomValidity('')}catch(e){}" placeholder="نام و نام خانوادگی خود را وارد کنید"
+                      autocomplete="off" required />
+                    <svg class="icon">
+                      <use xlink:href="{% static 'landing/svg/icons.svg#user-icon' %}"></use>
+                    </svg>
+                  </label>
+                </div>
+                <!--form-item-->
+                <div>
+                  <span class="required-star"> شماره تماس </span>
+                  <label>
+                    <input name="phone" type="text" pattern=".{8,15}"
+                      oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                      onchange="try{setCustomValidity('')}catch(e){}"
+                      placeholder="شماره تماس خود را وارد کنید (09XXXXXXXXX)" autocomplete="off" required />
+                    <svg class="icon phone-icon">
+                      <use xlink:href="{% static 'landing/svg/icons.svg#phone-icon' %}"></use>
+                    </svg>
+                  </label>
+                </div>
+                <label>
+                  <span> توضیحات </span>
+                  <textarea id="question2" name="question"
+                    placeholder="می‌توانید سوالات خود را از ما بپرسید.&#10;می‌توانید طریقه ارتباط ما با خودتون رو مشخص کنید ( پیام واتس اپ، تماس تلفنی، اس . ام . اس) &#10;می‌توانید بهترین بازه زمانی برای تماس را مشخص کنید.&#10;"
+                    autocomplete="off" pattern=".{0,1000}"></textarea>
+                </label>
+                <p class="success-message" style="display: none">
+                  پیغام شما با موفقیت ارسال شد در اولین فرصت کارشناسان ما با
+                  شما تماس حاصل خواهند کرد.
+                </p>
+                <p class="error-registeration" style="display: none">
+                  اشکال در ثبت اطلاعات لطفا دوباره تلاش نمایید و یا با ما تماس
+                  حاصل فرمایید.
+                </p>
+                <p class="error-phone-number-needed" style="display: none">
+                  شماره همراه اشتباه است لطفا دوباره تلاش فرمایید.
+                </p>
+                <p class="error-repeated-phone" style="display: none">
+                  شماره تلفن وارد شده تکراری است لطفا دوباره تلاش فرمایید.
+                </p>
+                <p class="error-name_needed" style="display: none">
+                  نام و نام خانوادگی وارد شده اشتباه است لطفا دوباره تلاش
+                  فرمایید.
+                </p>
+                <p class="error-server" style="display: none">
+                  مشکلی از طرف سرور رخ داده لطفا دوباره تلاش نمایید و یا با ما
+                  تماس حاصل فرمایید.
+                </p>
+                <p class="error-message" style="display: none">
+                  متاسفیم. ارتباط با سرور موفقیت آمیز نبود لطفا دوباره تلاش
+                  نمایید و یا با ما تماس حاصل فرمایید.
+                </p>
+                <button type="submit" class="send-form">
+                  درخواست مشاوره
+                </button>
+              </form>
+              <!--left-form-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------- Modal register End ------------------------------>
+  <!--------------------------- Modals End ------------------------------>
+  <!--site-wrap-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/parsley.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/parsleyjs@2.9.2/dist/i18n/fa.js"></script>
+  <script src="{% static 'landing/js/main.js' %}"></script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Academyfarda - متخصصان فردا",
+      "image": "https://academyfarda.com/static/base/media/logo/1000X1000.png",
+      "@id": "https://academymobileset.com",
+      "url": "https://academymobileset.com",
+      "telephone": "+982188894358",
+      "priceRange": "IRR",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "بالاتر از میدان ولیعصر - جنب سینمای استقلال - پلاک 1706 - طبقه 3 - آموزشگاه متخصصان فردا",
+        "addressLocality": "تهران",
+        "postalCode": "1415843877",
+        "addressCountry": "IR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 35.7140061,
+        "longitude": 51.4068358
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "09:00",
+        "closes": "20:00"
+      },
+      "sameAs": [
+        "https://www.instagram.com/academy.farda",
+        "https://t.me/academymobileset",
+        "https://twitter.com/Academymobileset",
+        "https://api.whatsapp.com/send?phone=+989228482428"
+      ]
+    }
+  </script>
+  <!-- make loadong gone -->
+  <script>
+    function removeLoading() {
+      $("body").removeClass("body-on-loading");
+      $("#loading").fadeOut(1000);
+    }
+  </script>
+</body>
+</html>
