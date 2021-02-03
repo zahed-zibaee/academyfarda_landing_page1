@@ -26,6 +26,7 @@ def normalize(data):
     res = digits.fa_to_en(not_arabic)
     return res
 
+#TODO: need a limmiter
 class CommonLanding(TemplateView):
     """for render and register in common courses"""
 
@@ -69,7 +70,6 @@ class CommonLanding(TemplateView):
         if not 10 <= len(request.POST["address"]) <= 1000:
             return HttpResponseBadRequest("bad data address")
         try:
-            print(request.POST["course"])
             course = Course.objects.get(id = int(request.POST["course"]))
             if not course.is_active():
                 HttpResponseBadRequest("course is not active")

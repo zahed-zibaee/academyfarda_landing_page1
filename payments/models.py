@@ -11,8 +11,10 @@ from django.utils.encoding import smart_unicode
 from zeep import Client
 
 from SMS.models import Verify, Sent
-
-
+from .config import PREPAYMENT_COMMON_COURSE, PAYMENT_COMMON_COURSE,\
+    PAYMENT_COMMON_COURSE_DISCOUNTED ,DISCOUNT_ON_CASH_PAYMENT,\
+    OPERATOR_DISCOUNT
+    
 #TODO: relate name for all
 #TODO: timezone awareness
 class Product(models.Model):
@@ -21,9 +23,10 @@ class Product(models.Model):
     """
     name = models.CharField(max_length=100, blank=False)
     description = models.TextField(blank=True)
-    price = models.BigIntegerField(null=False, blank=False)
+    price = models.BigIntegerField(null=False, blank=False, default=PAYMENT_COMMON_COURSE_DISCOUNTED)
     stock = models.IntegerField(default=0)
     active = models.BooleanField(default=True)
+    order = models.IntegerField(default=100)
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User)
 
@@ -50,6 +53,12 @@ class Product(models.Model):
         else:
             return False
     
+    def get_total(self):
+        if self.is_active():
+            return self.price
+        else:
+            return False
+
     def __unicode__(self):
         return smart_unicode(
             "ID: {} - name: {}".format(self.id, self.name),
@@ -68,7 +77,7 @@ class Discount(models.Model):
     name = models.CharField(max_length=100, null=False, blank=False)
     code = models.CharField(max_length=50, null=False, blank=False, unique=True)
     product = models.ManyToManyField(Product, blank=False)
-    amount = models.BigIntegerField(null=False, blank=False)
+    amount = models.BigIntegerField(null=False, blank=False, default=OPERATOR_DISCOUNT)
     expiration_time = models.DateTimeField(
         null=False, 
         blank=False, 
@@ -76,12 +85,12 @@ class Discount(models.Model):
     )
     active = models.BooleanField(default=False)
     
-    def is_active(self ,product):
+    def is_active(self ,product_id):
         """check if discount and produuct is active and not discount expired"""
         if self.expiration_time.replace(tzinfo=None) > datetime.now()\
             and self.active == True:
             try:
-                if self.product.get(id=product).active == True:
+                if self.product.get(id=product_id).active == True:
                     return True
                 else:
                     return False
@@ -90,13 +99,14 @@ class Discount(models.Model):
         else:
             return False
 
-    def get_total(self, product):
+    def get_total(self, product_id):
         """get total amount for this product with this discount"""
-        if self.is_active(product):
-            try:
-                return (self.product.get(id=product).price - self.amount)
-            except:
-                return False
+        try:
+            product = self.product.get(id=product_id)
+        except:
+            return False
+        if self.is_active(product_id) and product in self.product.all():
+            return product.price - self.amount
         else:
             return False
 
@@ -217,6 +227,7 @@ class CourseTeacher(models.Model):
 
 class CourseType(models.Model):
     name = models.CharField(max_length=20, blank=False, null=False)
+    intensive = models.BooleanField(default=False)
     duration = models.CharField(max_length=20, blank=False, null=False)
     duration_hours = models.IntegerField(default=78)
 
@@ -276,7 +287,7 @@ class CourseDay(models.Model):
 
 class Course(Product):
     """this method will manage courses witch can be bought from online shop"""
-    intensive = models.BooleanField(default=False)
+    alter_name = models.CharField(max_length=100, blank=True)
     course_type = models.ForeignKey(
         CourseType,
         related_name='course_type', 
@@ -295,13 +306,12 @@ class Course(Product):
         null=False, 
         blank=False
     )
-    start = models.DateField()
     LOCATION_CHOICES = (
-        ('valiasr', 'Valiasr'),
-        ('enghelab', 'Enghelab'),
+        ('V', 'Valiasr'),
+        ('E', 'Enghelab'),
     )
     location = models.CharField(
-        max_length=10, 
+        max_length=1, 
         choices=LOCATION_CHOICES, 
         null=False, 
         blank=False,
@@ -312,12 +322,11 @@ class Course(Product):
         null=True, 
         blank=True
     )
-    site_name = models.CharField(max_length=100, blank=False)
-    site_total_price = models.BigIntegerField(null=False, blank=False, default=2500000)
-    site_total_price_discounted = models.BigIntegerField(null=False, blank=False, default=2000000)
-    site_special_discount = models.BooleanField(default=False)
+    prepayment = models.BigIntegerField(null=False, blank=False, default=PREPAYMENT_COMMON_COURSE)
+    price_showoff = models.BigIntegerField(null=False, blank=False, default=PAYMENT_COMMON_COURSE)
+    discount_cash_payment = models.BigIntegerField(null=False, blank=False, default=DISCOUNT_ON_CASH_PAYMENT)
+    site_show_special_discount = models.BooleanField(default=False)
     site_show = models.BooleanField(default=True)
-    site_order = models.IntegerField(default=100)
     
     def week_to_start(self):
         today = date.today()
@@ -340,17 +349,21 @@ class Cart(models.Model):
     """this class will manage carts so every product and its discount need to add to this 
     model and than need to add to total so total can be calculated"""
     courses = models.ManyToManyField(Course, blank=True)
-    courses_with_discount = models.ManyToManyField(Discount, blank=True)
+    discounts = models.ManyToManyField(Discount, blank=True)
     
-    def total(self):
-        """calculate the cart total price
-        you need to change this if for new products"""
-        res = 0 
-        for course in self.courses:
-            res += course.get_total()
-        for course in self.courses_with_discount:
-            res += course.get_total()
-        return res
+    def get_total_course(self):
+        """calculate total amount for one course with or without of discount in cart"""
+        try:
+            course = self.courses.get()
+        except ValueError:
+            raise ValueError("more than one course is in the cart")
+        if len(self.discounts.all()) > 1:
+            raise ValueError("more than one discount is in the cart")
+        elif len(self.discounts.all()) < 1:
+            return course.get_total(course.id)
+        else:
+            discount = self.discounts.get()
+            return discount.get_total(course.id)
 
     def get_courses(self):
         try:
@@ -361,10 +374,10 @@ class Cart(models.Model):
         except:
             return None
 
-    def get_courses_with_discount(self):
+    def get_discounts(self):
         try:
             return smart_unicode(
-                ", ".join([str(obj.id) for obj in self.courses_with_discount.all()]),
+                ", ".join([str(obj.id) for obj in self.discounts.all()]),
                 encoding='utf-8',
                 )
         except:
@@ -375,7 +388,7 @@ class Cart(models.Model):
             "ID: {} - course ids: {} - course with discount ids: {}".format(
                 self.id, 
                 self.get_courses(), 
-                self.get_courses_with_discount()
+                self.get_discounts()
             ), 
             encoding='utf-8',
         )
@@ -385,7 +398,7 @@ class Cart(models.Model):
             "ID: {} - course ids: {} - course with discount ids: {}".format(
                 self.id, 
                 self.get_courses(), 
-                self.get_courses_with_discount()
+                self.get_discounts()
             ), 
             encoding='utf-8',
         )
@@ -468,8 +481,8 @@ class Payment(models.Model):
             self.personal_info.name + " " + self.personal_info.family
             )
         if self.cart:
-            if len(self.cart.get_courses_with_discount()) > 0:
-                res +=  "- cart: {}".format(self.cart.get_courses_with_discount())
+            if len(self.cart.get_discounts()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_discounts())
             elif len(self.cart.get_courses()) > 0:
                 res +=  "- cart: {}".format(self.cart.get_courses())
             else:
@@ -484,8 +497,8 @@ class Payment(models.Model):
             self.personal_info.name + " " + self.personal_info.family
             )
         if self.cart:
-            if len(self.cart.get_courses_with_discount()) > 0:
-                res +=  "- cart: {}".format(self.cart.get_courses_with_discount())
+            if len(self.cart.get_discounts()) > 0:
+                res +=  "- cart: {}".format(self.cart.get_discounts())
             elif len(self.cart.get_courses()) > 0:
                 res +=  "- cart: {}".format(self.cart.get_courses())
             else:

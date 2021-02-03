@@ -106,7 +106,6 @@ class Course_admin(admin.ModelAdmin):
         "teacher",
         "week_to_start_per",
         "location",
-        "intensive",
         "active",
     )
     list_display_links = ["name"]
@@ -156,14 +155,14 @@ class Payment_admin(admin.ModelAdmin):
     def get_cart_course_get_name(self, obj):
         if obj.cart and len(obj.cart.courses.all()) > 0:
             return u"" + obj.cart.courses.all().first().name
-        elif obj.cart and len(obj.cart.courses_with_discount.all()) > 0:
-            return u"" + obj.cart.courses_with_discount.all().first().name
+        elif obj.cart and len(obj.cart.discounts.all()) > 0:
+            return u"" + obj.cart.discounts.all().first().name
         else:
             return ""
 
     def get_cart_discount_code(self, obj):
-        if obj.cart and len(obj.cart.courses_with_discount.all()) == 1:
-            return u"" + obj.cart.courses_with_discount.all().first().code
+        if obj.cart and len(obj.cart.discounts.all()) == 1:
+            return u"" + obj.cart.discounts.all().first().code
         else:
             return ""
 
@@ -191,5 +190,5 @@ class Payment_admin(admin.ModelAdmin):
 
 @admin.register(Cart)
 class Cart_admin(admin.ModelAdmin):
-    list_display = ('id', "get_courses", "get_courses_with_discount")
+    list_display = ('id', "get_courses", "get_discounts")
     list_display_links = ["id"]

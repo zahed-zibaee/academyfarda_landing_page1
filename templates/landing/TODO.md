@@ -19,3 +19,4 @@
  [ ] - robots.text need to change 
  [ ] - add govahiname 2nd pic
  [ ] - change logo
+ [ ] - api map

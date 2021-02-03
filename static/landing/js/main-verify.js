@@ -1,46 +1,20 @@
-//get url parameters
-$urlParam = function (name) {
-  var results = new RegExp("[?&]" + name + "=([^&#]*)").exec(
-    window.location.href
-  );
-  if (results != null) {
-    return results[1] || 0;
-  } else {
-    return null;
-  }
-};
 //global var
+//variable def
 var discount_code = "NULL";
 var timeLeft = 0;
 var sent = false;
-var verify_id = 0;
-var course_id = decodeURIComponent($urlParam("class_time"));
 var token1 = "";
 var token2 = "";
 var connect = true;
-var total = false;
-var course = false;
-var operator = 0
-//check for operator existance
-if ($urlParam("op") > 0){
-  operator = $urlParam("op")
-}
 //function check connection
-function checkconnection(){
+function checkconnection() {
   $.ajax({
-    url: "http://127.0.0.1:8000/hi",
+    url: "/hi",
     method: "POST",
     crossDomain: true,
+    timeout: 5000,
     success: function (res) {
       if (res.ans == "hi") {
-        if(total == false){
-          get_total(false);
-          total = true;
-        }
-        if(course == false){
-          check_course_validation();
-          course = true;
-        }
         setTimeout(function () {
           $("#serverconnectionerror").removeClass("show").addClass("hide");
         }, 1);
@@ -73,194 +47,11 @@ function checkconnection(){
     },
   });
 }
-function checkconnection2(){
-  aj = $.ajax({
-    url: "http://127.0.0.1:8000/hi",
-    method: "POST",
-    crossDomain: true,
-    async: false,
-    success: function (res) {
-      if (res.ans == "hi") {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    error: function (error) {
-      return false;
-    },
-  });
-  if (aj.status == 200 && aj.responseJSON.ans == "hi") {
-    return true;
-  } else {
-    return false;
-  }
-}
 //check for connection with server
 checkconnection();
 setInterval(function () {
   checkconnection();
 }, 10000);
-//end check for server connection
-//put data to table
-$("#name").text(decodeURIComponent($urlParam("name")));
-$("#family").text(decodeURIComponent($urlParam("family")));
-if (decodeURIComponent($urlParam("gender")) == "M") {
-  $("#gender").text("مرد");
-} else {
-  $("#gender").text("زن");
-}
-$("#father_name").text(decodeURIComponent($urlParam("father_name")));
-$("#code_meli").text(
-  $.persianNumbers(decodeURIComponent($urlParam("code_meli")))
-);
-$("#phone").text($.persianNumbers(decodeURIComponent($urlParam("phone"))));
-$("#address").text($.persianNumbers(decodeURIComponent($urlParam("address"))));
-if (decodeURIComponent($urlParam("payment_type")) == "option1") {
-  $("#payment_type").text("نقدی");
-} else {
-  $("#payment_type").text("اقساط");
-}
-//back to landing page with loading off
-$("#back").click(function (e) {
-  e.preventDefault();
-  var url = "./index.html?loading=off";
-  if ($urlParam("op") > 0) {
-    url = url + "&op=" + $urlParam("op") 
-  }
-  setTimeout(function () {
-    window.location.href = url;
-  }, 200);
-});
-//numpad focus and select
-$('#num1').on("focus", function(e){
-  setTimeout(function () {
-    $('#num1').select();
-  }, 10);
-});
-$('#num2').on("focus", function(e){
-  setTimeout(function () {
-    $('#num2').select();
-  }, 10);
-});
-$('#num3').on("focus", function(e){
-  setTimeout(function () {
-    $('#num3').select();
-  }, 10);
-});
-$('#num4').on("focus", function(e){
-  setTimeout(function () {
-    $('#num4').select();
-  }, 10);
-});
-$('#num5').on("focus", function(e){
-  setTimeout(function () {
-    $('#num5').select();
-  }, 10);
-});
-$('#num6').on("focus", function(e){
-  setTimeout(function () {
-    $('#num6').select();
-  }, 10);
-});
-// Mobile Verification input
-$('#num1').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    $('#num1').val("");
-  }else {
-    setTimeout(function () {
-      $('#num2')[0].focus();
-      $('#num2').select();
-    }, 50);
-  }
-});
-$('#num2').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    if ($('#num2').val() == ""){
-      setTimeout(function () {
-        $('#num1')[0].focus();
-        $('#num1').select();
-      }, 50);
-    }else{
-      $('#num2').val("");
-    }
-  }else {
-    setTimeout(function () {
-      $('#num3')[0].focus();
-      $('#num3').select();
-    }, 50);
-  }
-});
-$('#num3').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    if ($('#num3').val() == ""){
-      setTimeout(function () {
-        $('#num2')[0].focus();
-        $('#num2').select();
-      }, 50);
-    }else{
-      $('#num3').val("");
-    }
-  }else {
-    setTimeout(function () {
-      $('#num4')[0].focus();
-      $('#num4').select();
-    }, 50);
-  }
-});
-$('#num4').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    if ($('#num4').val() == ""){
-      setTimeout(function () {
-        $('#num3')[0].focus();
-        $('#num3').select();
-      }, 50);
-    }else{
-      $('#num4').val("");
-    }
-  }else {
-    setTimeout(function () {
-      $('#num5')[0].focus();
-      $('#num5').select();
-    }, 50);
-  }
-});
-$('#num5').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    if ($('#num5').val() == ""){
-      setTimeout(function () {
-        $('#num4')[0].focus();
-        $('#num4').select();
-      }, 50);
-    }else{
-      $('#num5').val("");
-    }
-  }else {
-    setTimeout(function () {
-      $('#num6')[0].focus();
-      $('#num6').select();
-    }, 50);
-  }
-});
-$('#num6').on('keydown', function(e){
-  if(e.key === "Backspace" || e.key === "Delete"){
-    if ($('#num6').val() == ""){
-      setTimeout(function () {
-        $('#num5')[0].focus();
-        $('#num5').select();
-      }, 50);
-    }else{
-      $('#num6').val("");
-    }
-  }else {
-    setTimeout(function () {
-      var valid = check_token_validation();
-      if (valid == true){
-        pre_submit()
-      }
-    }, 100);
-  }
-});
 //check for token input validation
 function check_token_validation(){
   gettokens();
@@ -347,103 +138,6 @@ function pre_submit(){
     );
   }
 }
-/*$(function () {
-  "use strict";
-
-  var body = $("#wrapper");
-  var flag_last = false;
-
-  function goToPreviousInput(e) {
-    $("#num1")[0].focus();
-    badsmsinputremover();
-  }
-
-  function goToNextInput(e) {
-    var key = e.which,
-      t = $(e.target),
-      sib = t.next("input");
-    if (t.hasClass("last")) {
-      flag_last = true;
-      loadingadd();
-      var res_check_course_validation = check_course_validation();
-      var res_check_data_validation = check_data_validation();
-      if (
-        res_check_course_validation == true &&
-        res_check_data_validation == true
-      ) {
-        gettokens();
-        submit();
-      } else if (
-        res_check_course_validation == false &&
-        res_check_data_validation == true) {
-        loadingremove();
-        alert(
-          "دوره انتخاب شده وجود ندارد و یا غیر فعال است."
-        );
-      }else if (
-        res_check_course_validation == true &&
-        res_check_data_validation == false) {
-        loadingremove();
-        alert(
-          "اطلاعات وارد شده را بررسی کنید و یا با پشتیبانی تماس حاصل کنید."
-        );
-      }else{
-        loadingremove();
-        alert(
-          "ارور سرور در صورتی که نمیدانید چه اتفاقی افتاده با ما تماس بگیرید."
-        );
-      }
-    } else {
-      flag_last = false;
-    }
-    if (key < 48 || (key > 57 && key < 96) || key > 105) {
-      e.preventDefault();
-      return false;
-    }
-    if (key === 9) {
-      return true;
-    }
-
-    setTimeout(() => {
-      if (t[0].value.length > 1) {
-        t[0].value = t[0].value[0];
-      }
-      if (flag_last === true) {
-        return false;
-      }
-      if (t[0].value.length !== 0) {
-        sib.select().focus();
-      }
-    }, 50);
-  }
-  function onKeyDown(e) {
-    var key = e.which,
-      t = $(e.target);
-    if (t[0].value.length == 1) {
-      goToNextInput(e);
-    }
-    if (key === 8) {
-      goToPreviousInput(e);
-    }
-    if (
-      (key === 9 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105)) &&
-      (flag_last === false || $(e.target)[0].value.length === 0)
-    ) {
-      return true;
-    }
-    e.preventDefault();
-    return false;
-  }
-  function onFocus(e) {
-    $(e.target).select();
-    badsmsinputremover();
-  }
-
-  body.on("keyup", "input", goToNextInput);
-  body.on("keydown", "input", onKeyDown);
-  body.on("click", "input", onFocus);
-});
-*/
 //function sms send
 function sendsms() {
   var phone = fixNumbers($urlParam("phone"));
@@ -686,72 +380,6 @@ function loadingremove() {
     $("#loading2").addClass("force-hide");
   }, 100);
 }
-//submit all data and get payment url function
-function submit() {
-  var url = "http://127.0.0.1:8000/payments/cartcoursecreate";
-  var data =
-    "course_id=" +
-    course_id +
-    "&" +
-    "verify_id=" +
-    verify_id +
-    "&" +
-    "token1=" +
-    token1 +
-    "&" +
-    "token2=" +
-    token2 +
-    "&";
-  data =
-    data +
-    "name=" +
-    decodeURIComponent($urlParam("name")) +
-    "&" +
-    "family=" +
-    decodeURIComponent($urlParam("family")) +
-    "&";
-  data =
-    data +
-    "gender=" +
-    decodeURIComponent($urlParam("gender")) +
-    "&" +
-    "father_name=" +
-    decodeURIComponent($urlParam("father_name")) +
-    "&";
-  data =
-    data +
-    "code_meli=" +
-    decodeURIComponent(fixNumbers($urlParam("code_meli"))) +
-    "&" +
-    "address=" +
-    decodeURIComponent($urlParam("address")) +
-    "&";
-  data = data + "payment_type=" + decodeURIComponent($urlParam("payment_type"));
-  if (discount_code != "NULL") {
-    data = data + "&discount_code=" + discount_code;
-  }
-  if (operator > 0){
-    data = data + "&operator=" + operator
-  }
-  console.log(data);
-  $.ajax({
-    url: url,
-    type: "POST",
-    data: data,
-    crossDomain: true,
-    success: function (res) {
-      setTimeout(function () {
-        window.location.href = res.url;
-      }, 200);
-    },
-    error: function (e) {
-      console.log(e);
-      badsmsinput();
-      loadingremove();
-      clearsmsinput();
-    },
-  });
-}
 //count down
 function countDown() {
   timeLeft = timeLeft - 1;
@@ -798,18 +426,3 @@ $("#remove_discount").click(function(e){
   $("#discount-ans-r").removeClass("hide");
   $("#remove_discount").addClass("force-hide");
 });
-//this function will change numbers to english
-var
-persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g],
-arabicNumbers  = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g],
-fixNumbers = function (str)
-{
-  if(typeof str === 'string')
-  {
-    for(var i=0; i<10; i++)
-    {
-      str = str.replace(persianNumbers[i], i).replace(arabicNumbers[i], i);
-    }
-  }
-  return str;
-};

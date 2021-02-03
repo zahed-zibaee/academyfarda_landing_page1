@@ -51,6 +51,7 @@
   </script>
 
 </head>
+
 <body onload="removeLoading();" class="body-on-loading">
   <!-- Start Loading -->
   <div id="loading">
@@ -92,7 +93,7 @@
   <header class="site-header">
     <div class="head-item container d-flex justify-content-center justify-content-sm-between">
       <a class="col-12 col-sm-9 px-0" href="https://academymobileset.com/home-en">
-        <div class="site-logo d-flex align-items-center justify-content-center justify-content-sm-start pt-2">
+        <div class="site-logo d-flex align-items-center justify-content-center justify-content-sm-start">
           <div class="row">
             <div class="row pt-2 mb-0">
               <div class="col-4 px-0">
@@ -125,7 +126,7 @@
     </div>
     <!--head-item-->
     <div class="header-body container d-flex">
-      <div class="right-head-body col-lg-4 d-none d-md-block">
+      <div class="right-head-body col-lg-4 d-none d-md-block ">
         <img src="{% static 'landing/images/onenumber.png' %}" alt="آموزش تعمیرات موبایل در تهران" />
       </div>
       <!--right-head-body-->
@@ -401,7 +402,7 @@
                           <i class="fa fa-lg fa-calendar" aria-hidden="true"></i>
                         </div>
                         <div class="col-11 px-0 d-flex align-items-center">
-                          <h6 class="mb-0 pl-2">روز های کلاس:</h6>
+                          <h6 class="mb-0 pl-2">روزهای کلاس:</h6>
                           <span>{{course.course_day.name}}</span>
                         </div>
                       </div>
@@ -1251,12 +1252,16 @@
             </div>
             <h2 class="title-product d-flex">لیست تخفیف ‌ها</h2>
             <p>
-              توجه داشته باشید تنها می‌توانید از یکی از سه تخفیف
-              <b class="px-1">" کمیته امداد و بهزیستی "</b>
+              توجه داشته باشید تنها می‌توانید از یکی از تخفیف های
+              <b class="px-1">" کمیته امداد "</b>
+              و
+              <b class="px-1">" بهزیستی "</b>
               و
               <b class="px-1">" خانه کارگر "</b>
               و
-              <b class="px-1">" فرهنگیان و ایثارگران "</b>
+              <b class="px-1">" ایثارگران "</b>
+              و
+              <b class="px-1">" فرهنگیان "</b>
               و
               <b class="px-1">" کادر درمان "</b>
               استفاده نمایید.
@@ -1266,7 +1271,11 @@
               <span class="pr-2">۱۰۰,۰۰۰</span><span class="pr-1">تومان</span>
             </p>
             <p class="pb-1">
-              <span class="bullet2"> کمیته امداد و بهزیستی </span>
+              <span class="bullet2"> بهزیستی </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> کمیته امداد </span>
               <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
             </p>
             <p class="pb-1">
@@ -1274,7 +1283,11 @@
               <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
             </p>
             <p class="pb-1">
-              <span class="bullet2"> فرهنگیان و ایثارگران </span>
+              <span class="bullet2"> ایثارگران </span>
+              <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+            </p>
+            <p class="pb-1">
+              <span class="bullet2"> فرهنگیان </span>
               <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
             </p>
             <p class="pb-1">
@@ -2009,13 +2022,158 @@
     </div>
   </footer>
   <!-- start footer Area -->
-  {% include 'landing/partials/_footer.html' %}
+  <footer id="footer2" class="py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h3 class="h5">
+              متخصصان فردا
+              <i id="discount-ans-b" class="fa fa-heart"></i>
+            </h3>
+            <ul>
+              <li>
+                <a href="https://academymobileset.com/home-en"><i class="fa fa-home link-home pl-2"></i>خانه</a>
+              </li>
+              <li>
+                <a href="https://academymobileset.com/notifications/experts.html">اطلاعیه‌ها</a>
+              </li>
+              <li>
+                <a href="https://academymobileset.com/test-scores/motekhasesan.html">نتایج آزمون</a>
+              </li>
+              <li>
+                <a href="https://academymobileset.com/about-us-2.html">درباره ما</a>
+              </li>
+              <li>
+                <a href="https://academymobileset.com/post-formats/courses.html">دوره های ما</a>
+              </li>
+              <li>
+                <a href="https://academymobileset.com/contact-us.html">تماس با ما</a>
+              </li>
+              <li>
+                <a rel="noreferrer" target="_blank"
+                  href="{% static 'landing/files/ghavaninesiteacademymobileset.com990620.pdf' %}">قوانین و
+                  مقررات</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h3 class="h5">لینک های سریع</h3>
+            <ul>
+              <li><a href="#topics">سرفصل ها</a></li>
+              <li><a href="#payment">شرایط و هزینه ها</a></li>
+              <li><a href="#license-course">گواهی نامه</a></li>
+              <li><a href="#teachers">اساتید</a></li>
+              <li><a href="#albums">پشتیبانی پس از دوره</a></li>
+              <li><a href="#CQs">سوالات متداول</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h3 class="h5">ثبت‌نام و مشاوره</h3>
+            <ul>
+              <li>
+                <a href="#nothing" data-toggle="modal" data-target="#exampleModal002">ثبت‌نام</a>
+              </li>
+              <li>
+                <a href="#nothing" class="go-to-consult-form" data-toggle="modal" data-target="#exampleModal003">مشاوره
+                  رایگان</a>
+              </li>
+              <li>
+                <a href="#nothing" class="go-to-consult-form-1fs" data-toggle="modal" data-target="#exampleModal003">یک
+                  جلسه رایگان</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-6">
+          <div class="single-footer-widget">
+            <h3 class="h5">نماد الکترونیکی</h3>
+            <p style="font-weight: 600">E-Namaad</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-12 pl-4">
+          <div class="single-footer-widget">
+            <h3 class="h5">تماس با ما</h3>
+            <ul>
+              <li class="mb-3 d-flex align-items-center border-bottom font-light-footer">
+                <div class="col-1 p-0 mb-2 text-center">
+                  <i class="fa fa-map-marker text-red fa-2x"></i>
+                </div>
+                <div class="col-11 pl-0">
+                  <div class="d-flex justify-content-between">
+                    <p class="text-nowrap pl-2">شعبه انقلاب:</p>
+                    <p class="mb-2 text-justify">
+                      خیابان انقلاب، رو به روی درب اصلی دانشگاه تهران، ابتدای
+                      خیابان فخر رازی، پلاک ۸۵، طبقه چهارم، واحد ۱۰
+                    </p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p class="text-nowrap pl-2">شعبه ولیعصر:</p>
+                    <p class="mb-2 text-justify">
+                      بالاتر از میدان ولیعصر، جنب سینمای استقلال، پلاک ۱۷۰۶،
+                      طبقه سوم
+                    </p>
+                  </div>
+                </div>
+              </li>
+              <li class="mb-1 d-flex align-items-center border-bottom font-light-footer">
+                <div class="col-1 p-0 mb-2 text-center">
+                  <i class="fa fa-phone text-red fa-2x"></i>
+                </div>
+                <div class="col-11 pl-0">
+                  <div class="d-flex justify-content-between">
+                    <p>شعبه انقلاب:</p>
+                    <p class="mb-2">۰۲۱-۶۶۴۱۷۰۷۳</p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p>شعبه ولیعصر:</p>
+                    <p class="mb-2">۰۲۱-۸۸۸۹۴۳۵۸</p>
+                  </div>
+                </div>
+              </li>
+              <li class="mb-1 d-flex align-items-center font-light-footer py-3">
+                <div class="col-1 p-0 mb-2 text-center">
+                  <i class="fa fa-envelope text-red fa-2x" aria-hidden="true"></i>
+                </div>
+                <div class="col-11 pl-0">
+                  <div class="d-flex justify-content-between">
+                    <p>ایمیل:</p>
+                    <p class="mb-2">academyfarda2@gmail.com</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom row align-items-center justify-content-between mb-5 mb-lg-0 ltr">
+        <div class="col-md-6 col-12 footer-social">
+          <a href="https://academymobileset.com/home-en"><i class="fa fa-home link-home fa-2x"></i></a>
+          <a rel="noreferrer" target="_blank" href="https://t.me/experts_farda"><i class="fa fa-telegram fa-2x"></i></a>
+          <a rel="noreferrer" target="_blank" href="https://instagram.com/academy.farda"><i
+              class="fa fa-instagram fa-2x"></i></a>
+          <a rel="noreferrer" target="_blank" href="https://api.whatsapp.com/send?phone=+989228482428"><i
+              class="fa fa-whatsapp fa-2x"></i></a>
+        </div>
+        <p class="footer-text m-0 col-md-6 col-12 font-light-footer">
+          Copyright &copy; All rights reserved
+          <a class="text-red" href="https://academymobileset.com" rel="noreferrer" target="_blank">Academy
+            Farda</a>
+        </p>
+      </div>
+    </div>
+  </footer>
   <!-- End footer Area -->
   <!--------------------------- Toasts Start ------------------------------>
   <!-- Flexbox container for aligning the toasts -->
   <div class="toasts" aria-live="alert" aria-atomic="true" class="d-flex justify-content-center align-items-center">
     <!-- Then put toasts within -->
-    <div id="toast" class="col-12 px-0 toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="15000">
+    <div id="toast" class="col-12 px-0 toast fade hide" role="alert" aria-live="assertive" aria-atomic="true"
+      data-delay="15000">
       <div class="toast-header">
         <strong id="toast-header" class="ml-auto">خطا</strong>
         <button type="button" class="close" data-dismiss="toast" aria-label="Close">
@@ -2023,7 +2181,9 @@
         </button>
       </div>
       <div id="toast-body" class="toast-body">
-        توضیحات خطا توضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطا
+        توضیحات خطا توضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات
+        خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات
+        خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطا
       </div>
     </div>
   </div>
@@ -2226,11 +2386,10 @@
                     <div>
                       <span class="required-star pb-3"> نوع پرداخت </span>
                       <div class="form-check form-check-inline mb-2">
-                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio02"
-                          value="1" />
+                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio02" value="1" />
                         <label class="form-check-label" for="inlineRadio02">اقساطی</label>
-                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio03"
-                          value="0" required />
+                        <input class="form-check-input" type="radio" name="payment_type" id="inlineRadio03" value="0"
+                          required />
                         <label class="form-check-label" for="inlineRadio03">نقدی</label>
                       </div>
                     </div>
@@ -2406,4 +2565,5 @@
     }
   </script>
 </body>
+
 </html>
