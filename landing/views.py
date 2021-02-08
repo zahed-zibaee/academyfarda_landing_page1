@@ -11,7 +11,7 @@ from django.contrib.auth import get_user_model
 
 #change theese to app name ...
 from SMS.models import Verify, Sent
-from payments.models import Course, Payment, Cart, PersonalInformation
+from payments.models import Course, Payment, Cart, PersonalInformation, Student
 
 User = get_user_model()
 
@@ -75,11 +75,18 @@ class CommonLanding(TemplateView):
                 HttpResponseBadRequest("course is not active")
         except:
             return HttpResponseNotFound("course not found")
-        if not (request.POST["payment_type"] == "0" or request.POST["payment_type"] == "1"):
+        if not (request.POST["discount_cash"] == "0" or request.POST["discount_cash"] == "1"):
             return HttpResponseBadRequest("bad data payment_type")
+        else:
+            if request.POST["discount_cash"] == "1":
+                discount_cash = True
+            else:
+                discount_cash = False
         # make payment object for tracking lead
         payment = Payment.objects.create(
             cart = Cart.objects.create(
+                _type = "0",
+                discount_cash = discount_cash,
             ), 
             # only make a verification object for later
             verification = Verify.objects.create(
@@ -88,7 +95,8 @@ class CommonLanding(TemplateView):
                 )
             ), 
             # save personal info for get lead if register not complete
-            personal_info = PersonalInformation.objects.create(
+            student = Student.objects.create(
+                PersonalInformation.objects.create(
                 name = request.POST["name"],
                 family = request.POST["family"],
                 gender = request.POST["gender"],
@@ -96,10 +104,9 @@ class CommonLanding(TemplateView):
                 code_meli = request.POST["code_meli"],
                 phone_number = request.POST["phone"],
                 address = request.POST["address"],
-            ), 
-            payment_type = int(request.POST["payment_type"]),
+                    ), 
+                ),
             # this total is for only course registration price not discount included
-            total = course.price,
         )
         # add course to cart
         # if discount added we need to remove this from cart

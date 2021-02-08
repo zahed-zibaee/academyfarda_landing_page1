@@ -57,8 +57,8 @@ class CourseTime_admin(admin.ModelAdmin):
     list_display_links = ['name',]
 
 
-@admin.register(CourseTeacher)
-class CourseTeacher_admin(admin.ModelAdmin):
+@admin.register(Teacher)
+class Teacher_admin(admin.ModelAdmin):
 
     def personal_info_get_name(self, obj):
         if obj.personal_info:
@@ -100,9 +100,9 @@ class Course_admin(admin.ModelAdmin):
         'id', 
         "name", 
         "price",
-        "course_type", 
-        "course_day", 
-        "course_time",
+        "_type", 
+        "day", 
+        "time",
         "teacher",
         "week_to_start_per",
         "location",
@@ -129,14 +129,14 @@ class Payment_admin(admin.ModelAdmin):
         self.message_user(request, "%s sent." % message_bit)
     
     def personal_info_get_name(self, obj):
-        if obj.personal_info:
-            return u"" + obj.personal_info.name + " " + obj.personal_info.family 
+        if obj.student:
+            return u"" + obj.student.personal_info.name + " " + obj.student.personal_info.family 
         else:
             return ""
 
     def personal_info_get_phone(self, obj):
         if obj.personal_info:
-            return u"" + obj.personal_info.phone_number
+            return u"" + obj.student.personal_info.phone_number
         else:
             return ""
             
@@ -179,7 +179,7 @@ class Payment_admin(admin.ModelAdmin):
                     "operator_get_name", "total", "get_date",\
                     "get_time", "status", "ref_id", "send_receipt")
     list_display_links = ["personal_info_get_name"]
-    raw_id_fields = ("verification","cart","personal_info","operator")
+    raw_id_fields = ("verification","cart","student","operator")
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'status',
