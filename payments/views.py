@@ -106,47 +106,7 @@ def verify_zarinpal_payment(request):
     else:
         return HttpResponseNotAllowed("bad request.")
 
-@ratelimit(key='ip', rate='60/d')
-@csrf_exempt
-def get_course_total(request):
-    """this method will check if discount exist and valid or returns course amount
-    it return status code and amount
-    """
-    if request.method == 'POST' and 'course_id' in request.POST.keys():
-        if Course.objects.filter(id = request.POST['course_id']).exists():
-            course = Course.objects.get(id = request.POST['course_id'])
-        else:
-            return HttpResponseNotFound("course not found")
-        if 'discount_code' in request.POST.keys():
-            discount_code = normalize(request.POST['discount_code'])
-            if Discount.objects.filter(code = discount_code).exists() and\
-                Discount.objects.filter(code = discount_code).first().is_active(course.id):
-                discount = Discount.objects.filter(code = discount_code).first()
-                total = discount.get_total(course.id)
-                return JsonResponse({'total':total})
-            else:
-                return HttpResponseNotFound("code not found")
-        else:
-            return JsonResponse({'total':course.price})
-    else:
-        return HttpResponseBadRequest("bad request")
 
-@csrf_exempt
-def check_course(request):
-    """this method will check if course exist and active
-    it return active true or false
-    """
-    if request.method == 'POST' and 'course_id' in request.POST.keys():
-        if Course.objects.filter(id = request.POST['course_id']).exists():
-            course = Course.objects.get(id = request.POST['course_id'])
-        else:
-            return HttpResponseNotFound("course not found")
-        if course.active == True:
-            return JsonResponse({'active':'true','name':course.name})
-        else:
-            return JsonResponse({'active':'false','name':course.name})
-    else:
-        return HttpResponseBadRequest("bad request")
 
 
 @csrf_exempt
