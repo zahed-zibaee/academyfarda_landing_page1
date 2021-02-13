@@ -5,6 +5,7 @@ from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServer
 from .models import Sent, Verify
 from persiantools import digits
 from datetime import datetime,timedelta
+from django.utils import timezone
 from random import randint
 from django.views.decorators.csrf import csrf_exempt
 from ratelimit.decorators import ratelimit
@@ -23,7 +24,6 @@ def normalize(string):
     return res
 
 @ratelimit(key='ip', rate='30/d')
-@csrf_exempt
 def lookup(request):
     """this is a view to send sms authenticator to phone
     this POST request need ip address and phone number and returns status and verify id
@@ -34,35 +34,33 @@ def lookup(request):
         if Verify.objects.filter(
             sent__receptor = phone, 
             sent__created_date__lt = datetime.now(), 
-            sent__created_date__gt = datetime.now() + timedelta(minutes=-1)
-        ).exists():
+            sent__created_date__gt = datetime.now()
+            ).exists():
             return HttpResponseServerError(
                 "not allowed to make more than one message every minute"
             )
         #if in last 9 min we had a message we can resend it
         elif Verify.objects.filter(
             sent__receptor = phone, 
-            sent__created_date__lt = datetime.now() + timedelta(minutes=-1), 
-            sent__created_date__gt = datetime.now() + timedelta(minutes=-10)
+            sent__created_date__lt = datetime.now(), 
+            sent__created_date__gt = datetime.now()
             ).exists():
                 sms = Verify.objects.filter(
                 sent__receptor = phone, 
-                sent__created_date__lt = datetime.now() + timedelta(minutes=-1), 
-                sent__created_date__gt = datetime.now() + timedelta(minutes=-10)
+                sent__created_date__lt = datetime.now(), 
+                sent__created_date__gt = datetime.now()
                 ).last()
                 status = sms.send()
                 return JsonResponse(
                     {
-                        'status':status,
-                        'id':sms.id,
-                        'status_message':STATUS_CODES[str(status)]
+                        'status': status,
+                        'id': sms.id,
+                        'status_message': STATUS_CODES[str(status)]
                     }
                 )
         else:
             sms = Verify.objects.create(
                 sent = Sent.objects.create(receptor = phone),
-                token1=''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),
-                token2 = ''.join(["{}".format(randint(0, 9)) for num in range(0, 3)]),
             )
             sms.save()
             status = sms.send()

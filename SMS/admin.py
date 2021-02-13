@@ -2,12 +2,22 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
+from persiantools.jdatetime import JalaliDateTime
+
 from .models import * 
-from time import sleep
 
 
 @admin.register(Sent)
 class Sent_admin(admin.ModelAdmin):
+
+    def get_jalali_send_date(self, obj):
+        return JalaliDateTime(obj.send_date).strftime("%Y/%m/%d %H:%M:%S")
+
+    def get_status_code(self, obj):
+        try:
+            return obj.get_status_code_display()
+        except:
+            return obj.status_code
 
     def check_sms_status(self, request, queryset):
         rows_updated = 0
@@ -25,15 +35,38 @@ class Sent_admin(admin.ModelAdmin):
         if rows_updated == 1:
             message_bit = "1 status was"
         elif rows_updated == 0:
-            message_bit = "0 statuses was"
+            message_bit = "0 status was"
         else:
             message_bit = "%s statuses were" % rows_updated
         self.message_user(request, "%s successfully updated." % message_bit)
-        
-    check_sms_status.short_description = "Check selected SMS status"
-    list_display = ('id',"user",'receptor',"message","created_date","gone","get_status_display")
+
+    def resend_sms(self, request, queryset):
+        rows_updated = 0
+        for item in queryset:
+            item.send()
+            rows_updated += 1
+        if rows_updated == 1:
+            message_bit = "1 SMS successfully sent"
+        elif rows_updated == 0:
+            message_bit = "0 SMS sent"
+        else:
+            message_bit = "%s SMSs were" % rows_updated
+        self.message_user(request, "%s successfully sent." % message_bit)
+
+    get_status_code.short_description="Send date time"
+    get_jalali_send_date.short_description="Send date time"
+    resend_sms.short_description = "Send or Resend selected SMSs"
+    check_sms_status.short_description = "Check selected SMSs status"
+    list_display = (
+        'id',
+        "user",
+        'receptor',
+        "message",
+        "get_jalali_send_date",
+        "gone","get_status_code"
+        )
     list_display_links = ['user','receptor']
-    actions = [check_sms_status]
+    actions = [check_sms_status, resend_sms]
 
 @admin.register(Verify)
 class Verify_admin(admin.ModelAdmin):

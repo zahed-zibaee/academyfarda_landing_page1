@@ -10,7 +10,7 @@ from .models import *
 
 @admin.register(Discount)
 class Discount_admin(admin.ModelAdmin):
-    list_display = ('id', "name", "code", "amount", "expiration_time", "active")
+    list_display = ('id', "name", "code", "amount", "expiration_date", "active")
     list_display_links = ["name"]
 
 
@@ -100,8 +100,8 @@ class Course_admin(admin.ModelAdmin):
         'id', 
         "name", 
         "price",
-        "_type", 
-        "day", 
+        "course_type", 
+        "days", 
         "time",
         "teacher",
         "week_to_start_per",
@@ -129,13 +129,13 @@ class Payment_admin(admin.ModelAdmin):
         self.message_user(request, "%s sent." % message_bit)
     
     def personal_info_get_name(self, obj):
-        if obj.student:
+        if obj.student and obj.student.personal_info:
             return u"" + obj.student.personal_info.name + " " + obj.student.personal_info.family 
         else:
             return ""
 
     def personal_info_get_phone(self, obj):
-        if obj.personal_info:
+        if obj.student and obj.student.personal_info:
             return u"" + obj.student.personal_info.phone_number
         else:
             return ""
@@ -155,14 +155,14 @@ class Payment_admin(admin.ModelAdmin):
     def get_cart_course_get_name(self, obj):
         if obj.cart and len(obj.cart.courses.all()) > 0:
             return u"" + obj.cart.courses.all().first().name
-        elif obj.cart and len(obj.cart.discounts.all()) > 0:
-            return u"" + obj.cart.discounts.all().first().name
+        elif obj.cart and len(obj.cart.discount_codes.all()) > 0:
+            return u"" + obj.cart.discount_codes.all().first().name
         else:
             return ""
 
     def get_cart_discount_code(self, obj):
-        if obj.cart and len(obj.cart.discounts.all()) == 1:
-            return u"" + obj.cart.discounts.all().first().code
+        if obj.cart and len(obj.cart.discount_codes.all()) == 1:
+            return u"" + obj.cart.discount_codes.all().first().code
         else:
             return ""
 
@@ -190,5 +190,5 @@ class Payment_admin(admin.ModelAdmin):
 
 @admin.register(Cart)
 class Cart_admin(admin.ModelAdmin):
-    list_display = ('id', "get_courses", "get_discounts")
+    list_display = ('id', "get_courses", "get_discount_codes")
     list_display_links = ["id"]

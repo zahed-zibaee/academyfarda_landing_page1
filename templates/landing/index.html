@@ -364,7 +364,7 @@
                   </div>
                   <div class="card-img-overlay">
                     <img
-                      src="{% if course.course_time.start|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.course_time.start|time:"H:i" == "13:00" %} {% elif course.course_time.start|time:"H:i" == "17:00" %} {% else %} {% endif %}"
+                      src="{% if course.course_time.start_date|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.course_time.start_date|time:"H:i" == "13:00" %} {% elif course.course_time.start_date|time:"H:i" == "17:00" %} {% else %} {% endif %}"
                       alt="">
                     <div class="row m-0">
                       <div class="col d-flex justify-content-between align-items-center text-nowrap text-muted">
@@ -372,7 +372,7 @@
                           <i class="fa fa-clock-o px-1 pb-1" aria-hidden="true"></i>
                           <span class="mb-0">شروع دوره: </span>
                           <span class="px-1">
-                            {{course.start|date:"Y-m-d"|weeks_date_to_string}}
+                            {{course.start_date|date:"Y-m-d"|weeks_date_to_string}}
                           </span>
                         </div>
                         <div>
@@ -393,8 +393,8 @@
                         </div>
                         <div class="col-11 px-0 d-flex align-items-center">
                           <h6 class="mb-0 pl-2">محل برگزاری:</h6>
-                          <span>{% if course.location == "valiasr" %} شعبه ولیعصر
-                            {% elif course.location == "enghelab" %} شعبه انقلاب {% else %} نا‌مشخص {% endif %}</span>
+                          <span>{% if course.location == "V" %} شعبه ولیعصر
+                            {% elif course.location == "E" %} شعبه انقلاب {% else %} نا‌مشخص {% endif %}</span>
                         </div>
                       </div>
                       <div class="row py-2">
@@ -403,7 +403,7 @@
                         </div>
                         <div class="col-11 px-0 d-flex align-items-center">
                           <h6 class="mb-0 pl-2">روزهای کلاس:</h6>
-                          <span>{{course.course_day.name}}</span>
+                          <span>{{course.days.name}}</span>
                         </div>
                       </div>
                       <div class="row py-2">
@@ -412,7 +412,7 @@
                         </div>
                         <div class="col-11 px-0 d-flex align-items-center">
                           <h6 class="mb-0 pl-2">طول دوره:</h6>
-                          <span>{{course.course_type.duration}} ({{course.course_type.duration_hours|persian_numbers}}
+                          <span>{{course.course_type.duration_text}} ({{course.course_type.duration|persian_numbers}}
                             ساعت)</span>
                         </div>
                       </div>
@@ -422,7 +422,7 @@
                         </div>
                         <div class="col-11 px-0 d-flex align-items-center">
                           <h6 class="mb-0 pl-2">پیش پرداخت:</h6>
-                          <span>{{course.price|toman_to_hezartoman|persian_numbers}} هزار تومان</span>
+                          <span>{{course.prepayment|toman_to_hezartoman|persian_numbers}} هزار تومان</span>
                         </div>
                       </div>
                       <div class="row py-2">
@@ -441,8 +441,8 @@
                         <div class="col-10 px-0 d-flex align-items-center">
                           <h6 class="h4 mb-0 pl-2 pr-1">شهریه:</h6>
                           <span
-                            class="text-muted linethrough">{{course.site_total_price|money_comma|persian_numbers}}</span>
-                          <b class="px-2">{{course.site_total_price_discounted|money_comma|persian_numbers}} تومان</b>
+                            class="text-muted linethrough">{{course.price_showoff|money_comma|persian_numbers}}</span>
+                          <b class="px-2">{{course.price|money_comma|persian_numbers}} تومان</b>
                         </div>
                       </div>
                     </div>
@@ -2344,7 +2344,7 @@
                       <span class="required-star"> شماره تماس </span>
                       <label>
                         <input name="phone" type="text"
-                          pattern="^09[0-9]{9}$|^٠٩[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}$|^۰۹[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}$|^\+989[0-9]{9}$|^\+٩٨٩[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}$|^\+۹۸۹[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}$"
+                          pattern="^(\+98|0|\+۹۸|۰)(9|۹)([٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}|[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}|[0-9]{9})$"
                           oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
                           onchange="try{setCustomValidity('')}catch(e){}" placeholder="شماره موبایل ۰۹XXXXXXXXX"
                           autocomplete="off" required />
@@ -2386,9 +2386,9 @@
                     <div>
                       <span class="required-star pb-3"> نوع پرداخت </span>
                       <div class="form-check form-check-inline mb-2">
-                        <input class="form-check-input" type="radio" name="discount_cash" id="inlineRadio02" value="0" />
+                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio02" value="0" />
                         <label class="form-check-label" for="inlineRadio02">اقساطی</label>
-                        <input class="form-check-input" type="radio" name="discount_cash" id="inlineRadio03" value="1"
+                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio03" value="1"
                           required />
                         <label class="form-check-label" for="inlineRadio03">نقدی</label>
                       </div>

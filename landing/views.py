@@ -6,6 +6,7 @@ from re import compile as re_compile
 from django.http import HttpResponseBadRequest, \
     HttpResponseNotFound, HttpResponseRedirect
 from django.views.generic import TemplateView
+from datetime import datetime
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
@@ -38,7 +39,7 @@ class CommonLanding(TemplateView):
         except:
             operator = None
         # show all courses by site_order
-        courses = Course.objects.filter(active=True, site_show=True).order_by("site_order")
+        courses = Course.objects.filter(active=True, site_show=True).order_by("order")
         # pass courses to show in landing and operator for tracking for registration
         data = {"courses": courses, "operator_username": operator}
         return render(request, 'landing/index.html', context = data)
@@ -75,18 +76,18 @@ class CommonLanding(TemplateView):
                 HttpResponseBadRequest("course is not active")
         except:
             return HttpResponseNotFound("course not found")
-        if not (request.POST["discount_cash"] == "0" or request.POST["discount_cash"] == "1"):
+        if not (request.POST["installment"] == "0" or request.POST["installment"] == "1"):
             return HttpResponseBadRequest("bad data payment_type")
         else:
-            if request.POST["discount_cash"] == "1":
-                discount_cash = True
+            if request.POST["installment"] == "1":
+                installment = True
             else:
-                discount_cash = False
+                installment = False
         # make payment object for tracking lead
         payment = Payment.objects.create(
             cart = Cart.objects.create(
-                _type = "0",
-                discount_cash = discount_cash,
+                cart_type = "0",
+                installment = installment,
             ), 
             # only make a verification object for later
             verification = Verify.objects.create(
@@ -96,7 +97,7 @@ class CommonLanding(TemplateView):
             ), 
             # save personal info for get lead if register not complete
             student = Student.objects.create(
-                PersonalInformation.objects.create(
+                personal_info = PersonalInformation.objects.create(
                 name = request.POST["name"],
                 family = request.POST["family"],
                 gender = request.POST["gender"],
@@ -104,8 +105,10 @@ class CommonLanding(TemplateView):
                 code_meli = request.POST["code_meli"],
                 phone_number = request.POST["phone"],
                 address = request.POST["address"],
+                birthday = datetime(1621, 3, 21)
                     ), 
                 ),
+                total = 0,
             # this total is for only course registration price not discount included
         )
         # add course to cart
