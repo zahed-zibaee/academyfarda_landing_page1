@@ -3529,67 +3529,25 @@ input[type="number"]::-webkit-outer-spin-button {
   padding-left: 5px;
 }
 
-#wrapper {
-  font-family: Lato;
-  font-size: 1.5rem;
+#wrong-code {
   text-align: center;
-  box-sizing: border-box;
-  color: #333;
 }
 
-#wrapper h3 {
-  margin: 0 0 10px;
-  padding: 0;
-  line-height: 1.25;
+#token {
+  font-family: isans;
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 11px;
+  background-color: #eee;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center; 
 }
 
-#wrapper #form {
-  max-width: 480;
-}
-
-#wrapper #form input {
-  margin: 0 3px;
-  text-align: center;
-  line-height: 50px;
-  font-size: 28px;
-  border: solid 1px #ccc;
-  box-shadow: 0 0 5px #ccc inset;
-  outline: 0;
-  width: 10%;
-  transition: all 0.2s ease-in-out;
-  border-radius: 3px;
-}
-
-#wrapper #form input:focus {
-  border-color: #1831d1;
-  box-shadow: 0 0 5px #1831d1 inset;
-}
-
-#wrapper #form input::selection {
-  background: 0 0;
-  color: #000;
-}
-
-#discount-ans-g {
-  color: green !important;
-}
-
-#discount-ans-b {
-  color: red !important;
-}
-
-#discount-ans-r {
-  color: green !important;
-}
-
-#open-discount {
-  display: block;
-  font-family: Yekan;
-  font-size: 1.5rem;
-  font-weight: 700;
-  padding-right: 1rem;
-  margin-bottom: 2rem;
-  color: #3303e2;
+#token.bad {
+  border-color: #d11818;
+  box-shadow: 0 0 5px #d11818 inset;
 }
 
 #loading2 {
@@ -3828,11 +3786,6 @@ footer#footer2 {
 
 .linethrough {
   text-decoration: line-through !important;
-}
-
-#wrapper #form input.bad {
-  border-color: #d11818;
-  box-shadow: 0 0 5px #d11818 inset;
 }
 
 .job-condition-wrap {
@@ -4083,12 +4036,19 @@ i.fa-white {
   border-top-right-radius: calc(0.25rem - 1px);
 }
 
+.discount-status .red,
 .toast-header .red {
   color: red;
 }
 
+.discount-status .green,
 .toast-header .green {
   color: green;
+}
+
+.discount-status .orange,
+.toast-header .orange {
+  color: darkorange;
 }
 
 .toast-body {
@@ -4190,16 +4150,97 @@ i.fa-white {
   color: #2400a5;
 }
 
-.redplaceholder::placeholder {
-  color:#ff327d96;
-  font-weight: bold;
-  font-family: Yekan;
-}
-
 .fw-900 {
   font-weight: 900;
 }
 
 .text-black {
   color: #000;
+}
+
+.tokenfield {
+  height: auto;
+  direction: rtl;
+  text-align: right;
+  min-height: 42px;
+  padding-bottom: 4px;
+}
+.tokenfield.focus {
+  border-color: #3700ff;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px #3700ff7b;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px #3700ff7b;
+}
+.tokenfield .token {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  display: inline-block;
+  border: 1px solid #06007454;
+  background-color: #f0f0f051;
+  white-space: nowrap;
+  margin: 0px -2px 0 20px;
+  padding: 1px 5px 1px 5px;
+  height: 28px;
+  vertical-align: middle;
+  cursor: default;
+}
+.tokenfield .token:hover {
+  border-color: #07005795;
+}
+
+.tokenfield .token:hover .close{
+  color: #ff0000;
+  opacity: 1;
+}
+
+.tokenfield .token .token-label {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px 7px;
+  vertical-align: middle;
+}
+.tokenfield .token .close {
+  font-family: Arial;
+  display: inline-block;
+  line-height: 100%;
+  font-size: 1.3em;
+  line-height: 1.25em;
+  float: none;
+  height: 100%;
+  vertical-align: middle;
+}
+.tokenfield .token-input {
+  background: none;
+  width: 60px;
+  min-width: 60px;
+  border: 0;
+  padding: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  height: 100%;
+  line-height: 23px;
+  vertical-align: middle;
+  font-weight: bold;
+  font-family: Yekan;
+  margin: -5px;
+}
+.tokenfield .token-input:focus {
+  border-color: transparent;
+  outline: 0;
+  /* IE6-9 */
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.close:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+.tokenfield .token-input::placeholder {
+  color:#ff9000;
+  font-weight: bold;
+  font-family: Yekan;
 }

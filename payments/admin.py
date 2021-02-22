@@ -192,3 +192,7 @@ class Payment_admin(admin.ModelAdmin):
 class Cart_admin(admin.ModelAdmin):
     list_display = ('id', "get_courses", "get_discount_codes")
     list_display_links = ["id"]
+
+@admin.register(Student)
+class Student_admin(admin.ModelAdmin):
+    pass

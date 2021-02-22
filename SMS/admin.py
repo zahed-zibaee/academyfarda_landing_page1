@@ -11,7 +11,9 @@ from .models import *
 class Sent_admin(admin.ModelAdmin):
 
     def get_jalali_send_date(self, obj):
-        return JalaliDateTime(obj.send_date).strftime("%Y/%m/%d %H:%M:%S")
+        return  JalaliDateTime(
+            obj.send_date.astimezone(timezone.get_default_timezone())
+            ).strftime("%Y/%m/%d %H:%M:%S")
 
     def get_status_code(self, obj):
         try:
@@ -53,7 +55,7 @@ class Sent_admin(admin.ModelAdmin):
             message_bit = "%s SMSs were" % rows_updated
         self.message_user(request, "%s successfully sent." % message_bit)
 
-    get_status_code.short_description="Send date time"
+    get_status_code.short_description="Status"
     get_jalali_send_date.short_description="Send date time"
     resend_sms.short_description = "Send or Resend selected SMSs"
     check_sms_status.short_description = "Check selected SMSs status"

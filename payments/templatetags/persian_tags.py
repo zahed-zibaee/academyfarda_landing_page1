@@ -5,6 +5,9 @@ from django.utils.encoding import smart_unicode
 from datetime import date, datetime
 from django import template
 from persiantools import digits
+from persiantools.jdatetime import JalaliDateTime
+from django.utils import timezone
+
 
 register = template.Library()
 
@@ -33,7 +36,10 @@ def weeks_date_to_string(string):
 @register.filter
 def persian_numbers(string):  
     res = digits.en_to_fa(str(string))
-    return  smart_unicode(res, encoding="utf-8")
+    try:
+        return smart_unicode(res, encoding="utf-8")
+    except:
+        return ""
 
 @register.filter
 def toman_to_hezartoman(integer):
@@ -44,9 +50,12 @@ def toman_to_hezartoman(integer):
 
 @register.filter
 def money_comma(data):
-    integer = int(data)
-    return ('{:,}'.format(integer))
-        
+    try:
+        integer = int(data)
+        return ('{:,}'.format(integer))
+    except:
+        return ""
+
 @register.filter
 def four_digit_id(id_string):
     id_string = str(id_string)
@@ -56,3 +65,29 @@ def four_digit_id(id_string):
         zeros += "0"
     res = zeros + id_string
     return res
+
+@register.filter
+def eight_digit_id(id_string):
+    id_string = str(id_string)
+    zero_needed = 8 - len(id_string)
+    zeros = ""
+    for _ in range(zero_needed):
+        zeros += "0"
+    res = zeros + id_string
+    return res
+
+@register.filter
+def jalali_date(date):
+    if not isinstance(date, datetime):
+        return ""
+    return JalaliDateTime(
+        date.astimezone(timezone.get_default_timezone())
+        ).strftime("%Y/%m/%d")
+
+@register.filter
+def jalali_time(date):
+    if not isinstance(date, datetime):
+        return ""
+    return JalaliDateTime(
+        date.astimezone(timezone.get_default_timezone())
+        ).strftime("%H:%M:%S")

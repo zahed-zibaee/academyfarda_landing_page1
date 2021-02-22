@@ -1,21 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
-from .models import Sent, Verify
+from re import compile as re_compile
 from persiantools import digits
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from django.utils import timezone
-from random import randint
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from ratelimit.decorators import ratelimit
+from django.shortcuts import get_object_or_404
 
+from .models import Sent, Verify
 from .statuscode import STATUS_CODES
 
-
-#TODO: add logging of admin to view
-#TODO: add limitter
-#TODO: add validation
 def normalize(string):
     """this methode will check for arabic charecter and will convert them
     to persian and than change persian numerics to english one"""
@@ -23,53 +20,38 @@ def normalize(string):
     res = digits.fa_to_en(not_arabic)
     return res
 
-@ratelimit(key='ip', rate='30/d')
+@ratelimit(key='header:x-cluster-client-ip', rate='15/d', block=True, method=['POST'])
 def lookup(request):
     """this is a view to send sms authenticator to phone
     this POST request need ip address and phone number and returns status and verify id
     """
-    if request.method == 'POST' and 'phone' in request.POST.keys():
-        phone = normalize(request.POST['phone'])
-        #exist in last min
-        if Verify.objects.filter(
-            sent__receptor = phone, 
-            sent__created_date__lt = datetime.now(), 
-            sent__created_date__gt = datetime.now()
-            ).exists():
-            return HttpResponseServerError(
+    if request.method == 'POST' and 'verification_id' in request.POST.keys():
+        verification_id = normalize(request.POST['verification_id'])
+        verification = get_object_or_404(Verify, id = verification_id)
+        now = timezone.make_aware(
+                datetime.now(), 
+                timezone.get_default_timezone()
+                )
+        last_min = now + timedelta(minutes=-1)
+        last_ten_min = now + timedelta(minutes=-10)
+        if last_min < verification.sent.send_date < now:
+            return HttpResponseForbidden(
                 "not allowed to make more than one message every minute"
             )
-        #if in last 9 min we had a message we can resend it
-        elif Verify.objects.filter(
-            sent__receptor = phone, 
-            sent__created_date__lt = datetime.now(), 
-            sent__created_date__gt = datetime.now()
-            ).exists():
-                sms = Verify.objects.filter(
-                sent__receptor = phone, 
-                sent__created_date__lt = datetime.now(), 
-                sent__created_date__gt = datetime.now()
-                ).last()
-                status = sms.send()
-                return JsonResponse(
-                    {
-                        'status': status,
-                        'id': sms.id,
-                        'status_message': STATUS_CODES[str(status)]
-                    }
-                )
+        #if in last 10 min we had a message we can resend it
+        elif last_ten_min < verification.sent.send_date < now:
+                status = verification.send()
+                if status != 200:
+                    return HttpResponseServerError("Kavehnegar api does not woek properly with error code: " + status)
+                else:
+                    return JsonResponse({})
         else:
-            sms = Verify.objects.create(
-                sent = Sent.objects.create(receptor = phone),
-            )
-            sms.save()
-            status = sms.send()
-            return JsonResponse(
-                {
-                    'status':status,
-                    'id':sms.id,
-                    'status_message':STATUS_CODES[str(status)]
-                 }
-            )
+            verification.save()
+            verification.start()
+            status = verification.send()
+            if status != 200:
+                return HttpResponseServerError("Kavehnegar api does not woek properly with error code: " + status)
+            else:
+                return JsonResponse({})
     else:
         return HttpResponseBadRequest("bad request")

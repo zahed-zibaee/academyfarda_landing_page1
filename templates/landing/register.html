@@ -139,27 +139,38 @@
               <h6>{{ payment.cart.courses.get.teacher.personal_info.name }} {{ payment.cart.courses.get.teacher.personal_info.family }}</h5>
             </div>
             <h5 class="title-product col-12 pt-4">پرداخت</h3>
-            <form class="col-12 px-0 pb-4" id="form-discount">
+            <form class="col-12 px-0 pb-3">
               <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6 d-flex justify-content-center align-content-center">
-                  
-                  <input id="input-discount" class="form-control redplaceholder mx-2" type="text" placeholder="کد تخفیف"/>
+                  <input 
+                    id="input-discount-code" 
+                    name="discount_code" 
+                    class="form-control redplaceholder mx-2" 
+                    type="text" 
+                    placeholder="کد تخفیف" 
+                    pattern="^.+$"
+                    oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
+                    onchange="try{setCustomValidity('')}catch(e){}"
+                    required
+                  />
                   <button id="check_discount" class="btn btn-orange mx-2">
                     اعمال کد
-                  </button>
-                  <button id="remove_discount" class="btn btn-danger mx-1 force-hide">
-                    X
                   </button>
                 </div>
               </div>
             </form>
+            <div class="discount-status col-12 d-flex justify-content-center pb-4">
+              <span id="discount-success" class="green hide">کد تخفیف با موفقیت اعمال شد.</span>
+              <span id="discount-unsuccess" class="red hide">کد تخفیف اشتباه است.</span>
+              <span id="discount-delete-success" class="orange hide">کد تخفیف با موفقیت حذف شد.</span>
+            </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">شهریه دوره:</h5>
-              <h6 >  <span class="linethrough px-1">{{ payment.cart.courses.get.price_showoff|money_comma|persian_numbers }}</span class="fw-900"> {{ payment.cart.total|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span></h6>
+              <h6 >  <span class="linethrough px-1">{{ payment.cart.courses.get.price_showoff|money_comma|persian_numbers }}</span class="fw-900"> {{ total|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h6>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">پیش پرداخت:</h5>
-              <h6>{{ payment.cart.prepayment|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span></h5>
+              <h6>{{ prepayment|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">نوع پرداخت:</h5>
@@ -167,36 +178,41 @@
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">تخفیف نوع پرداخت:</h5>
-              <h6>{% if payment.cart.installment == True %} ۰ {% else %} {{ payment.cart.courses.get.discount_cash_payment_amount|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span> {% endif %}</h5>
+              <h6>{% if payment.cart.installment == True %} ۰ {% else %} {{ payment.cart.courses.get.discount_cash_payment_amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% endif %}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">کد تخفیف:</h5>
-              <h6>{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.code }} {% else %} - {% endif %}</h5>
+              <h6 id="discount_code">{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.code }} {% else %} - {% endif %}</h5>
             </div> 
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">تخفیف کد:</h5>
-              <h6>{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.amount|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span> {% else %} ۰ {% endif %}</h5>
+              <h6 id="discount_amount">{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% else %} ۰ {% endif %}</h5>
             </div> 
+            <script>
+              var discount_state = "{% if state %}{{state}}{% else %}N{% endif %}"
+              var code = "{{ payment.cart.discount_codes.get.code }}"
+              var amount = "{{ payment.cart.discount_codes.get.amount|money_comma|persian_numbers }}"
+            </script>
             {% if payment.cart.installment == True %}
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">قسط اول (جلسه اول):</h5>
-              <h6> {{ payment.cart.first_installment|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span></h5>
+              <h6> {{ installment1|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h5>
             </div>
             {% else %}
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">مابقی شهریه (جلسه اول):</h5>
-              <h6> {{ payment.cart.payment|money_comma|persian_numbers }} <span class="text-muted">هزار تومان</span></h5>
+              <h6> {{ pay|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h5>
             </div>
             {% endif %}
             {% if payment.cart.installment == True %}
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">قسط دوم (جلسه ۱۳ ام):</h5>
-              <h6> {{ payment.cart.second_installment|money_comma|persian_numbers }}<span class="text-muted">هزار تومان</span> </h5>
+              <h6> {{ installment2|money_comma|persian_numbers }}<span class="text-muted pr-1"> تومان</span> </h5>
             </div>
             {% endif %}
             <div class="col-12 d-flex align-items-center py-3 border-top">
               <h4 class="text-red fw-900 pl-1">قابل پرداخت:</h4>
-              <h5 class="text-black">{{ payment.cart.prepayment|money_comma|persian_numbers }} <span>هزار تومان</span></h5>
+              <h5 class="text-black">{{ prepayment|money_comma|persian_numbers }} <span> تومان</span></h5>
             </div>
           </div>
           <div class="mt-3 mb-4 pt-4">
@@ -204,12 +220,10 @@
               تنها با 150 هزار تومان به عنوان پیش پرداخت کلاس را رزرو می‌کنید.
             </h6>
             <h6 class="form-warning">
-              {% if payment.payment_type == "0" %}
+              {% if payment.cart.installment == False %}
               باقی شهریه باید در جلسه اول قبل از شروع کلاس پرداخت گردد.
-              {% elif payment.payment_type == "1" %}
-              قسط اول را باید در جلسه اول قبل از شروع کلاس و قسط دوم را باید قبل از جلسه ۱۳ ام دوره کامل کنید.
               {% else %}
-              ارور نامشخص لطفا با آموزشگاه تماس بگیرید
+              قسط اول را باید در جلسه اول قبل از شروع کلاس و قسط دوم را باید قبل از جلسه ۱۳ ام دوره کامل کنید.
               {% endif %}
             </h6>
             <h6 class="form-warning">
@@ -248,6 +262,26 @@
     <!-------------------END main Section--------------------------->
     <div class="spacer-004"></div>
     <!-------------------Spacer ------------------------------------>
+    <!--------------------------- Toasts Start ------------------------------>
+    <!-- Flexbox container for aligning the toasts -->
+    <div class="toasts" aria-live="alert" aria-atomic="true" class="d-flex justify-content-center align-items-center">
+      <!-- Then put toasts within -->
+      <div id="toast" class="col-12 px-0 toast fade hide" role="alert" aria-live="assertive" aria-atomic="true"
+        data-delay="15000">
+        <div class="toast-header">
+          <strong id="toast-header" class="ml-auto">خطا</strong>
+          <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div id="toast-body" class="toast-body">
+          توضیحات خطا توضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات
+          خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات
+          خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطاتوضیحات خطا
+        </div>
+      </div>
+    </div>
+    <!--------------------------- Toasts end ------------------------------>
     <!-- start footer Area -->
     <footer id="footer2" class="py-5">
       <div class="container">
@@ -256,7 +290,7 @@
             <div class="single-footer-widget">
               <h3 class="h5">
                 متخصصان فردا
-                <i id="discount-ans-b" class="fa fa-heart"></i>
+                <i id="discount-ans-b" class="fa fa-heart text-red"></i>
               </h3>
               <ul>
                 <li>
@@ -408,37 +442,36 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body p-3">
             <span class="">کد تایید به شماره شما ارسال شد.</span>
-            <div class="d-flex justify-content-center py-4">
-              <div id="wrapper">
-                <form class="ltr" id="form">
-                  <input id="num1" type="number" maxlength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
-                  <input id="num2" type="number" maxlength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
-                  <input class="mr-3" id="num3" type="number" maxlength="1" size="1" min="0" max="9"
-                    pattern="[0-9]{1}" />
-                  <input class="ml-3" id="num4" type="number" maxlength="1" size="1" min="0" max="9"
-                    pattern="[0-9]{1}" />
-                  <input id="num5" type="number" maxlength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
-                  <input id="num6" type="number" maxlength="1" size="1" min="0" max="9" pattern="[0-9]{1}" />
-                </form>
-              </div>
+            <div class="form-wrapper my-3">
+              <form class="form-row d-flex justify-content-center align-items-center" id="form">
+                <input 
+                id="token" 
+                name="token"
+                class="col-md-6 mx-auto ltr"
+                type="number" 
+                onKeyPress="if(this.value.length==6) return false;"
+                pattern="\d{6}"
+                placeholder="XXXXXX"
+                autocomplete="off" 
+                required
+                >
+                <div class="col-12 mx-auto justify-content-center text-center">
+                  <span id="wrong-code" class="hide" style="color: red">کد وارد شده اشتباه است.</span>
+                </div>
+                <button id="submit_code" class="btn btn-red text-center my-3" type="submit">اعمال کد</button>
+              </form>
             </div>
-            <div class="d-flex justify-content-center align-items-center py-2">
-              <button id="submit_code" class="btn btn-red text-center">اعمال کد</button>
-            </div>
-
             <div class="row justify-content-center">
-              <span id="wrong-code" class="hide" style="color: red">کد وارد شده اشتباه است.</span>
-            </div>
-            <div id="aaa"></div>
-            <div class="row justify-content-center">
-              <h3 id="timer">
+              <h6 id="timer">
                 <span id="timeleft"></span>
                 <span>ثانیه تا ارسال دوباره کد</span>
-              </h3>
+              </h6>
               <a id="resend-btn" class="" href="">ارسال دوباره کد</a>
             </div>
+          </div>
+            
           </div>
         </div>
       </div>
@@ -448,6 +481,7 @@
   <!--site-wrap-->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-tokenfield@0.12.0/dist/bootstrap-tokenfield.min.js"></script>
   <script src="{% static 'landing/js/main-verify.js' %}"></script>
 </body>
 

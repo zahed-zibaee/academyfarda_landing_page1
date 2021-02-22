@@ -364,7 +364,7 @@
                   </div>
                   <div class="card-img-overlay">
                     <img
-                      src="{% if course.course_time.start_date|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.course_time.start_date|time:"H:i" == "13:00" %} {% elif course.course_time.start_date|time:"H:i" == "17:00" %} {% else %} {% endif %}"
+                      src="{% if course.time.start|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.time.start|time:"H:i" == "13:00" %} {% static 'landing/images/sample.png' %} {% elif course.time.start|time:"H:i" == "17:00" %} {% static 'landing/images/sample.png' %} {% else %} {% static 'landing/images/sample.png' %} {% endif %}"
                       alt="">
                     <div class="row m-0">
                       <div class="col d-flex justify-content-between align-items-center text-nowrap text-muted">
@@ -383,7 +383,7 @@
                     </div>
                   </div>
                   <div class="card-header px-2 pt-3">
-                    <h3 class="card-title weight-800 px-2 m-0">{{course.site_name}}</h3>
+                    <h3 class="card-title weight-800 px-2 m-0">{{course.alter_name}}</h3>
                   </div>
                   <div class="card-body">
                     <div class="card-text">
@@ -1427,6 +1427,20 @@
                         </div>
                       </div>
                     </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <img src="{% static 'landing/svg/waze-brands.svg' %}" alt="waze brand" width="40" height="40" style="color: #3303e2;">
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">نقشه:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <a class="text-red" target="_blank" href="https://waze.com/ul/htnke1v3qw">برای استفاده از مسیریاب اینجا کلیک کنید</a>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div class="row px-3 pb-3 p-xs-0">
                     <iframe title="map" class="pt-0"
@@ -1478,6 +1492,20 @@
                         <div
                           class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
                           <span>academymobileset@gmail.com</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 px-0">
+                      <div class="row">
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-center align-items-center px-0">
+                          <img src="{% static 'landing/svg/waze-brands.svg' %}" alt="waze brand" width="40" height="40" style="color: #3303e2;">
+                        </div>
+                        <div class="col-3 col-sm-2 col-xl-1 d-flex justify-content-start align-items-center px-0">
+                          <h5 class="pt-1">نقشه:</h5>
+                        </div>
+                        <div
+                          class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
+                          <a class="text-red" target="_blank" href="https://waze.com/ul/htnke1e1ep">برای استفاده از مسیریاب اینجا کلیک کنید</a>
                         </div>
                       </div>
                     </div>
@@ -2029,7 +2057,7 @@
           <div class="single-footer-widget">
             <h3 class="h5">
               متخصصان فردا
-              <i id="discount-ans-b" class="fa fa-heart"></i>
+              <i id="discount-ans-b" class="fa fa-heart text-red"></i>
             </h3>
             <ul>
               <li>
@@ -2331,7 +2359,7 @@
                       <span class="required-star"> شماره ملی </span>
                       <label>
                         <input name="code_meli" type="text"
-                          pattern="^[0-9]{10}$|^[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{10}$|^[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{10}$"
+                          pattern="^([0-9]|[٠,١,٢,٣,٤,٥,٦,٧,٨,٩]|[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]){10}$"
                           oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
                           onchange="try{setCustomValidity('')}catch(e){}" autocomplete="off" placeholder="XXXXXXXXXX"
                           required />
@@ -2344,7 +2372,7 @@
                       <span class="required-star"> شماره تماس </span>
                       <label>
                         <input name="phone" type="text"
-                          pattern="^(\+98|0|\+۹۸|۰)(9|۹)([٠,١,٢,٣,٤,٥,٦,٧,٨,٩]{9}|[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]{9}|[0-9]{9})$"
+                          pattern="^(\+?98|0|\+?۹۸|۰|٠?|\+٩٨)(9|۹|٩)([٠,١,٢,٣,٤,٥,٦,٧,٨,٩]|[۰,۱,۲,۳,۴,۵,۶,۷,۸,۹]|[0-9]){9}$"
                           oninvalid="setCustomValidity('فرمت وارد شده صحیح نیست. ')"
                           onchange="try{setCustomValidity('')}catch(e){}" placeholder="شماره موبایل ۰۹XXXXXXXXX"
                           autocomplete="off" required />

@@ -1,4 +1,3 @@
- [X] - toast
  [ ] - add background pic for container
  [ ] - change alt of pics
  [ ] - add deleted svg element icons.svg

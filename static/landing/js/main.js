@@ -16,15 +16,14 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 function checkconnection() {
   $.ajax({
     url: "/hi",
-    method: "POST",
+    method: "GET",
     crossDomain: true,
     timeout: 5000,
     success: function (res) {
-      if (res.ans == "hi") {
-        setTimeout(function () {
-          $("#serverconnectionerror").removeClass("show").addClass("hide");
-        }, 1);
         if (connect == false) {
+          setTimeout(function () {
+            $("#serverconnectionerror").removeClass("show").addClass("hide");
+          }, 1);
           setTimeout(function () {
             $("#serverconnectionreconnect")
               .removeClass("hide")
@@ -37,12 +36,6 @@ function checkconnection() {
           }, 5000);
           connect = true;
         }
-      } else {
-        setTimeout(function () {
-          $("#serverconnectionerror").removeClass("hide").addClass("show");
-        }, 1);
-        connect = false;
-      }
     },
     error: function (error) {
       console.log(error);
@@ -127,7 +120,7 @@ $(function () {
   $("#register_form")
     .parsley()
     .on("form:submit", function () {
-      $("#register_form")[0 ].submit();
+      $("#register_form")[0].submit();
     });
 });
 //swipers

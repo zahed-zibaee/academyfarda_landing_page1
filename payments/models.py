@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from persiantools.jdatetime import JalaliDateTime
+from os import urandom
+from binascii import hexlify
+from zeep import Client
 from django.db import models
 from django.core.validators import RegexValidator
 from datetime import timedelta, datetime
 from django.utils import timezone
-from persiantools.jdatetime import JalaliDateTime
 from django.contrib.auth import get_user_model
 from django.utils.encoding import smart_unicode
 
@@ -13,17 +16,29 @@ from SMS.models import Verify, Sent
 from .prices import PREPAYMENT_COMMON_COURSE_PRICE, COMMON_COURSE_PRICE,\
     COMMON_COURSE_DISCOUNTED_PRICE ,DISCOUNT_ON_CASH_PAYMENT_AMOUNT,\
     DISCOUNT_OPERATORS_AMOUNT
+from .config import ZARINPAL_MERCHANT as MERCHANT
+from .zarinpall_errors import ERROR_CODES
     
 User = get_user_model()
+
 #TODO: relate name for all
 #TODO: timezone awareness
+class APIError(Exception):
+    """An API Error Exception"""
+    def __init__(self, api_name, status):
+        self.status = status
+        self.api_name = api_name
+
+    def __str__(self):
+        return "API={} status={}".format(self.api_name, self.status)
+
+
 class Product(models.Model):
     """what we want to sell
     its abstract so u need to make a class for every product type
     """
     name = models.CharField(max_length = 100, blank = False)
     description = models.TextField(blank = True)
-    prepayment = models.BigIntegerField(null = False, blank = False, default = 0)
     price = models.BigIntegerField(null = False, blank = False, default = 0)
     stock = models.IntegerField(default = 0)
     active = models.BooleanField(default = True)
@@ -89,49 +104,48 @@ class Discount(models.Model):
     code = models.CharField(max_length =50, null = False, blank = False, unique= True)
     product = models.ManyToManyField(Product, blank = False)
     amount = models.BigIntegerField(null = False, blank = False, default =DISCOUNT_OPERATORS_AMOUNT)
-    expiration_date = models.DateTimeField(
+    expiration_date = models.DateField(
         null = False, 
         blank = False, 
         default = (timezone.make_aware(datetime.now(), timezone.get_default_timezone()) + timedelta(days=+3650)).date()
     )
     active = models.BooleanField(default = False)
     
-    def product_is_active(self ,product_id):
-        """check if discount and produuct is active and not discount expired"""
-        if self.expiration_date.replace(tzinfo = None) > \
-            timezone.make_aware(
+    def match(self, product, code):
+        """this method will match a code for a product"""
+        if not self.is_active(product) or self.code != code and product not in self.product.all():
+            return False
+        else:
+            return True
+
+    def is_active(self ,product):
+        """check if discount and product is active and not discount expired"""
+        try:
+            isinstance(product, Product)   
+        except:
+            return False
+        if self.expiration_date < timezone.make_aware(
                 datetime.now(), 
                 timezone.get_default_timezone()
-                ).date().replace(tzinfo = None) and \
-            self.active is True:
-            try:
-                if self.product.get(id =product_id).active is True:
-                    return True
-                else:
-                    return False
-            except:
-                return False
-        else:
+                ).date() or \
+            self.active is not True or product.active is not True:
             return False
+        else:
+            return True
 
-    def get_prepayment_total(self, product_id):
+    def get_prepayment_total(self, product):
         """get total amount for this product with this discount"""
-        try:
-            product = self.product.get(id = product_id)
-        except ValueError:
-            raise ValueError("product by id " + product_id + "can not find")
-        if self.is_active(product_id) and product in self.product.all():
-            return product.prepayment - self.amount
+        product = Product.objects.get(id = product.id)
+        course = Course.objects.get(id = product.id)
+        if self.is_active(product) and product in self.product.all():
+            return course.prepayment - self.amount
         else:
             return 0
 
-    def get_total(self, product_id):
+    def get_total(self, product):
         """get total amount for this product with this discount"""
-        try:
-            product = self.product.get(id = product_id)
-        except ValueError:
-            raise ValueError("product by id " + product_id + "can not find")
-        if self.is_active(product_id) and product in self.product.all():
+        product = Product.objects.get(id = product.id)
+        if self.is_active(product) and product in self.product.all():
             return product.price - self.amount
         else:
             return 0
@@ -382,7 +396,12 @@ class Course(Product):
         on_delete = models.PROTECT,
         )
     students = models.ManyToManyField(Student, blank = True)
-    price_showoff = models.BigIntegerField(null = False, blank = False, default = COMMON_COURSE_PRICE)
+    prepayment = models.BigIntegerField(null = False, blank = False, default = PREPAYMENT_COMMON_COURSE_PRICE)
+    price_showoff = models.BigIntegerField(
+        null = False, 
+        blank = False, 
+        default = COMMON_COURSE_PRICE
+        )
     discount_cash_payment_amount = models.BigIntegerField(
         null = False, 
         blank = False, 
@@ -427,10 +446,8 @@ class Course(Product):
             encoding = 'utf-8',
         )
 
-
 Course._meta.get_field("price").default = COMMON_COURSE_DISCOUNTED_PRICE
 Course._meta.get_field("stock").default = -1
-Course._meta.get_field("prepayment").default = PREPAYMENT_COMMON_COURSE_PRICE
 
 
 class Cart(models.Model):
@@ -458,96 +475,74 @@ class Cart(models.Model):
     courses = models.ManyToManyField(Course, blank = True)
     discount_codes = models.ManyToManyField(Discount, blank = True)
     installment = models.BooleanField(default = False)
-    total = models.BigIntegerField(null = False, blank = False, default = 0)
-    prepayment = models.BigIntegerField(null = False, blank = False, default = 0)
-    payment = models.BigIntegerField(null = False, blank = False, default = 0)
-    first_installment = models.BigIntegerField(null = False, blank = False, default = 0)
-    second_installment = models.BigIntegerField(null = False, blank = False, default = 0)
 
-    def set_prepayment_course(self):
+    def get_prepayment_course(self):
         """calculate total amount of prepayment for one course with or without of discount_code in cart"""
-        if int(self._type) != 0:
+        if int(self.cart_type) != 0:
             raise ValueError("this method is only for buy one course")
+        if len(self.courses.all()) != 1:
+            raise ValueError("only one course can be in this cart type")
         course = self.courses.get()
         if len(self.discount_codes.all()) > 1:
             raise ValueError("more than one discount is in the cart")
         elif len(self.discount_codes.all()) == 0:
-            if course.get_prepayment_total(course.id) > 10000:
-                self.prepayment = course.get_prepayment_total(course.id)
-                self.save()
+            total = course.get_prepayment_total()
+            if total != 0:
+                return total
             else:
                 raise ValueError("can not calculate total")
         else:
             discount = self.discount_codes.get()
-            if discount.get_prepayment_total(course.id) > 10000:
-                self.prepayment = discount.get_prepayment_total(course.id)
-                self.save()
+            total = discount.get_prepayment_total(course)
+            if total != 0:
+                return total
             else:
                 raise ValueError("can not calculate total")
 
-    def set_total_course(self):
+    def get_total(self):
         """calculate total amount for one course with or without of discount_code in cart"""
-        if 0 < int(self._type) <= 3:
-            raise ValueError("this method is only for buy one course")
         res = 0
-        course = self.courses.get()
-        # add course and discount amount to total
-        if len(self.discount_codes.all()) > 1:
-            raise ValueError("more than one discount is in the cart")
-        elif len(self.discount_codes.all()) == 0:
-            if course.get_prepayment_total(course.id) > 10000:
-                res += course.get_total(course.id)
+        if int(self.cart_type) == 0:
+            if len(self.courses.all()) != 1:
+                raise ValueError("only one course can be in this cart type")
+            course = self.courses.get()
+            # add course and discount amount to total
+            if len(self.discount_codes.all()) > 1:
+                raise ValueError("more than one discount is in the cart")
+            elif len(self.discount_codes.all()) == 0:
+                total = course.get_total()
+                if total != 0:
+                    res += total
             else:
-                res += 0
-        else:
-            discount = self.discount_codes.get()
-            if discount.get_total(course.id) > 10000:
-                res += discount.get_total(course.id)
+                discount = self.discount_codes.get()
+                total = discount.get_total(course)
+                if total != 0:
+                    res += total
+            # check for discount cash
+            if res != 0 and self.installment is not True:
+                res -= course.discount_cash_payment_amount
+            # check if amount not 0 retrun total amount or make an error
+            if res == 0:
+                raise ValueError("can not calculate total")
             else:
-                res += 0
-        # check for discount cash
-        if res != 0 and self.installment is True:
-            res -= course.discount_cash_payment_amount
-        # check if amount not 0 retrun total amount or make an error
-        if res == 0:
-            raise ValueError("can not calculate total")
+                return res
         else:
-            self.total = res
-            self.save()
+            pass
 
-    def set_installments_course(self):
+    def get_installments_course(self):
         """calculate installments amount for one course with or without of discount_code in cart
-        its first installment and second installment"""
-        pass
-
-    def set_payments(self):
-        """automagically set total, prepayment, first_installment, second_installment"""
-        pass
-
-    def get_payment_amount(self):
-        """after calculate the amount of payment this method retrun """
-        if int(self._type) == -1:
-            raise ValueError("Unknown cart type")
-        elif int(self._type) == 0:
-            if self.prepayment == 0:
-                raise ValueError("payment amount not calculated prepayment")
-            return self.prepayment
-        elif int(self._type) == 1:
-            if self.first_installment == 0:
-                raise ValueError("payment amount not calculated installment")
-            return self.first_installment
-        elif int(self._type) == 2:
-            if self.first_installment == 0:
-                raise ValueError("payment amount not calculated first installment")
-            return self.first_installment
-        elif int(self._type) == 3:
-            if self.second_installment == 0:
-                raise ValueError("payment amount not calculated second installment")
-            return self.second_installment
-        elif int(self._type) > 3:
-            if self.total == 0:
-                raise ValueError("payment amount not calculated payment total")
-            return self.total
+        its payment or first installment and second installment
+        result order is payment, first_installment, second_installment"""
+        total = self.get_total()
+        prepayment = self.get_prepayment_course()
+        # check is it one payment or installment
+        if self.installment == False:            
+            payment = total - prepayment
+            return payment, 0, 0
+        else:
+            first_installment = total / 2 - prepayment
+            second_installment = total / 2
+            return 0, first_installment, second_installment
 
     def get_courses(self):
         try:
@@ -556,7 +551,7 @@ class Cart(models.Model):
                 encoding = 'utf-8',
                 )
         except:
-            return None
+            return []
 
     def get_discount_codes(self):
         try:
@@ -565,11 +560,11 @@ class Cart(models.Model):
                 encoding = 'utf-8',
                 )
         except:
-            return None
+            return []
     
     def __unicode__(self):
        return smart_unicode(
-            "ID: {}, course ids: {}, course with discount ids: {}".format(
+            "ID: {}, course ids: {}, discount codes ids: {}".format(
                 self.id, 
                 self.get_courses(), 
                 self.get_discount_codes()
@@ -579,7 +574,7 @@ class Cart(models.Model):
 
     def __str__(self):
         return smart_unicode(
-            "ID: {}, course ids: {}, course with discount ids: {}".format(
+            "ID: {}, course ids: {}, discount codes ids: {}".format(
                 self.id, 
                 self.get_courses(), 
                 self.get_discount_codes()
@@ -588,6 +583,7 @@ class Cart(models.Model):
         )
 
 class Payment(models.Model):
+    slug = models.CharField(max_length = 40, null = False, blank = False, unique= True)
     PAYMENT_TYPE_CHOICES = (
         ('O', 'Online'),
         ('P', 'POS'),
@@ -628,7 +624,7 @@ class Payment(models.Model):
         on_delete = models.SET_NULL
     )
     total = models.BigIntegerField(null = False, blank = False)
-    authority = models.CharField(max_length =100, null = False, blank = False)
+    authority = models.CharField(max_length = 100, null = False, blank = False)
     created_date = models.DateTimeField(auto_now_add = True)
     created_by = models.ForeignKey(
         User, 
@@ -636,13 +632,74 @@ class Payment(models.Model):
         null = True, 
         blank = True
         )
+    payed_at = models.DateTimeField(null = True, blank = True)
     status = models.BooleanField(default = False)
     ref_id = models.CharField(max_length =20, blank = True)
     send_receipt = models.BooleanField(default = False) 
 
+    def verification_zarinpal(self):
+        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+        try:
+            result = client.service.PaymentVerification(
+                MERCHANT,
+                self.authority,
+                self.total
+                )
+        except:
+            raise APIError('Zarinpal', 'Can not connect')
+        if result.Status == 100 or result.Status == 101:
+            self.status = True
+            self.ref_id = result.RefID
+            self.payed_at = timezone.make_aware(datetime.now(), timezone.get_default_timezone())
+            self.save()
+            if self.send_receipt == False:
+                self.send_receipt_course()
+            return True, result.Status
+        else:
+            try:
+                status = ERROR_CODES[result.Status]
+            except:
+                status = result.Status
+            return False, status
+
+    def get_zarinpal_authority(self, CallbackURL = "https://academyfarda.com/payments/verify", description = "ثبت نام دوره تعمیرات موبایل متخصصان فردا"):
+        amount = self.total
+        mobile = self.verification.sent.receptor
+        try:
+            client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+            result = client.service.PaymentRequest(
+                MERCHANT, 
+                amount, 
+                description, 
+                mobile,
+                CallbackURL = CallbackURL 
+            )
+        except:
+            raise APIError('Zarinpal', 'Can not connect')
+        if result.Status == 100:
+            self.authority = result.Authority
+            self.save()
+            return True, str(result.Authority)
+        else:
+            try:
+                status = ERROR_CODES[result.Status]
+            except:
+                status = result.Status
+            return False, status
+
+    def set_absolute_url(self):
+        slug = str(hexlify(urandom(15)))
+        while True:
+            if len(Payment.objects.filter(slug = slug)) > 0:
+                slug = str(hexlify(urandom(15)))
+            else:
+                break
+        self.slug = slug
+        self.save()
+
     def check_total(self):
         """check if total if not less than payment api low limit"""
-        if self.total <= 10000:
+        if self.total > 10000:
             return True
         else:
             return False

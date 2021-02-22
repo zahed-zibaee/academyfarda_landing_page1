@@ -8,7 +8,7 @@ from django.http import HttpResponseBadRequest, \
     HttpResponseNotFound, HttpResponseForbidden,\
     HttpResponseServerError,HttpResponseNotAllowed, HttpResponseRedirect
 from django.views.generic import TemplateView
-from django.shortcuts import redirect, render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -37,6 +37,7 @@ def normalize(data):
     res = digits.fa_to_en(not_arabic)
     return res
 
+
 #class based
 def get_zarinpal_payment_url(self, MERCHANT, description, amount, mobile, CallbackURL):
         client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -52,60 +53,9 @@ def get_zarinpal_payment_url(self, MERCHANT, description, amount, mobile, Callba
         else:
             return False, str(result.Status)
 
-#chane to class based
-@csrf_exempt
+#change to class based
 def verify_zarinpal_payment(request):
-    """this view verify peyment with get mothod and return the answer by refrence id or an error
-    this method needs Authority
-    """
-    if request.method == 'GET':
-        if request.GET.get('Status') == 'OK':
-            try:
-                authority = request.GET['Authority']
-                payment_id = Payment.objects.filter(authority = authority).order_by("-created_date").first().id
-                payment = Payment.objects.get(id=payment_id)
-            except:
-                return HttpResponseNotFound("payment not found")
-            client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-            try:
-                result = client.service.PaymentVerification(
-                    MERCHANT_CODE,
-                    request.GET['Authority'],
-                    payment.total
-                    )
-            except:
-                return HttpResponseServerError("can not connect to zarinpal server")
-            if result.Status == 100 or result.Status == 101:
-                payment.status = True
-                payment.ref_id = result.RefID
-                payment.save()
-                if payment.send_receipt == False:
-                    payment.send_receipt_course()
-                data = {'status':"OK",'payment':payment, 'error_code': None}
-                if len(payment.cart.course_with_discount.all()) > 0:
-                    data.update( {'discount' : True} )
-                return render(request,'receipt/index.html', data)
-            else:
-                try:
-                    error = "\"" + ERROR_CODES[result.Status] + "\""
-                except:
-                    error = "\"" + "نامشخص" + " " + str(result.Status) + "\""
-                data = {'status':"ERROR",'payment':payment, 'error_code': error}
-                if len(payment.cart.discount.all()) > 0:
-                    data.update( {'discount' : True} )
-                return render(request,'receipt/index.html', data)
-        else:
-            try:
-                payment_id = Payment.objects.filter(authority = request.GET['Authority']).order_by("-created_date").first().id
-                payment = Payment.objects.get(id=payment_id)
-            except:
-                return HttpResponseNotFound("payment not found")
-            data = {'status':"NOK",'payment':payment, 'error_code': None}
-            if len(payment.cart.discount.all()) > 0:
-                    data.update( {'discount' : True} )
-            return render(request,'receipt/index.html', data)
-    else:
-        return HttpResponseNotAllowed("bad request.")
+    pass
 
 
 

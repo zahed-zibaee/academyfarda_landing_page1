@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import redirect
+from django.urls import reverse
+
 
 def error_404(request):
     #TODO: add other errors 
@@ -15,10 +17,10 @@ def error_404(request):
 
 @csrf_exempt
 def hi(request):
-    if request.method == "POST" or request.method == "GET":
-        return JsonResponse({'ans':'hi'})
-    else:
-        return HttpResponseBadRequest("bad request")
+    return JsonResponse({'ans':'hi'})
 
 def landing_redirect(request):
-    return redirect('common_landing')
+    url = reverse('common_landing')
+    if 'op' in request.GET.keys():
+        url += "?op=" + request.GET["op"]    
+    return redirect(url)

@@ -1,9 +1,19 @@
 {% load static %}
 {% load humanize %}
+{% load persian_tags %}
 <!DOCTYPE html>
 <html lang="fa">
   <head>
-    <meta charset="utf-8" />
+    <title>رسید پیش ثبت نام دوره آموزشی تعمیرات موبایل متخصصان فردا</title>
+    <meta name="description"
+      content="لطفا رسید خود را چاپ کنید امکان ارائه دوباره رسید وجود ندارد.">
+    <meta name="keywords"
+      content="آموزش تعمیرات موبایل، بهترین آموزشگاه تعمیرات موبایل، آموزش صفر تا صد تعمیرات موبایل، آموزش تعمیرات موبایل در تهران، اموزش تعمیرات موبایل">
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#301faa" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="Designer" content="Made with love by Academyfarda" />
     <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css" integrity="sha384-vus3nQHTD+5mpDiZ4rkEPlnkcyTP+49BhJ4wJeJunw06ZAp+wzzeBPUXr42fi8If" crossorigin="anonymous">
     <link
       href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
@@ -23,7 +33,6 @@
     <title>{% block title %}رسید دیجیتال{% endblock %}</title>
   </head>
   <body>
-    
     <div class="container">
       <div class="row">
         <div class="col-12 justify-content-center">
@@ -60,7 +69,7 @@
                   </p>
                   <p class="card-text">
                     <span class="statics">به نام:</span>
-                    <span>{{payment.cart.payment_info.name}} {{payment.cart.payment_info.family}}</span>
+                    <span>{{payment.student.personal_info.name}} {{payment.student.personal_info.family}}</span>
                   </p>
                   <p class="card-text">
                     <span class="statics">درگاه:</span>
@@ -75,7 +84,7 @@
                     {% if status == "OK" %}
                     <span>{{ payment.ref_id }}</span>
                     {% else %}
-                    <span>{{ payment.id }}</span>
+                    <span>{{ payment.id|eight_digit_id|persian_numbers }}</span>
                     {% endif %}
                   </p>
                 </div>
@@ -85,16 +94,16 @@
                   </p>
                   <p class="card-text">
                     <span class="statics">شماره فاکتور:</span>
-                    <span>{{ payment.id }}</span>
+                    <span>{{ payment.id|eight_digit_id|persian_numbers }}</span>
 
                   </p>
                   <p class="card-text">
                     <span class="statics">تاریخ:</span>
-                    <span>{{ payment.get_jalali_date }}</span>
+                    <span>{{ payment.payed_at|jalali_date|persian_numbers }}</span>
                   </p>
                   <p class="card-text">
                     <span class="statics">زمان:</span>
-                    <span>{{ payment.get_tehran_time }}</span>
+                    <span>{{ payment.payed_at|jalali_time|persian_numbers }}</span>
                   </p>
                   <p class="card-text d-flex">
                     <span class="statics">چاپ:</span>
@@ -113,30 +122,28 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row">1</th>
-                        {% for course in payment.cart.course.all %}
-                          <td>ثبت‌نام {{ course.get_name }}</td>
+                      <tr class="text-secondary">
+                        <th scope="row">۱</th>
+                        {% for course in payment.cart.courses.all %}
+                          <td>پیش ثبت‌نام کلاس {{ course.alter_name }} کد {{ course.id|four_digit_id|persian_numbers }}</td>
                         {% endfor %}
-                        <td>1</td>
-                        {% if discount%}
-                          {% for discount in payment.cart.discount.all %}
-                            <td><span>{{discount.amount|intcomma}}</span><span class="ml-1">تومان</span></td>
-                          {% endfor %}
+                        <td>۱</td>
+                        {% if payment.cart.discount_codes.get %}
+                        {% for discount in payment.cart.discount_codes.all %}
+                        <td><span>{{discount.amount|money_comma|persian_numbers}} تومان</span></td>
+                        {% endfor %}
                         {% else %}
-                          <td><span>0</span><span class="ml-1">تومان</span></td>
+                        <td><span>۰ تومان</span>
                         {% endif %}
-                        {% for course in payment.cart.course.all %}
-                          <td><span>{{course.price|intcomma}}</span><span class="ml-1">تومان</span></td>
-                        {% endfor %}
+                        <td><span >{{payment.total|money_comma|persian_numbers}} تومان</span>
                       </tr>
                     </tbody>
                   </table>
                   <div class="row">
                     <div class="col-12">
                       <p class="card-text text-right mx-5">
-                        <span class="statics">قابل پرداخت:</span>
-                        <span>{{payment.total|intcomma}}</span><span class="ml-1">تومان</span>
+                        <span class="statics">کل:</span>
+                        <span>{{payment.total|money_comma|persian_numbers}} تومان</span>
                       </p>
                     </div>
                   </div>

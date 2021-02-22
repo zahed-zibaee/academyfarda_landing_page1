@@ -2,17 +2,26 @@
 from __future__ import unicode_literals
 
 from persiantools import digits
+from json import loads
 from re import compile as re_compile
+from ratelimit.decorators import ratelimit
 from django.http import HttpResponseBadRequest, \
-    HttpResponseNotFound, HttpResponseRedirect
+    HttpResponseNotFound, HttpResponseRedirect, \
+    JsonResponse, HttpResponseForbidden, \
+    HttpResponseServerError, HttpResponse
 from django.views.generic import TemplateView
-from datetime import datetime
-from django.shortcuts import render
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import get_user_model
+from django.urls import reverse
+
 
 #change theese to app name ...
 from SMS.models import Verify, Sent
-from payments.models import Course, Payment, Cart, PersonalInformation, Student
+from payments.models import Course, Payment, Cart, \
+    PersonalInformation, Student, Discount
 
 User = get_user_model()
 
@@ -44,15 +53,19 @@ class CommonLanding(TemplateView):
         data = {"courses": courses, "operator_username": operator}
         return render(request, 'landing/index.html', context = data)
 
+    @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='POST'))
     def post(self, request):
         """register by this"""
         #normalize data
         request.POST = request.POST.copy()
-        request.POST["code_meli"] = normalize(request.POST["code_meli"])
-        request.POST["phone"] = normalize(request.POST["phone"])
-        pattern = re_compile("^\+989\d{9}$")
-        if pattern.match(request.POST["phone"]) == True:
-            request.POST["phone"] = "0" + request.POST["phone"][3:]
+        code_meli = normalize(request.POST["code_meli"])
+        phone = normalize(request.POST["phone"])
+        pattern = re_compile("^\+98\d{10}$")
+        pattern2 = re_compile("^98\d{10}$")
+        if pattern.match(phone):
+            phone = "0" + phone[3:]
+        elif pattern2.match(phone):
+            phone = "0" + phone[2:]
         #check data validation
         if not 3 <= len(request.POST["name"]) <= 50:
             return HttpResponseBadRequest("bad data name")
@@ -63,19 +76,16 @@ class CommonLanding(TemplateView):
         if not (request.POST["gender"] == "M" or request.POST["gender"] == "F"):
             return HttpResponseBadRequest("bad data gender")
         pattern = re_compile("^\d{10}$")
-        if not pattern.match(request.POST["code_meli"]):
+        if not pattern.match(code_meli):
             return HttpResponseBadRequest("bad data code_meli")
-        pattern = re_compile("^09\d{9}$|^\+989\d{9}$")
-        if not pattern.match(request.POST["phone"]):
+        pattern = re_compile("^09\d{9}$")
+        if not pattern.match(phone):
             return HttpResponseBadRequest("bad data phone")
         if not 10 <= len(request.POST["address"]) <= 1000:
             return HttpResponseBadRequest("bad data address")
-        try:
-            course = Course.objects.get(id = int(request.POST["course"]))
-            if not course.is_active():
+        course = get_object_or_404(Course, id = int(request.POST["course"]))
+        if not course.is_active():
                 HttpResponseBadRequest("course is not active")
-        except:
-            return HttpResponseNotFound("course not found")
         if not (request.POST["installment"] == "0" or request.POST["installment"] == "1"):
             return HttpResponseBadRequest("bad data payment_type")
         else:
@@ -92,7 +102,7 @@ class CommonLanding(TemplateView):
             # only make a verification object for later
             verification = Verify.objects.create(
                 sent = Sent.objects.create(
-                    receptor = request.POST["phone"],
+                    receptor = phone,
                 )
             ), 
             # save personal info for get lead if register not complete
@@ -102,11 +112,11 @@ class CommonLanding(TemplateView):
                 family = request.POST["family"],
                 gender = request.POST["gender"],
                 father_name = request.POST["father_name"],
-                code_meli = request.POST["code_meli"],
-                phone_number = request.POST["phone"],
+                code_meli = code_meli,
+                phone_number = phone,
                 address = request.POST["address"],
                 birthday = datetime(1621, 3, 21)
-                    ), 
+                    ),
                 ),
                 total = 0,
             # this total is for only course registration price not discount included
@@ -120,24 +130,150 @@ class CommonLanding(TemplateView):
             payment.operator = operator
         except:
             pass
+        # save payment to generate slug
         payment.save()
+        payment.set_absolute_url()
         # go to verify/id page to verify payment by user
-        return HttpResponseRedirect("/landing/common/verify/" + str(payment.id))
+        return HttpResponseRedirect("/landing/common/register/" + payment.slug)
 
-class CommonVerify(TemplateView):
-    #TODO: add methode to check for discounts
-    #change template page to show properly
+class CommonLandingRegister(TemplateView):
     #on post make verification happend and if its success redirect to bank
-    #on post check for discount if we had a valid one we need to change payment.cart and payment.total accordingly
     #after payment we need to show and send receipt
+    ##### add student to class
+    #    course = payment.cart.courses.get()
+    #    course.student.add(payment.student)
+    #    course.save()
 
-    def get(self, request, verify_id):
-        try:
-            payment = Payment.objects.get(id = verify_id)
-        except:
-            return HttpResponseNotFound("payment not found")
-        data = {'payment': payment,}
-        return render(request, 'landing/verify.html', context = data)
+    @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='GET'))
+    def get(self, request, slug):
+        payment = get_object_or_404(Payment, slug = slug)
+        if payment.payment_type != "O":
+            return HttpResponseBadRequest("this payment is not online")
+        total = payment.cart.get_total()
+        prepayment = payment.cart.get_prepayment_course()
+        pay = payment.cart.get_installments_course()[0]
+        installment1 = payment.cart.get_installments_course()[1]
+        installment2 = payment.cart.get_installments_course()[2]
+        data = {
+            'payment': payment, 
+            'total': total, 
+            'prepayment': prepayment, 
+            'pay': pay, 
+            'installment1': installment1, 
+            'installment2': installment2,
+            }
+        if 'state' in request.GET.keys():
+            data['state'] = request.GET['state']
+        return render(request, 'landing/register.html', context = data)
     
-    def post(self, request):
-        pass
+    @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='POST'))
+    def post(self, request, slug):
+        payment = get_object_or_404(Payment, slug = slug)
+        # validate token
+        if 'token' not in request.POST.keys():
+            return HttpResponseBadRequest("tokens needed to verify")
+        token = normalize(request.POST['token'])
+        if not payment.verification.validate(token):
+            return HttpResponseForbidden("tokens are not valid or they expired")
+        # change total payment
+        payment.total = payment.cart.get_prepayment_course()
+        payment.save()
+        # make student phone number verified
+        payment.student.phone_number_validate = True
+        payment.student.save()
+        # check total
+        if payment.check_total() == False:
+            return HttpResponseServerError("less than mimimum payment amount")
+        # make url comeback
+        CallbackURL = "https://" + request.META['HTTP_HOST'] + reverse('common_landing_course_payment_verification')
+        # make authority code for redirecting to API
+        try:
+            zarinpal_authority = payment.get_zarinpal_authority(CallbackURL) 
+        except:
+            return HttpResponseServerError("zarinpall api error")
+        if zarinpal_authority[0]:
+            url = 'https://www.zarinpal.com/pg/StartPay/' + zarinpal_authority[1]
+            return HttpResponse({url: url})
+        else:
+            return HttpResponseServerError("zarinpall api error: " + zarinpal_authority[1])
+
+    @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='PATCH'))
+    def patch(self, request, slug):
+        payment = get_object_or_404(Payment, slug = slug)
+        json_req = loads(request.body.decode("utf-8"))
+        if len(json_req['discount_code']) > 0:
+            discount_code = normalize(json_req['discount_code'])
+            discount = get_object_or_404(Discount, code = discount_code)
+            if discount.match(payment.cart.courses.get(), discount_code):
+                payment.cart.discount_codes.clear()
+                payment.cart.discount_codes.add(discount)
+                payment.save()
+                return JsonResponse(
+                    {}, status=201)
+            else:
+                return HttpResponseNotFound("code is wrong")
+        else:
+            payment.cart.discount_codes.clear()
+            payment.save()
+            return JsonResponse({},status=200)
+        
+    @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='15/d', block=True, method='PUT'))
+    def put(self, request, slug):
+        """this is a view to send sms authenticator to phone
+        this patch request need verification id"""
+        payment = get_object_or_404(Payment, slug = slug)
+        verification = get_object_or_404(Verify, id = payment.verification.id)
+        if verification.sent.send_date == None and verification.sent.gone == False:
+            verification.start()
+            status = verification.send()
+            if status != 200:
+                return HttpResponseServerError("Kavehnegar api does not work properly with error code: " + status)
+            else:
+                return JsonResponse({}, status = 201)
+        else:
+            now = timezone.make_aware(
+                    datetime.now(), 
+                    timezone.get_default_timezone()
+                    )
+            last_min = now + timedelta(minutes=-1)
+            last_ten_min = now + timedelta(minutes=-10)
+            if last_min < verification.sent.send_date < now:
+                return HttpResponseForbidden(
+                    "not allowed to make more than one message every minute"
+                )
+            #if in last 10 min we had a message we can resend it
+            elif last_ten_min < verification.sent.send_date < now:
+                    status = verification.send()
+                    if status != 200:
+                        return HttpResponseServerError("Kavehnegar api does not work properly with error code: " + status)
+                    else:
+                        return JsonResponse({}, status = 200)
+            else:
+                verification.start()
+                status = verification.send()
+                if status != 200:
+                    return HttpResponseServerError("Kavehnegar api does not work properly with error code: " + status)
+                else:
+                    return JsonResponse({}, status = 201)
+            
+class CommonLandingPaymentVerification(TemplateView):
+
+    def get(self, request):
+        if request.GET.get('Status') == 'OK':
+            authority = request.GET['Authority']
+            payment = get_object_or_404(Payment, authority = authority)
+            try:
+                res = payment.verification_zarinpal() 
+            except:
+                return HttpResponseServerError("Zarinpal api does not work properly")
+            if res[0] == True :
+                data = {'status': "OK", 'payment': payment, 'error_code': None}
+                return render(request, 'landing/receipt.html', data)
+            else:
+                data = {'status': "ERROR", 'payment': payment, 'error_code': res[1]}
+                return render(request, 'landing/receipt.html', data)
+        else:
+            authority = request.GET['Authority']
+            payment = get_object_or_404(Payment, authority = authority)
+            data = {'status': "NOK", 'payment': payment, 'error_code': None}
+            return render(request, 'landing/receipt.html', data)
