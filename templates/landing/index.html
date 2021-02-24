@@ -134,6 +134,9 @@
         <span class="top-txt text-nowarp"> تنها </span>
         <h2 class="pt-2 yellow"> آموزشگاه تعمیرات موبایل </h2>
         <span class="bottom-txt text-nowarp"> رتبه ۱ در کشور </span>
+        <svg class="icon d-none d-lg-block line-icon">
+          <use xlink:href="{% static 'landing/svg/' %}icons.svg#line-icon"></use>
+        </svg>
         <span class="mokaab1 d-none d-lg-block">
           <img src="{% static 'landing/svg/mokaab1.svg' %}" alt="mokaab">
         </span>
@@ -188,7 +191,7 @@
               <a class="stretched-link" href="#albums">پشتیبانی پس از دوره</a>
             </li>
             <li class="list-group-item">
-              <a class="stretched-link" href="#CQs">سوالات متداول</a>
+              <a class="stretched-link" href="#FAQ">سوالات متداول</a>
             </li>
             <li class="list-group-item">
               <a class="stretched-link" href="#dorms">خوابگاه</a>
@@ -301,8 +304,11 @@
           </a>
         </section>
         <!---------------------------end(banner)------------------------------------------>
-        <div class="spacer-004"></div>
+        <div class="spacer-003"></div>
         <!---------------------------Spacer------------------------------------------>
+        <div class="d-flex justify-content-end d-none d-lg-flex ml-5">
+          <img src="{% static 'landing/images/mokaab2.png' %}" alt="mokaab-red">
+        </div>
         <section class="main-product" id="courseinfo">
           <div class="title-experts">
             <h3>معرفی دوره</h3>
@@ -358,14 +364,14 @@
               <div class="col mb-4">
                 <div class="card card-shadow card-hover2 card-border h-100">
                   <div class="discounted">
-                    <div class="text-center {% if course.site_special_discount == True %} hidden {% endif %}">
+                    <div class="text-center {% if course.site_show_special_discount != True %} hidden {% endif %}">
                       <span>تخفیف ویژه</span>
                     </div>
                   </div>
                   <div class="card-img-overlay">
                     <img
                       src="{% if course.time.start|time:"H:i"  == "09:00" %} {% static 'landing/images/sample.png' %} {% elif course.time.start|time:"H:i" == "13:00" %} {% static 'landing/images/sample.png' %} {% elif course.time.start|time:"H:i" == "17:00" %} {% static 'landing/images/sample.png' %} {% else %} {% static 'landing/images/sample.png' %} {% endif %}"
-                      alt="">
+                      alt="روز های کلاس">
                     <div class="row m-0">
                       <div class="col d-flex justify-content-between align-items-center text-nowrap text-muted">
                         <div>
@@ -1437,7 +1443,7 @@
                         </div>
                         <div
                           class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
-                          <a class="text-red" target="_blank" href="https://waze.com/ul/htnke1v3qw">برای استفاده از مسیریاب اینجا کلیک کنید</a>
+                          <a class="text-red" rel="noopener" target="_blank" href="https://waze.com/ul/htnke1v3qw">برای استفاده از مسیریاب اینجا کلیک کنید</a>
                         </div>
                       </div>
                     </div>
@@ -1505,7 +1511,7 @@
                         </div>
                         <div
                           class="col-12 col-sm-8 col-xl-10 d-flex justify-content-sm-start text-center align-items-center text-justify pr-0 pl-3">
-                          <a class="text-red" target="_blank" href="https://waze.com/ul/htnke1e1ep">برای استفاده از مسیریاب اینجا کلیک کنید</a>
+                          <a class="text-red" rel="noopener" target="_blank" href="https://waze.com/ul/htnke1e1ep">برای استفاده از مسیریاب اینجا کلیک کنید</a>
                         </div>
                       </div>
                     </div>
@@ -1543,9 +1549,9 @@
               <div class="media-body media-body-right">
                 <h4 class="media-head mt-0">استاد بهرام اسودی</h4>
                 <span class="text-justify">
-                  8 سال سابقه تدریس سخت افزار و نرم افزار موبایل و تبلت به صورت کاملا تخصصی در آموزشگاه های عالی کشور
-                  ،5 سال سابقه آموزش در محل کار به صورت عملی و همچنین تعمیرات موبایل را به صورت حرفه ایی انجام می‌دهم.
-                  تعداد قابل توجهی از شاگردان‌ام وارد بازار کار شده و همچنین من پشتیبان و راهنمای آنها به صورت تلفنی
+                  ۸ سال سابقه تدریس و آموزش سخت افزار و نرم افزار موبایل و تبلت به صورت کاملا تخصصی در آموزشگاه های عالی کشور
+                  ،5 سال سابقه آموزش در محل کار به صورت عملی و همچنین تعمیرات موبایل را به صورت حرفه‌ایی انجام می‌دهم.
+                  تعداد قابل توجهی از شاگردان‌ام وارد بازار کار شده و همچنین من پشتیبان و راهنمای آن‌ها از راه دور
                   هستم.
                 </span>
               </div>
@@ -1556,10 +1562,10 @@
               <div class="media-body media-body-left">
                 <h4 class="media-head mt-0">استاد محمد رضایی</h4>
                 <span class="text-justify">
-                  9 سال سابقه در زمینه آموزش سخت افزار و نرم افزار موبایل و بیش از یک دهه تجربه در زمینه تعمیرات حرفه
+                  ۶ سال سابقه در زمینه آموزش سخت افزار و نرم افزار موبایل و بیش از یک دهه تجربه در زمینه تعمیرات حرفه
                   ایی موبایل .سرپرست خدمات پس از فروش شرکتهای پارس‌کامتل، مدیا پردازش، ال‌جی، مادیران ‌و یاس. تدریس در
-                  آموزشگاه های متخصصان‌فردا، موبایل‌آباد، پارس ‌نیکاتل، همراه‌تل و برگزاری دوره‌های خصوصی تدریس به صورت
-                  حرفه ایی برای گوشی های ios و اندروید.
+                  آموزشگاه های متخصصان‌فردا، موبایل‌آباد، پارس ‌نیکاتل، همراه‌تل و برگزاری دوره‌های خصوصی آموزش 
+                  حرفه ایی برای گوشی های آیفون(IOS) و اندروید.
                 </span>
               </div>
               <img src="{% static 'landing/images/mohammad_rezaii.jpg' %}" class="masters-pic d-none d-md-block"
@@ -1571,10 +1577,10 @@
               <div class="media-body media-body-right">
                 <h4 class="media-head mt-0">استاد محمد حسین زیدی نظری </h4>
                 <span class="text-justify">
-                  9 سال سابقه در زمینه آموزش سخت افزار و نرم افزار موبایل و بیش از یک دهه تجربه در زمینه تعمیرات حرفه
-                  ایی موبایل .سرپرست خدمات پس از فروش شرکتهای پارس‌کامتل، مدیا پردازش، ال‌جی، مادیران ‌و یاس. تدریس در
-                  آموزشگاه های متخصصان‌فردا، موبایل‌آباد، پارس‌نیکاتل، همراه‌تل و برگزاری دوره‌های خصوصی تدریس به صورت
-                  حرفه ایی برای گوشی های ios و اندروید.
+                  ۷ سال سابقه در زمینه آموزش تعمیرات سخت‌افزاری و نرم‌افزاری موبایل و تبلت تمامی برند ها.
+                  نزدیک به یک دهه سابقه آموزش خصوصی حرفه‌ای و کارآموزی در زمینه تعمیرات موبایل.
+                  بیش از یک دهه سابقه کار تعمیرات موبایل سخت‌افزار و نرم‌افزار در تعمیرگاه های خودم.
+                  صد ها نفر از دانشجویان من وارد بازار کار شده‌اند و از داخل و یا خارج از کشور با من در تماس هستند.
                 </span>
               </div>
             </div>
@@ -1584,8 +1590,8 @@
               <div class="media-body media-body-left">
                 <h4 class="media-head mt-0">استاد زاهد زیبایی</h4>
                 <span class="text-justify">
-                  5 سال سابقه کار حرفه ایی در زمینه تعمیرات نرم افزار موبایل ، تدریس حرفه ایی سخت افزار و نرم افزار
-                  تمامی گوشی های ios و اندروید به صورت پاره وقت ، تدریس نرم افزار موبایل های روز دنیا به صورت خصوصی در
+                  ۵ سال سابقه کار حرفه ایی در زمینه تعمیرات نرم افزار موبایل ، تدریس حرفه ایی سخت افزار و نرم افزار
+                  تمامی گوشی های آیفون(IOS) و اندروید به صورت پاره وقت ، آموزش تعمیرات نرم افزار موبایل های روز دنیا به صورت خصوصی در
                   آموزشگاه های متخصصان فردا
                 </span>
               </div>
@@ -1666,7 +1672,8 @@
         <!--------------------------- End album ------------------------------->
         <div class="spacer-004"></div>
         <!---------------------------Spacer------------------------------------------>
-        <section id="CQs">
+        <img class="left-icn flip mr-4 d-none d-lg-block" src="/static/landing/svg/left-iconns.svg" alt="left-icons">
+        <section id="FAQ">
           <div class="title-experts">
             <h3>سوالات متداول</h3>
           </div>
@@ -1691,7 +1698,7 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse001" aria-labelledby="heading001">
                 <div class="card-body">
-                  می‌توانید نحوه برگزاری کلاس های در حال ثبت نام را از
+                  می‌توانید نحوه برگزاری کلاس های آموزش تعمیرات موبایل در حال ثبت نام را از
                   <a href="#courseinfo">اینجا</a>
                   و همچنین شهریه و شرایط ثبت‌نام را از
                   <a href="#payment">اینجا</a>
@@ -1719,6 +1726,7 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse002" aria-labelledby="heading002">
                 <div class="card-body">
+                  آموزش ما از صفر تا صد است بدین معنی که
                   ما از ابتدای آموزش تعمیرات موبایل تا ورود به بازار کار همراه
                   شما هستیم. تضمین ما صدها متخصص فعال در زمینه تعمیرات موبایل
                   در داخل و خارج از کشور است که زمانی کارآموز متخصصان بوده
@@ -1773,8 +1781,8 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse004" aria-labelledby="heading004  ">
                 <div class="card-body">
-                  بعد از اتمام دوره تعدادی از کارآموزان با توجه به نمره کلاسی
-                  و تائید استاد مربوطه جهت معرفی به کار به تعمیرگاه هاو شرکت
+                  بعد از اتمام دوره تعداد محدودی از کارآموزان با توجه به نمره کلاسی
+                  و تائید استاد مربوطه جهت معرفی به کار به تعمیرگاه‌ها و شرکت
                   ها معرفی می‌شوند.
                 </div>
               </div>
@@ -1798,7 +1806,7 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse005" aria-labelledby="heading005">
                 <div class="card-body">
-                  خیر، تمامی افراد از 13 سال تا 60 سال می‌توانند در این دوره
+                  خیر، تمامی افراد بالای 13 سال می‌توانند در این دوره
                   شرکت کنند، زیرا تمامی مباحث از پایه آموزش داده می‌شود.
                 </div>
               </div>
@@ -1823,9 +1831,9 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse006" aria-labelledby="heading006">
                 <div class="card-body">
-                  بعد از اتمام دوره تمام کارآموزان به فنی و حرفه ای معرفی می
-                  شوند و بعد از برگزاری آزمون کتبی و عملی گواهینامه مربوطه را
-                  دریافت می‌کنید.
+                  پس از اتمام دوره تمام کارآموزان به فنی و حرفه ای معرفی می
+                  شوند و بعد از اعلام زمان آزمون و برگزاری آزمون کتبی و عملی، گواهینامه مربوطه را
+                 دریافت می‌کنند. که این درک را می‌توانید برای مهاجرت ترجمه کنید، مغازه باز کنید و وام خود اشتغالی دریافت کنید.
                 </div>
               </div>
             </div>
@@ -1838,7 +1846,7 @@
                       <div class="experts-content">
                         <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
                       </div>
-                      <span class="pt-2">این دوره برای چه افرادی مناسب هست؟</span>
+                      <span class="pt-2">این دوره برای چه افرادی مناسب است؟</span>
                     </div>
                     <div class="col-1 d-flex align-items-center justify-content-center px-0">
                       <span class="collapse-icon-plus-minus"></span>
@@ -1848,7 +1856,7 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse007" aria-labelledby="heading007">
                 <div class="card-body">
-                  این دوره برای علاقه مندان به تعمیرات موبایل و همچنین افرادی
+                  این دوره برای علاقه مندان به تعمیرات موبایل، افراد فنی و همچنین افرادی
                   که تمایل به شغل پردرآمد دارند مناسب می‌باشد.
                 </div>
               </div>
@@ -1915,7 +1923,8 @@
                       <div class="experts-content">
                         <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
                       </div>
-                      <span class="pt-2">کلاس ها تئوری است یا به صورت عملی برگزار
+                      <span class="pt-2">
+                        کلاس ها تئوری است یا به صورت عملی برگزار
                         می‌شود؟</span>
                     </div>
                     <div class="col-1 d-flex align-items-center justify-content-center px-0">
@@ -1926,7 +1935,7 @@
               </div>
               <div class="pr-2 pt-4 collapse" id="collapse010" aria-labelledby="heading010">
                 <div class="card-body">
-                  کلاس ها روزانه سه ساعت می‌باشد، که یک ساعت و نیم به صورت
+                  کلاس ها روزانه سه ساعت می‌باشد، که عموماً یک ساعت و نیم به صورت
                   تئوری و یک ساعت و نیم به صورت عملی در کارگاه های مجهز برگزار
                   می‌شود.
                 </div>
@@ -1953,7 +1962,60 @@
                 <div class="card-body">
                   این سوال از ما زیاد پرسیده می‌شود و جواب ما همیشه این است که
                   اگر دیگران توانسته اند از طریق آموزشگاه ما تعمیرکار شوند شما
-                  هم می‌توانید.
+                  هم می‌توانید. <br>
+                  در صورتی که مبحثی را متوجه نشدید می‌توانید درخواست کنید تا در کلاس بعدی در مبحث مورد نظر شرکت کنید.<br>
+                  شما می‌توانید در ساعات غیر از کلاس خود و یا بعد از دوره در صورتی که یکی از کار گاه های ما آزاد بود بدون هزینه از کارگاه استفاده کنید.<br>
+                  ما همچنین پشتیبانی پس از دوره داریم و هر موقع که نیاز داشتید می‌توانید سوالات خود را از ما و یا استاد خودتان بپرسید.
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading012">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse012" aria-expanded="false"
+                  aria-controls="collapse012">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">کارگاه شما کامل است؟ آیا برای شرکت در کلاس نیاز داریم ابزار خاصی تهیه کنیم؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse012" aria-labelledby="heading012">
+                <div class="card-body">
+                  کارگاه‌های ما کامل هستند و برای این دوره نیازی به خرید ابزار ندارید. <br>
+                  همچنین در این دوره یک برد گوشی در اختیار شما قرار می‌گیرد تا روی آن تمرین کنید. 
+                </div>
+              </div>
+            </div>
+            <div class="card p-2 my-2">
+              <div class="card-header" id="heading013">
+                <div class="collapsed" data-toggle="collapse" data-target="#collapse013" aria-expanded="false"
+                  aria-controls="collapse013">
+                  <div class="row">
+                    <div class="col-11 cqs-header d-flex">
+                      <div class="experts-content">
+                        <span><i class="fa fa-question fa-2x" aria-hidden="true"></i></span>
+                      </div>
+                      <span class="pt-2">دوره‌ شما آموزش تعمیرات گوشی های اندرویدی است یا آیفون(IOS)؟</span>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-center px-0">
+                      <span class="collapse-icon-plus-minus"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pr-2 pt-4 collapse" id="collapse013" aria-labelledby="heading013">
+                <div class="card-body">
+                  ما آموزش تعمیرات آیفون (IOS) و اندروید را به صورت همزمان آموزش می‌دهیم و تلاش می‌کنیم در مباحث سخت افزاری اصول تعمیرات موبایل را به شما بیاموزیم و آموزش را محدود به برند نکنیم. <br>
+                  برای مطالعه سرفصل ها می‌توانید 
+                  <a href="#topics">اینجا</a>
+                  را مطالعه کنید.
                 </div>
               </div>
             </div>
@@ -1983,23 +2045,23 @@
             <div class="swiper-container picture-sliders" id="picture_slide">
               <div class="swiper-wrapper">
                 <div class="swiper-slide pic-slide-item">
-                  <img src="{% static 'landing/images/Image_10.png' %}" alt="آموزش تعمیرات موبایل خوابگاه" />
+                  <img src="{% static 'landing/images/Image_10.png' %}" alt="۱آموزش تعمیرات موبایل خوابگاه" />
                 </div>
                 <!--pic-slide-item-->
                 <div class="swiper-slide pic-slide-item">
-                  <img src="{% static 'landing/images/Image_9.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                  <img src="{% static 'landing/images/Image_9.png' %}" alt="۲آموزش تعمیرات موبایل تهران خوابگاه" />
                 </div>
                 <!--pic-slide-item-->
                 <div class="swiper-slide pic-slide-item">
-                  <img src="{% static 'landing/images/Image_12.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                  <img src="{% static 'landing/images/Image_12.png' %}" alt="۳آموزش تعمیرات موبایل تهران خوابگاه" />
                 </div>
                 <!--pic-slide-item-->
                 <div class="swiper-slide pic-slide-item">
-                  <img src="{% static 'landing/images/Image_11.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                  <img src="{% static 'landing/images/Image_11.png' %}" alt="۴آموزش تعمیرات موبایل تهران خوابگاه" />
                 </div>
                 <!--pic-slide-item-->
                 <div class="swiper-slide pic-slide-item">
-                  <img src="{% static 'landing/images/Image_6.png' %}" alt="آموزش تعمیرات موبایل تهران خوابگاه" />
+                  <img src="{% static 'landing/images/Image_6.png' %}" alt="۵ تعمیرات موبایل تهران خوابگاه" />
                 </div>
                 <!--pic-slide-item-->
               </div>
@@ -2020,10 +2082,14 @@
             <div class="pic-slide-pagination"></div>
           </div>
         </section>
+        <div class="d-flex justify-content-end d-none d-lg-flex">
+          <img class="left-icn d-none d-lg-block" src="{% static 'landing/svg/left-iconns.svg' %}" alt="left-icons">
+        </div>
+        
       </article>
       <!--------------------------- End dorms ------------------------------->
-      <div class="container">
-        <div class="spacer-004 d-block d-md-none"></div>
+      <div class="container spacer-last">
+        
         <div class="spacer-002 d-block d-none d-lg-block"></div>
         <!---------------------------Spacer------------------------------------------>
       </div>
@@ -2095,7 +2161,7 @@
               <li><a href="#license-course">گواهی نامه</a></li>
               <li><a href="#teachers">اساتید</a></li>
               <li><a href="#albums">پشتیبانی پس از دوره</a></li>
-              <li><a href="#CQs">سوالات متداول</a></li>
+              <li><a href="#FAQ">سوالات متداول</a></li>
             </ul>
           </div>
         </div>
@@ -2270,7 +2336,7 @@
                 <a class="stretched-link close-modal" href="#albums">پشتیبانی پس از دوره</a>
               </li>
               <li class="list-group-item">
-                <a class="stretched-link close-modal" href="#CQs">سوالات متداول</a>
+                <a class="stretched-link close-modal" href="#FAQ">سوالات متداول</a>
               </li>
               <li class="list-group-item">
                 <a class="stretched-link close-modal" href="#dorms">خوابگاه</a>

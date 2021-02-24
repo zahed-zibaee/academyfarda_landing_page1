@@ -17,7 +17,6 @@ def weeks_date_to_string(string):
     date_value = datetime_value.date()
     today = date.today()
     weeks = (date_value - today).days // 7
-    print(weeks)
     if weeks <= 0:
         return smart_unicode("کمتر از یک هفته",encoding="utf-8")
     elif  weeks == 1:
@@ -28,7 +27,7 @@ def weeks_date_to_string(string):
         return smart_unicode("سه هفته",encoding="utf-8")
     elif  weeks == 4:
         return smart_unicode("یک ماه",encoding="utf-8")
-    elif  weeks == 5:
+    elif  weeks >= 5:
         return smart_unicode("بیشتر از یک ماه",encoding="utf-8")
     else:
         return smart_unicode("نا‌مشخص",encoding="utf-8")

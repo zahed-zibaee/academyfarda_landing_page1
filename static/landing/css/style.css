@@ -710,8 +710,8 @@ img {
 
 @media (max-width: 767px) {
   .site-header .head-item .site-logo img {
-    width: 75px;
-    height: 75px;
+    width: 71px;
+    height: 71px;
   }
 }
 
@@ -4243,4 +4243,21 @@ i.fa-white {
   color:#ff9000;
   font-weight: bold;
   font-family: Yekan;
+}
+#map {
+  height: 400px;
+  width: 100%;
+}
+
+.mokaab-red {
+  margin-bottom: -50px; 
+  margin-right: 50px;
+}
+
+img.flip {
+  -moz-transform:    scaleX(-1); /* Gecko */
+  -o-transform:      scaleX(-1); /* Opera */
+  -webkit-transform: scaleX(-1); /* Webkit */
+  transform:         scaleX(-1); /* Standard */
+  filter: FlipH;                 /* IE 6/7/8 */
 }
