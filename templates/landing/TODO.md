@@ -17,3 +17,5 @@
  [ ] - add govahiname 2nd pic
  [ ] - compression css js
  [ ] - html validate
+ [X] - add sarbaz to discounts
+ [ ] - add method to apply discount and ...
