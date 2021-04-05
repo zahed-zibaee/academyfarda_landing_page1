@@ -3,7 +3,7 @@
  [X] - new register form and consolt form
  [X] - clean js and ids
  [ ] - change courses to one row pic and text and col-6 and in small to col-12
- [ ] - change courses pic
+ [X] - change courses pic
  [ ] - SEO
  [X] - SEO mohtava har bakhsh (matn)
  [ ] - Google ADs
@@ -19,3 +19,4 @@
  [ ] - html validate
  [X] - add sarbaz to discounts
  [ ] - add method to apply discount and ...
+ [ ] - change price to 1400 prices
