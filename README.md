@@ -2,6 +2,7 @@
 
 # TODO
 
+- [ ] landing - change on of phone number to other branch
 - [ ] landing - change courses to one row pic and text and col-6 and in small to col-12
 - [ ] SEO
 - [ ] SEO mohtava
