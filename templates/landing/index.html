@@ -2473,8 +2473,8 @@
                         <select id="class_select" name="course" class="form-control" required>
                           <option value="" disabled selected>...</option>
                           {% for course in courses %}
-                          <option value="{{course.id}}">کد: {{course.id|four_digit_id}} - {{course.site_name}} -
-                            {% if course.location == "valiasr" %} شعبه ولیعصر {% elif course.location == "enghelab" %}
+                          <option value="{{course.id}}">کد: {{course.id|four_digit_id}} - {{course.alter_name}} -
+                            {% if course.location == "V" %} شعبه ولیعصر {% elif course.location == "E" %}
                             شعبه انقلاب {% else %} نامشخص {% endif %} {% if course.teacher %} - استاد
                             {{course.teacher.personal_info.name}} {{course.teacher.personal_info.family}} {% endif %}
                           </option>
@@ -2488,9 +2488,9 @@
                     <div>
                       <span class="required-star pb-3"> نوع پرداخت </span>
                       <div class="form-check form-check-inline mb-2">
-                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio02" value="0" />
+                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio02" value="1" />
                         <label class="form-check-label" for="inlineRadio02">اقساطی</label>
-                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio03" value="1"
+                        <input class="form-check-input" type="radio" name="installment" id="inlineRadio03" value="0"
                           required />
                         <label class="form-check-label" for="inlineRadio03">نقدی</label>
                       </div>

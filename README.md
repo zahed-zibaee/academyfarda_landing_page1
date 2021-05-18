@@ -22,3 +22,8 @@
 - [ ] make all bootstrap, jquery, etc... one version and local
 - [ ] use cookie cuter 
 - [ ] upload main site
+- [ ] add paid individual to students after payment not before
+- [ ] can not calculate installment for cart type is hardcoded
+- [ ] usermodel needed
+  - [ ] landing - change modal to user register check
+- [ ] landing - register error not dynamic check it
