@@ -91,3 +91,6 @@ academyfarda_landing_page1/settings.py
 .env
 *.sqlite3
 config.py
+
+#VSCODE
+.vscode/
