@@ -182,16 +182,16 @@
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">کد تخفیف:</h5>
-              <h6 id="discount_code">{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.code }} {% else %} - {% endif %}</h5>
+              <h6 id="discount_code">{% if payment.cart.discount_code %} {{ payment.cart.discount_code.code }} {% else %} - {% endif %}</h5>
             </div> 
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">تخفیف کد:</h5>
-              <h6 id="discount_amount">{% if payment.cart.discount_codes.get %} {{ payment.cart.discount_codes.get.amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% else %} ۰ {% endif %}</h5>
+              <h6 id="discount_amount">{% if payment.cart.discount_code %} {{ payment.cart.discount_code.amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% else %} ۰ {% endif %}</h5>
             </div> 
             <script>
               var discount_state = "{% if state %}{{state}}{% else %}N{% endif %}"
-              var code = "{{ payment.cart.discount_codes.get.code }}"
-              var amount = "{{ payment.cart.discount_codes.get.amount|money_comma|persian_numbers }}"
+              var code = "{{ payment.cart.discount_code.code }}"
+              var amount = "{{ payment.cart.discount_code.amount|money_comma|persian_numbers }}"
             </script>
             {% if payment.cart.installment == True %}
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">

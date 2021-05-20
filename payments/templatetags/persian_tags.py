@@ -13,7 +13,10 @@ register = template.Library()
 
 @register.filter
 def weeks_date_to_string(string):
-    datetime_value = datetime.strptime(string, '%Y-%m-%d')
+    try:
+        datetime_value = datetime.strptime(string, '%Y-%m-%d')
+    except:
+        return ""
     date_value = datetime_value.date()
     today = date.today()
     weeks = (date_value - today).days // 7

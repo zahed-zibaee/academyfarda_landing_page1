@@ -16,16 +16,19 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from random import choice
 
+from .phone_numbers import PHONE_NUMBER_CHOICES
 
 #change theese to app name ...
 from SMS.models import Verify, Sent
 from payments.models import Course, Payment, Cart, \
-    PersonalInformation, Student, Discount
+    PersonalInformation, Student, DiscountCode
+
 
 User = get_user_model()
 
-def normalize(data):
+def en_ar_to_persian(data):
     """this methode will check for arabic charecter and will convert them
     to persian and than change persian numerics to english one"""
     try:
@@ -50,7 +53,7 @@ class CommonLanding(TemplateView):
         # show all courses by site_order
         courses = Course.objects.filter(active=True, site_show=True).order_by("order")
         # pass courses to show in landing and operator for tracking for registration
-        data = {"courses": courses, "operator_username": operator}
+        data = {"courses": courses, "operator_username": operator, 'phone': choice(PHONE_NUMBER_CHOICES)}
         return render(request, 'landing/index.html', context = data)
 
     @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='POST'))
@@ -58,8 +61,8 @@ class CommonLanding(TemplateView):
         """register by this"""
         #normalize data
         request.POST = request.POST.copy()
-        code_meli = normalize(request.POST["code_meli"])
-        phone = normalize(request.POST["phone"])
+        code_meli = en_ar_to_persian(request.POST["code_meli"])
+        phone = en_ar_to_persian(request.POST["phone"])
         pattern = re_compile("^\+98\d{10}$")
         pattern2 = re_compile("^98\d{10}$")
         if pattern.match(phone):
@@ -106,24 +109,22 @@ class CommonLanding(TemplateView):
                 )
             ), 
             # save personal info for get lead if register not complete
-            student = Student.objects.create(
-                personal_info = PersonalInformation.objects.create(
-                name = request.POST["name"],
-                family = request.POST["family"],
-                gender = request.POST["gender"],
-                father_name = request.POST["father_name"],
-                code_meli = code_meli,
-                phone_number = phone,
-                address = request.POST["address"],
-                birthday = datetime(1621, 3, 21)
-                    ),
+            customer = PersonalInformation.objects.create(
+                    name = request.POST["name"],
+                    family = request.POST["family"],
+                    gender = request.POST["gender"],
+                    father_name = request.POST["father_name"],
+                    code_meli = code_meli,
+                    phone_number = phone,
+                    address = request.POST["address"],
+                    birthday = datetime(1621, 3, 21)
                 ),
                 total = 0,
             # this total is for only course registration price not discount included
         )
         # add course to cart
         # if discount added we need to remove this from cart
-        payment.cart.courses.add(course)
+        payment.cart.products.add(course)
         try:
             # try to track operator
             operator = User.objects.get(username = request.POST["operator_username"])
@@ -139,8 +140,8 @@ class CommonLanding(TemplateView):
 class CommonLandingRegister(TemplateView):
     #on post make verification happend and if its success redirect to bank
     #after payment we need to show and send receipt
-    ##### add student to class
-    #    course = payment.cart.courses.get()
+    ##### add student to class after payment
+    #    course = payment.cart.products.get()
     #    course.student.add(payment.student)
     #    course.save()
 
@@ -172,15 +173,12 @@ class CommonLandingRegister(TemplateView):
         # validate token
         if 'token' not in request.POST.keys():
             return HttpResponseBadRequest("tokens needed to verify")
-        token = normalize(request.POST['token'])
+        token = en_ar_to_persian(request.POST['token'])
         if not payment.verification.validate(token):
             return HttpResponseForbidden("tokens are not valid or they expired")
         # change total payment
         payment.total = payment.cart.get_prepayment_course()
         payment.save()
-        # make student phone number verified
-        payment.student.phone_number_validate = True
-        payment.student.save()
         # check total
         if payment.check_total() == False:
             return HttpResponseServerError("less than mimimum payment amount")
@@ -202,20 +200,16 @@ class CommonLandingRegister(TemplateView):
         payment = get_object_or_404(Payment, slug = slug)
         json_req = loads(request.body.decode("utf-8"))
         if len(json_req['discount_code']) > 0:
-            discount_code = normalize(json_req['discount_code'])
-            discount = get_object_or_404(Discount, code = discount_code)
-            if discount.match(payment.cart.courses.get(), discount_code):
-                payment.cart.discount_codes.clear()
-                payment.cart.discount_codes.add(discount)
-                payment.save()
-                return JsonResponse(
-                    {}, status=201)
-            else:
-                return HttpResponseNotFound("code is wrong")
-        else:
-            payment.cart.discount_codes.clear()
+            discount_code = en_ar_to_persian(json_req['discount_code'])
+            discount = get_object_or_404(DiscountCode, code = discount_code)
+            payment.cart.discount_code = discount
             payment.save()
-            return JsonResponse({},status=200)
+            return JsonResponse(
+                {}, status=201)
+        else:
+            payment.cart.discount_code = None
+            payment.save()
+            return JsonResponse({}, status=200)
         
     @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='15/d', block=True, method='PUT'))
     def put(self, request, slug):

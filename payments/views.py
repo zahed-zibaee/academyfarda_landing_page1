@@ -104,9 +104,9 @@ def cart_course_create(request):
             if 'discount_code' in request.POST.keys():
                 discount_code = normalize(request.POST['discount_code'])
                 # check for validating discount code
-                if Discount.objects.filter(code = discount_code).exists() and\
-                    Discount.objects.filter(code = discount_code).first().is_active(course.id):
-                    discount = Discount.objects.filter(code = discount_code).first()
+                if DiscountCode.objects.filter(code = discount_code).exists() and\
+                    DiscountCode.objects.filter(code = discount_code).first().is_active(course.id):
+                    discount = DiscountCode.objects.filter(code = discount_code).first()
                 else:
                     return HttpResponseForbidden("discount code is not valid")
             else:

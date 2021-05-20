@@ -8,7 +8,7 @@ from persiantools.jdatetime import JalaliDateTime
 from .models import *
 
 
-@admin.register(Discount)
+@admin.register(DiscountCode)
 class Discount_admin(admin.ModelAdmin):
     list_display = ('id', "name", "code", "amount", "expiration_date", "active")
     list_display_links = ["name"]
@@ -129,15 +129,15 @@ class Payment_admin(admin.ModelAdmin):
         self.message_user(request, "%s sent." % message_bit)
     
     def personal_info_get_name(self, obj):
-        if obj.student and obj.student.personal_info:
-            return u"" + obj.student.personal_info.name + " " + obj.student.personal_info.family 
-        else:
+        try:
+            return u"{} {}".format(obj.customer.name, obj.customer.family) 
+        except:
             return ""
 
     def personal_info_get_phone(self, obj):
-        if obj.student and obj.student.personal_info:
-            return u"" + obj.student.personal_info.phone_number
-        else:
+        try:
+            return u"" + obj.customer.phone_number
+        except:
             return ""
             
     def operator_get_name(self, obj):
@@ -153,17 +153,15 @@ class Payment_admin(admin.ModelAdmin):
         return u"" + JalaliDateTime(obj.created_date).strftime("%H:%M:%S")
     
     def get_cart_course_get_name(self, obj):
-        if obj.cart and len(obj.cart.courses.all()) > 0:
-            return u"" + obj.cart.courses.all().first().name
-        elif obj.cart and len(obj.cart.discount_codes.all()) > 0:
-            return u"" + obj.cart.discount_codes.all().first().name
+        if obj.cart and obj.cart.products.count() > 0:
+            return u" -- ".join([obj.name for obj in obj.cart.products.all()])
         else:
             return ""
 
     def get_cart_discount_code(self, obj):
-        if obj.cart and len(obj.cart.discount_codes.all()) == 1:
-            return u"" + obj.cart.discount_codes.all().first().code
-        else:
+        try:
+            return u"" + obj.cart.discount_code.code
+        except:
             return ""
 
     resend_receipt.short_description = "Resend receipt"
@@ -179,7 +177,7 @@ class Payment_admin(admin.ModelAdmin):
                     "operator_get_name", "total", "get_date",\
                     "get_time", "status", "ref_id", "send_receipt")
     list_display_links = ["personal_info_get_name"]
-    raw_id_fields = ("verification","cart","student","operator")
+    raw_id_fields = ("verification","cart","customer","operator")
     list_filter = (
         ('created_date', DateFieldListFilter,),
         'status',

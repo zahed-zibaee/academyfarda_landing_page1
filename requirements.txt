@@ -1,8 +1,8 @@
-Django==1.11.29
-django-jalali-date
+Django==1.11.*
+django-jalali-date==0.3.*
 mysqlclient
-pytz
-persiantools
-zeep
-requests
-django-ratelimit
+pytz==2021.1
+persiantools==1.5.*
+zeep==3.4.*
+requests==2.25.*
+django-ratelimit==2.0.*

@@ -72,14 +72,8 @@ class Product(models.Model):
             return True
         else:
             return False
-    
-    def get_prepayment_total(self):
-        if self.is_active() and self.have_stock():
-            return self.prepayment
-        else:
-            return 0
 
-    def get_total(self):
+    def get_price_total(self):
         if self.is_active() and self.have_stock():
             return self.price
         else:
@@ -98,11 +92,10 @@ class Product(models.Model):
         )
 
 
-class Discount(models.Model):
+class DiscountCode(models.Model):
     """discount for bunch of products"""
     name = models.CharField(max_length =100, null = False, blank = False)
     code = models.CharField(max_length =50, null = False, blank = False, unique= True)
-    product = models.ManyToManyField(Product, blank = False)
     amount = models.BigIntegerField(null = False, blank = False, default =DISCOUNT_OPERATORS_AMOUNT)
     expiration_date = models.DateField(
         null = False, 
@@ -110,45 +103,23 @@ class Discount(models.Model):
         default = (timezone.make_aware(datetime.now(), timezone.get_default_timezone()) + timedelta(days=+3650)).date()
     )
     active = models.BooleanField(default = False)
-    
-    def match(self, product, code):
-        """this method will match a code for a product"""
-        if not self.is_active(product) or self.code != code and product not in self.product.all():
-            return False
-        else:
-            return True
 
-    def is_active(self ,product):
-        """check if discount and product is active and not discount expired"""
-        try:
-            isinstance(product, Product)   
-        except:
-            return False
+    def is_active(self):
+        """check for discount being active and not expired"""
         if self.expiration_date < timezone.make_aware(
                 datetime.now(), 
                 timezone.get_default_timezone()
-                ).date() or \
-            self.active is not True or product.active is not True:
+                ).date() or self.active is not True:
             return False
         else:
             return True
 
-    def get_prepayment_total(self, product):
+    def get_amount(self):
         """get total amount for this product with this discount"""
-        product = Product.objects.get(id = product.id)
-        course = Course.objects.get(id = product.id)
-        if self.is_active(product) and product in self.product.all():
-            return course.prepayment - self.amount
+        if self.is_active():
+            return self.amount
         else:
-            return 0
-
-    def get_total(self, product):
-        """get total amount for this product with this discount"""
-        product = Product.objects.get(id = product.id)
-        if self.is_active(product) and product in self.product.all():
-            return product.price - self.amount
-        else:
-            return 0
+            raise 0
 
     def __unicode__(self):
         return smart_unicode(
@@ -412,6 +383,12 @@ class Course(Product):
     start_date = models.DateField(blank = True)
     finished = models.BooleanField(default = False)
     
+    def get_prepayment_total(self):
+        if self.is_active() and self.have_stock():
+            return self.prepayment
+        else:
+            raise ValueError("product pre payment can not processed")
+
     def start(self):
         self.active = False
         self.save()
@@ -472,62 +449,70 @@ class Cart(models.Model):
         blank = False,
         default ="0"
         )
-    courses = models.ManyToManyField(Course, blank = True)
-    discount_codes = models.ManyToManyField(Discount, blank = True)
+    products = models.ManyToManyField(Product, blank = True)
+    discount_code = models.ForeignKey(
+        DiscountCode, 
+        blank = True, 
+        null = True, 
+        on_delete=models.PROTECT
+        )
     installment = models.BooleanField(default = False)
 
     def get_prepayment_course(self):
         """calculate total amount of prepayment for one course with or without of discount_code in cart"""
+        # check for method usage problems
         if int(self.cart_type) != 0:
             raise ValueError("this method is only for buy one course")
-        if len(self.courses.all()) != 1:
-            raise ValueError("only one course can be in this cart type")
-        course = self.courses.get()
-        if len(self.discount_codes.all()) > 1:
-            raise ValueError("more than one discount is in the cart")
-        elif len(self.discount_codes.all()) == 0:
-            total = course.get_prepayment_total()
-            if total != 0:
-                return total
-            else:
-                raise ValueError("can not calculate total")
+        if self.products.count() != 1:
+            raise ValueError("only one course can be pre payed")
+        # try to get course
+        try:
+            course = Course.objects.get(product_ptr_id=self.products.get().id)
+        except:
+            raise RuntimeError("can not get course object with this id")
+        if self.discount_code is not None:
+            try:
+                return course.get_prepayment_total() - self.discount_code.get_amount()
+            except:
+                raise RuntimeError("getting pre payment total can not be processed")   
         else:
-            discount = self.discount_codes.get()
-            total = discount.get_prepayment_total(course)
-            if total != 0:
-                return total
-            else:
-                raise ValueError("can not calculate total")
+            try:
+                return course.get_prepayment_total()
+            except:
+                raise RuntimeError("getting pre payment total can not be processed")   
 
     def get_total(self):
-        """calculate total amount for one course with or without of discount_code in cart"""
+        """calculate total amount for everything"""
         res = 0
         if int(self.cart_type) == 0:
-            if len(self.courses.all()) != 1:
-                raise ValueError("only one course can be in this cart type")
-            course = self.courses.get()
-            # add course and discount amount to total
-            if len(self.discount_codes.all()) > 1:
-                raise ValueError("more than one discount is in the cart")
-            elif len(self.discount_codes.all()) == 0:
-                total = course.get_total()
-                if total != 0:
-                    res += total
+            if self.products.count() != 1:
+                raise ValueError("only one course can be pre payed")
+            # try to get course
+            try:
+                course = Course.objects.get(product_ptr_id=self.products.get().id)
+            except:
+                raise RuntimeError("can not get course object with this id")
+            # process course price
+            try:
+                course_price = course.get_price_total()
+            except:
+                raise ValueError("can not process course total")
+            # process discount
+            if self.discount_code is not None:
+                try:
+                    discount_amount = self.discount_code.get_amount()
+                except:
+                    raise ValueError("can not process discount amount")
             else:
-                discount = self.discount_codes.get()
-                total = discount.get_total(course)
-                if total != 0:
-                    res += total
-            # check for discount cash
-            if res != 0 and self.installment is not True:
-                res -= course.discount_cash_payment_amount
-            # check if amount not 0 retrun total amount or make an error
-            if res == 0:
-                raise ValueError("can not calculate total")
+                discount_amount = 0
+            # process installment
+            if self.installment is True:
+                installment_discount_amount = course.discount_cash_payment_amount
             else:
-                return res
+                installment_discount_amount = 0
+            return course_price - discount_amount - installment_discount_amount
         else:
-            pass
+            raise RuntimeError("can not process this type of payment")
 
     def get_installments_course(self):
         """calculate installments amount for one course with or without of discount_code in cart
@@ -609,9 +594,9 @@ class Payment(models.Model):
         on_delete = models.SET_NULL, 
         null = True,
     )
-    student = models.ForeignKey(
-        Student, 
-        related_name = 'payment_student_personal_info',
+    customer = models.ForeignKey(
+        PersonalInformation, 
+        related_name = 'customer',
         null = False, 
         blank = False, 
         on_delete = models.PROTECT,
