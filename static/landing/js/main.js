@@ -15,7 +15,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 //check for connection with server function
 function checkconnection() {
   $.ajax({
-    url: "/hi",
+    url: "/heartbeat/",
     method: "GET",
     crossDomain: true,
     timeout: 5000,

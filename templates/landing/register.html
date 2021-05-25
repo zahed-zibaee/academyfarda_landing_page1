@@ -81,67 +81,69 @@
             <h5 class="title-product col-12">مشخصات فردی</h3>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">نام:</h5>
-              <h6>{{ payment.student.personal_info.name}}</h5>
+              <h6>{{ payment.customer.name}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">نام خانوادگی:</h5>
-              <h6>{{ payment.student.personal_info.family}}</h5>
+              <h6>{{ payment.customer.family}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">جنسیت:</h5>
-              <h6>{% if payment.student.personal_info.gender == "M" %} مرد {% elif payment.student.personal_info.gender == "F" %} زن {% else %}  {% endif %}</h5>
+              <h6>{% if payment.customer.gender == "M" %} مرد {% elif payment.customer.gender == "F" %} زن {% else %}  {% endif %}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">نام پدر:</h5>
-              <h6>{{ payment.student.personal_info.father_name}}</h5>
+              <h6>{{ payment.customer.father_name}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">شماره ملی:</h5>
-              <h6>{{ payment.student.personal_info.code_meli|persian_numbers}}</h5>
+              <h6>{{ payment.customer.code_meli|persian_numbers}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">شماره تماس:</h5>
-              <h6>{{ payment.student.personal_info.phone_number|persian_numbers}}</h5>
+              <h6>{{ payment.customer.phone_number|persian_numbers}}</h5>
             </div>
             <div class="col-12 d-flex align-items-center py-1">
               <h5 class="text-darkblue pl-1">آدرس:</h5>
-              <h6>{{ payment.student.personal_info.address}}</h5>
+              <h6>{{ payment.customer.address}}</h5>
             </div>
             <h5 class="title-product col-12 pt-4">دوره انتخابی</h3>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">کد دوره:</h5>
-              <h6>{{ payment.cart.courses.get.id|four_digit_id|persian_numbers}}</h5>
+              <h6>{{ payment.cart.course.id|four_digit_id|persian_numbers}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">نام دوره:</h5>
-              <h6>{{ payment.cart.courses.get.alter_name}}</h5>
+              <h6>{{ payment.cart.course.alter_name}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">شروع دوره:</h5>
-              <h6>حدوداً {{ payment.cart.courses.get.start_date|date:"Y-m-d"|weeks_date_to_string}}</h5>
+              <h6>حدوداً {{ payment.cart.course.start_date|date:"Y-m-d"|weeks_date_to_string}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">محل برگزاری دوره:</h5>
-              <h6>{% if payment.cart.courses.get.location == "V" %} شعبه ولیعصر
-                {% elif payment.cart.courses.get.location == "E" %} شعبه انقلاب {% else %} نا‌مشخص {% endif %}</h5>
+              <h6>{% if payment.cart.course.location == "V" %} شعبه ولیعصر
+                {% elif payment.cart.course.location == "E" %} شعبه انقلاب {% else %} نا‌مشخص {% endif %}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">روز‌های کلاس:</h5>
-              <h6>{{ payment.cart.courses.get.days.name}}</h5>
+              <h6>{{ payment.cart.course.days.name}}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">طول دوره:</h5>
-              <h6>{{ payment.cart.courses.get.course_type.duration_text}} ({{ payment.cart.courses.get.course_type.duration|persian_numbers}}
+              <h6>{{ payment.cart.course.course_type.duration_text}} ({{ payment.cart.course.course_type.duration|persian_numbers}}
                ساعت)</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">استاد دوره:</h5>
-              <h6>{{ payment.cart.courses.get.teacher.personal_info.name }} {{ payment.cart.courses.get.teacher.personal_info.family }}</h5>
+              <h6>{{ payment.cart.course.teacher.personal_info.name }} {{ payment.cart.course.teacher.personal_info.family }}</h5>
             </div>
             <h5 class="title-product col-12 pt-4">پرداخت</h3>
             <form class="col-12 px-0 pb-3">
+
               <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-6 d-flex justify-content-center align-content-center">
+                  {% csrf_token %}
                   <input 
                     id="input-discount-code" 
                     name="discount_code" 
@@ -166,7 +168,7 @@
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">شهریه دوره:</h5>
-              <h6 >  <span class="linethrough px-1">{{ payment.cart.courses.get.price_showoff|money_comma|persian_numbers }}</span class="fw-900"> {{ total|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h6>
+              <h6 >  <span class="linethrough px-1">{{ payment.cart.course.price_showoff|money_comma|persian_numbers }}</span class="fw-900"> {{ total|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span></h6>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">پیش پرداخت:</h5>
@@ -178,7 +180,7 @@
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">تخفیف نوع پرداخت:</h5>
-              <h6>{% if payment.cart.installment == True %} ۰ {% else %} {{ payment.cart.courses.get.discount_cash_payment_amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% endif %}</h5>
+              <h6>{% if payment.cart.installment == True %} ۰ {% else %} {{ payment.cart.course.discount_cash_payment_amount|money_comma|persian_numbers }} <span class="text-muted pr-1"> تومان</span> {% endif %}</h5>
             </div>
             <div class="col-12 col-lg-6 d-flex align-items-center py-1 ">
               <h5 class="text-darkblue pl-1">کد تخفیف:</h5>
@@ -446,6 +448,7 @@
             <span class="">کد تایید به شماره شما ارسال شد.</span>
             <div class="form-wrapper my-3">
               <form class="form-row d-flex justify-content-center align-items-center" id="form">
+                {% csrf_token %}
                 <input 
                 id="token" 
                 name="token"

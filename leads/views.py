@@ -6,21 +6,20 @@ from django.http import JsonResponse, HttpResponseRedirect,\
     HttpResponseBadRequest, HttpResponseForbidden, HttpResponseNotAllowed
 from json import JSONEncoder
 from django.views.decorators.csrf import csrf_exempt
-from .models import Origin, Lead, Comment, Label, LabelDefinition
+from .models import Origin, Lead, Comment, Label
 from datetime import datetime, timedelta
 from django.contrib import messages
 from persiantools import digits
 from persiantools.jdatetime import JalaliDateTime, JalaliDate
 from django.core.paginator import Paginator
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import get_user_model
 from random import choice
 from ratelimit.decorators import ratelimit
+
 from .lead_search_choices import REGISTRATION_STATUS, GENDER_CHOICES,\
     ORIGIN_DESCRIPTION, USER_NAME_AND_FAMILY, LABELDEFINITION_TAG
-from .marketing import OPERATORS
-
-User = get_user_model()
+from academyfarda_backend import LEAD_OPERATORS
+from users.models import User
 
 #TODO: add comment to all project
 def normalize(data):
@@ -55,7 +54,7 @@ def api_submit(request):
                 origin = Origin.objects.filter(token = token).first()
             )
         try:
-            my_operator = choice(OPERATORS)
+            my_operator = choice(LEAD_OPERATORS)
             my_lead.operator.add(User.objects.filter(username = my_operator).first())
         except:
             pass
@@ -67,7 +66,6 @@ def api_submit(request):
     
 @staff_member_required
 def export(request):
-    
     data = {}
     #operators can not know each other leads
     if request.user.is_superuser:

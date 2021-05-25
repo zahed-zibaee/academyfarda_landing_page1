@@ -13,17 +13,19 @@ from django.views.generic import TemplateView
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from random import choice
 
-from .phone_numbers import PHONE_NUMBER_CHOICES
-
-#change theese to app name ...
+from academyfarda_backend.config import LANDING_PHONE_NUMBER_CHOICES,\
+    PREPAYMENT_COMMON_COURSE_PRICE, COMMON_COURSE_PRICE,\
+    COMMON_COURSE_DISCOUNTED_PRICE, DISCOUNT_ON_CASH_PAYMENT_AMOUNT,\
+    DISCOUNT_ON_SPECIAL_JOBS_AMOUNT
 from SMS.models import Verify, Sent
-from payments.models import Course, Payment, Cart, \
-    PersonalInformation, Student, DiscountCode
+from courses.models import Course
+from payments.models import Payment, Cart,\
+    PersonalInformation, DiscountCode
 
 
 User = get_user_model()
@@ -53,7 +55,24 @@ class CommonLanding(TemplateView):
         # show all courses by site_order
         courses = Course.objects.filter(active=True, site_show=True).order_by("order")
         # pass courses to show in landing and operator for tracking for registration
-        data = {"courses": courses, "operator_username": operator, 'phone': choice(PHONE_NUMBER_CHOICES)}
+        data = {
+            "courses": courses, 
+            "operator_username": operator, 
+            "phone": choice(LANDING_PHONE_NUMBER_CHOICES),
+            "course_price" : COMMON_COURSE_PRICE,
+            "course_discounted_price": COMMON_COURSE_DISCOUNTED_PRICE,
+            "cash_payment_discount": DISCOUNT_ON_CASH_PAYMENT_AMOUNT,
+            "cash_payment_discount_hezar": DISCOUNT_ON_CASH_PAYMENT_AMOUNT/1000,
+            "prepayment_amount": PREPAYMENT_COMMON_COURSE_PRICE,
+            "prepayment_amount_hezar": PREPAYMENT_COMMON_COURSE_PRICE/1000,
+            "first_payment_cash": COMMON_COURSE_DISCOUNTED_PRICE\
+                - PREPAYMENT_COMMON_COURSE_PRICE\
+                - DISCOUNT_ON_CASH_PAYMENT_AMOUNT,
+            "total_payment_cash": COMMON_COURSE_DISCOUNTED_PRICE - DISCOUNT_ON_CASH_PAYMENT_AMOUNT,
+            "first_payment_installment": COMMON_COURSE_DISCOUNTED_PRICE/2 - PREPAYMENT_COMMON_COURSE_PRICE,
+            "second_payment_installment": COMMON_COURSE_DISCOUNTED_PRICE/2,
+            "discount_on_special_jobs_amount": DISCOUNT_ON_SPECIAL_JOBS_AMOUNT,
+            }
         return render(request, 'landing/index.html', context = data)
 
     @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='POST'))
@@ -137,6 +156,7 @@ class CommonLanding(TemplateView):
         # go to verify/id page to verify payment by user
         return HttpResponseRedirect("/landing/common/register/" + payment.slug)
 
+
 class CommonLandingRegister(TemplateView):
     #on post make verification happend and if its success redirect to bank
     #after payment we need to show and send receipt
@@ -148,6 +168,13 @@ class CommonLandingRegister(TemplateView):
     @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='20/d', block=True, method='GET'))
     def get(self, request, slug):
         payment = get_object_or_404(Payment, slug = slug)
+        # get product id and change it to course
+        if payment.cart is None:
+            return HttpResponseBadRequest("need a cart to complete payment")
+        try:
+            payment.cart.course = payment.cart.get_product_course()
+        except:
+            return HttpResponseNotFound("can not find course")
         if payment.payment_type != "O":
             return HttpResponseBadRequest("this payment is not online")
         total = payment.cart.get_total()
@@ -203,12 +230,12 @@ class CommonLandingRegister(TemplateView):
             discount_code = en_ar_to_persian(json_req['discount_code'])
             discount = get_object_or_404(DiscountCode, code = discount_code)
             payment.cart.discount_code = discount
-            payment.save()
+            payment.cart.save()
             return JsonResponse(
                 {}, status=201)
         else:
             payment.cart.discount_code = None
-            payment.save()
+            payment.cart.save()
             return JsonResponse({}, status=200)
         
     @method_decorator(ratelimit(key='header:x-cluster-client-ip', rate='15/d', block=True, method='PUT'))
@@ -250,6 +277,7 @@ class CommonLandingRegister(TemplateView):
                 else:
                     return JsonResponse({}, status = 201)
             
+
 class CommonLandingPaymentVerification(TemplateView):
 
     def get(self, request):

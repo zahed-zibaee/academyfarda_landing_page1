@@ -6,3 +6,4 @@ persiantools==1.5.*
 zeep==3.4.*
 requests==2.25.*
 django-ratelimit==2.0.*
+django-heartbeat==2.0.*

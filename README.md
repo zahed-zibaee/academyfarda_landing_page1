@@ -32,3 +32,4 @@
 - [ ] add config .sample files
 - [ ] change template to app folder
 - [ ] django jalali date implementation
+- [ ] landing add code khanevar

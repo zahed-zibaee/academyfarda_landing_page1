@@ -69,7 +69,7 @@
                   </p>
                   <p class="card-text">
                     <span class="statics">به نام:</span>
-                    <span>{{payment.student.personal_info.name}} {{payment.student.personal_info.family}}</span>
+                    <span>{{payment.customer.name}} {{payment.customer.family}}</span>
                   </p>
                   <p class="card-text">
                     <span class="statics">درگاه:</span>
@@ -117,15 +117,15 @@
                         <th scope="col">#</th>
                         <th scope="col">کالا یا خدمات</th>
                         <th scope="col">تعداد</th>
-                        <th scope="col">تخفیف</th>
-                        <th scope="col">قیمت</th>
+                        <th scope="col">قیمت تکی</th>
+                        <th scope="col">قیمت تعداد</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr class="text-secondary">
                         <th scope="row">۱</th>
-                        {% for course in payment.cart.courses.all %}
-                          <td>پیش ثبت‌نام کلاس {{ course.alter_name }} کد {{ course.id|four_digit_id|persian_numbers }}</td>
+                        {% for product in payment.cart.products.all %}
+                          <td>پیش ثبت‌نام کلاس {{ product.alter_name }} کد {{ product.id|four_digit_id|persian_numbers }}</td>
                         {% endfor %}
                         <td>۱</td>
                         {% if payment.cart.discount_codes.get %}
@@ -133,7 +133,7 @@
                         <td><span>{{discount.amount|money_comma|persian_numbers}} تومان</span></td>
                         {% endfor %}
                         {% else %}
-                        <td><span>۰ تومان</span>
+                        <td><span>{{payment.total|money_comma|persian_numbers}} تومان</span>
                         {% endif %}
                         <td><span >{{payment.total|money_comma|persian_numbers}} تومان</span>
                       </tr>

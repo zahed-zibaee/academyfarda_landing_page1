@@ -1125,7 +1125,7 @@
         <section class="main-product" id="payment">
           <div class="title-experts">
             <h3>شرایط و هزینه</h3>
-            <span>شما تنها با پرداخت ۱۵۰ هزار تومان کلاس را رزرو و مابقی شهریه را
+            <span>شما تنها با پرداخت {{prepayment_amount_hezar|money_comma|persian_numbers}} هزار تومان کلاس را رزرو و مابقی شهریه را
               می‌توانید به صورت
               <b>اقساطی</b>
               و یا
@@ -1137,7 +1137,7 @@
           <div class="spacer-005 mb-5">
             <div class="row spacer-005">
               <div class="col-12 d-flex align-items-center justify-content-center pb-0">
-                <h3 class="payment-big">۲,۵۰۰,۰۰۰</h3>
+                <h3 class="payment-big">{{course_price|money_comma|persian_numbers}}</h3>
               </div>
               <div class="col-12 d-flex align-items-start justify-content-center pt-0">
                 <span class="payment-mosavab">نرخ مصوبه فنی و حرفه ای</span>
@@ -1145,7 +1145,7 @@
             </div>
             <div class="row">
               <div class="col-12 d-flex align-items-center justify-content-center pb-0">
-                <h3 class="payment-bigblack">۲,۰۰۰,۰۰۰</h3>
+                <h3 class="payment-bigblack">{{course_discounted_price|money_comma|persian_numbers}}</h3>
                 <h3 class="px-3 payment-toman">تومان</h3>
               </div>
             </div>
@@ -1170,9 +1170,9 @@
                   <div class="collapse show" id="collapse301" aria-labelledby="heading301" data-parent="#accordion002">
                     <p class="bullet mb-2">
                       <b>شرایط پرداخت نقدی:</b>
-                      <span>در ابتدا با ۱۵۰ هزار تومان ثبت‌نام و جلسه اول دوره با
-                        پرداخت یک میلیون و هفت صد و پنجاه هزار تومان پرداخت خود را
-                        کامل می‌نمایید و از ما صد هزار تومان تخفیف دریافت
+                      <span>در ابتدا با {{prepayment_amount_hezar|persian_numbers}} هزار تومان ثبت‌نام و جلسه اول دوره با
+                        پرداخت {{first_payment_cash|money_comma|persian_numbers}} تومان پرداخت خود را
+                        کامل می‌نمایید و از ما {{cash_payment_discount_hezar|persian_numbers}} هزار تومان تخفیف دریافت
                         می‌کنید.</span>
                     </p>
                     <div class="row bg-gray my-1">
@@ -1180,7 +1180,7 @@
                         <h6 class="mb-0">
                           ثبت‌نام:
                         </h6>
-                        <span>۱۵۰,۰۰۰ تومان</span>
+                        <span>{{prepayment_amount|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                     <div class="row bg-gray my-1">
@@ -1188,7 +1188,7 @@
                         <h6 class="mb-0">
                           جلسه اول:
                         </h6>
-                        <span>۱,۷۵۰,۰۰۰ تومان</span>
+                        <span>{{first_payment_cash|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                     <div class="row bg-gray my-1">
@@ -1197,7 +1197,7 @@
                           تخفیف پرداخت نقدی:
                         </h6>
                         <div>
-                          <span class="text-green">۱۰۰,۰۰۰- تومان</span>
+                          <span class="text-green">{{cash_payment_discount|money_comma|persian_numbers}}- تومان</span>
                         </div>
                       </div>
                     </div>
@@ -1207,7 +1207,7 @@
                           شهریه کل:
                         </h6>
                         <div>
-                          <span class="blue-total">۱,۹۰۰,۰۰۰ تومان</span>
+                          <span class="blue-total">{{total_payment_cash|money_comma|persian_numbers}} تومان</span>
                         </div>
                       </div>
                     </div>
@@ -1215,9 +1215,9 @@
                   <div class="collapse" id="collapse302" aria-labelledby="heading302" data-parent="#accordion002">
                     <p class="bullet mb-2">
                       <b>شرایط پرداخت اقساطی:</b>
-                      <span>در ابتدا با ۱۵۰ هزار تومان ثبت‌نام و جلسه اول دوره با
-                        پرداخت هشت صد و پنجاه هزار تومان شهریه را به نصف و در اواسط
-                        دوره(جلسه 13ام) یک میلیون تومان باقی مانده از شهریه را تسویه
+                      <span>در ابتدا با {{prepayment_amount_hezar|persian_numbers}} هزار تومان ثبت‌نام و جلسه اول دوره با
+                        پرداخت {{first_payment_installment|money_comma|persian_numbers}} تومان شهریه را به نصف و در اواسط
+                        دوره(جلسه 13ام) {{second_payment_installment|money_comma|persian_numbers}} تومان باقی مانده از شهریه را تسویه
                         می‌نمایید.</span>
                     </p>
                     <div class="row bg-gray my-1">
@@ -1225,7 +1225,7 @@
                         <h6 class="mb-0">
                           ثبت‌نام:
                         </h6>
-                        <span>۱۵۰,۰۰۰ تومان</span>
+                        <span>{{prepayment_amount|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                     <div class="row bg-gray my-1">
@@ -1233,7 +1233,7 @@
                         <h6 class="mb-0">
                           جلسه اول:
                         </h6>
-                        <span>۸,۵۰۰,۰۰۰ تومان</span>
+                        <span>{{first_payment_installment|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                     <div class="row bg-gray my-1">
@@ -1241,7 +1241,7 @@
                         <h6 class="d-flex mb-0">
                           <span>جلسه سیزده‌ام:</span>
                         </h6>
-                        <span>۱,۰۰۰,۰۰۰ تومان</span>
+                        <span>{{second_payment_installment|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                     <div class="row bg-gray my-2 mt-4">
@@ -1249,7 +1249,7 @@
                         <h6 class="blue-total mb-0">
                           شهریه کل:
                         </h6>
-                        <span class="blue-total">۲,۰۰۰,۰۰۰ تومان</span>
+                        <span class="blue-total">{{course_discounted_price|money_comma|persian_numbers}} تومان</span>
                       </div>
                     </div>
                   </div>
@@ -1268,44 +1268,44 @@
               <b class="px-1">دانشجویان</b>
               و
               <b class="px-1">سربازان</b>
-              استفاده نمایید.
+              استفاده نمایید و تنها با ارايه مدارک توسط مسئول آموزش در جلسه اول و یا در طول دوره اعمال خواهد شد.
             </p>
             <div class="row pt-3">
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> تخفیف پرداخت نقدی </span>
-                <span class="pr-2">۱۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{cash_payment_discount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> بهزیستی </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> کمیته امداد </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> خانه کارگر </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> ایثارگران </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> فرهنگیان </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> کادر درمان </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> دانشجویان </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
               <p class="col-12 col-md-6 pb-1">
                 <span class="bullet2"> سربازان </span>
-                <span class="pr-2">۲۰۰,۰۰۰</span><span class="pr-1">تومان</span>
+                <span class="pr-2">{{discount_on_special_jobs_amount|money_comma|persian_numbers}}</span><span class="pr-1">تومان</span>
               </p>
             </div>
           </div>

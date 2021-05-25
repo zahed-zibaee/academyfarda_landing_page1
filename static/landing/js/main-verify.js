@@ -9,7 +9,7 @@ var connect = true;
 //function check connection
 function checkconnection() {
   $.ajax({
-    url: "/hi",
+    url: "/heartbeat/",
     method: "GET",
     crossDomain: true,
     timeout: 5000,

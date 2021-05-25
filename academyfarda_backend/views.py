@@ -15,10 +15,6 @@ def error_404(request):
     data = {}
     return render(request,'404/error_404.html', data)
 
-@csrf_exempt
-def hi(request):
-    return JsonResponse({'ans':'hi'})
-
 def landing_redirect(request):
     url = reverse('common_landing')
     if 'op' in request.GET.keys():

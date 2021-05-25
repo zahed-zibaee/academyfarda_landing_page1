@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import Lead, Origin, Comment, LabelDefinition, Label
+from .models import Lead, Origin, Comment, Label
 from django.http import HttpResponse
 from django.utils.encoding import smart_str
 from django.contrib.admin import DateFieldListFilter
@@ -19,22 +19,9 @@ class Comments_inline(admin.StackedInline):
     extra = 0
     readonly_fields = ['author']
 
-@admin.register(Label)
-class Label_admin(admin.ModelAdmin):
-    #TODO: only one time a label for a post
-    #make post field chose base
-    raw_id_fields = ("post","label",)
-    list_display = ('id','post','colored_name',)
-
-@admin.register(LabelDefinition)
-class LabelDefinition(admin.ModelAdmin):
-    #make post field chose base
-    radio_fields = {'color_code': admin.HORIZONTAL}
-    list_display = ('id','colored_name','color_code',)
-
 admin.site.register(Origin)
 @admin.register(Lead)
-class Lead_admin(admin.ModelAdmin):
+class LeadAdmin(admin.ModelAdmin):
     #TODO: add action to change operator, operator view, filter make for all admin objs, inline object in leads
     inlines = [Labels_inline, Comments_inline,]
     def save_formset(self, request, form, formset, change):

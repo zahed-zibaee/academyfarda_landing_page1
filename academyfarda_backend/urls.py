@@ -15,20 +15,26 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+
+from heartbeat.urls import urlpatterns as heartbeat_urls
+
 from . import views
 
 
 #TODO change from leads import views as leads_views to something dynamic
 urlpatterns = [
     url(r'^adminlogin/', admin.site.urls),
+    url(r'^heartbeat/?', include(heartbeat_urls)),
+
+    url(r'^/?$', views.landing_redirect , name="landing_redirect"),   
+]
+
+urlpatterns += [
     url(r'^leads/', include('leads.urls')),
     url(r'^accounts/', include('accounts.urls')),
-    url(r'^crm/', include('CRM.urls')),
     url(r'^payments/', include('payments.urls')),
     url(r'^SMS/', include('SMS.urls')),
     url(r'^landing/', include('landing.urls')),
-    url(r'^hi/?$', views.hi, name="hi"),
-    url(r'^/?$', views.landing_redirect , name="landing_redirect"),
 ]
 
 handler404 = views.error_404
